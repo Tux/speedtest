@@ -25,6 +25,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -q --quick[=20]   do a quick test (only the fastest 20 tests)
     -Q --realquick    do a real quick test (only the fastest 10 tests)
 
+    -v --verbose[=1]  set verbosity
     -V --version      show version and exit
     -? --help         show this help
 
@@ -269,6 +270,10 @@ sub distance
 sub servers
 {
     my %list = get_servers ();
+    if (my $iid = $config->{"server-config"}{ignoreids}) {
+	$opt_v > 3 and warn "Removing servers $iid from server list\n";
+	delete @list{split m/\s*,\s*/ => $iid};
+	}
     delete @list{grep { $list{$_}{cc} ne $opt_c } keys %list};
     %list or die "No servers in $opt_c found\n";
     for (values %list) {
