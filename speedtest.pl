@@ -1,9 +1,12 @@
 #!/pro/bin/perl
 
-use 5.16.3;
+# speedtest.pl - test network speed using speedtest.net
+# (m)'14 [2014-10-10] Copyright H.M.Brand 2014-2014
+
+use 5.12.0;
 use warnings;
 
-my $VERSION = "0.03";
+my $VERSION = "0.04";
 
 sub usage
 {
@@ -19,7 +22,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -s --server=nnn   use testserver with id nnn
        --download     test download speed (default true)
        --upload       test upload   speed (default true)
-    -q --quick        do a quick test (only the fastest 20 tests)
+    -q --quick[=20]   do a quick test (only the fastest 20 tests)
     -Q --realquick    do a real quick test (only the fastest 10 tests)
 
     -V --version      show version and exit
@@ -57,8 +60,8 @@ GetOptions (
     "s|server=i"	=> \my $server,
     "d|download!"	=>    \$opt_d,
     "u|upload!"		=>    \$opt_u,
-    "q|quick|fast!"	=> sub { $opt_q = 20; },
-    "Q|realquick!"	=> sub { $opt_q = 10; },
+    "q|quick|fast:20"	=>    \$opt_q,
+    "Q|realquick:10"	=>    \$opt_q,
 
     "m|mini=s"		=> \my $mini,	# NYI
       "source=s"	=> \my $source,	# NYI
@@ -140,6 +143,7 @@ if ($opt_d) {
     # http://ookla.extraip.net/speedtest/random350x350.jpg
     my @url = map { ("$base/random${_}x${_}.jpg") x 4 }
 	350, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000;
+    my @mnmx = (999999999.999, 0.000);
     my $size = 0;
     my $time = 0;
     $opt_q and splice @url, $opt_q;
@@ -155,15 +159,23 @@ if ($opt_d) {
 	my $sz = length $rsp->content;
 	$size += $sz;
 	$time += $elapsed;
+	my $speed = 8 * $sz / $elapsed / $k / $k;
+	$speed < $mnmx[0] and $mnmx[0] = $speed;
+	$speed > $mnmx[1] and $mnmx[1] = $speed;
 	$opt_v     and print  STDERR ".";
-	$opt_v > 1 and printf STDERR "%12.3f %s\n", 8 * $sz / $elapsed / 1_000_000, $url;
+	$opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	}
     printf "Download: %8.3f Mbit/s\n", 8 * ($size / $time) / $k / $k;
+    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+	$size / 1024, $time, @mnmx;
     }
 
 if ($opt_u) {
     $opt_v and print STDERR "Test upload   ";
-    my $data = "content1=".("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" x 115000); # +/- 4 Mb
+    my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
+    my $data = join "" => map { $data[int rand $#data] } 0 .. 4192;
+    $data = "content1=".($data x 1024); # Total length just over 4 Mb
+    my @mnmx = (999999999.999, 0.000);
     my $size = 0;
     my $time = 0;
     my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
@@ -182,11 +194,15 @@ if ($opt_u) {
 	    }
 	$size += $sz;
 	$time += $elapsed;
+	my $speed = 8 * $sz / $elapsed / $k / $k;
+	$speed < $mnmx[0] and $mnmx[0] = $speed;
+	$speed > $mnmx[1] and $mnmx[1] = $speed;
 	$opt_v     and print  STDERR ".";
-	$opt_v > 1 and printf STDERR "%12.3f %s (%7d)\n",
-	    8 * $sz / $elapsed / 1_000_000, $url, $sz;
+	$opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	}
     printf "Upload:   %8.3f Mbit/s\n", 8 * ($size / ($time || 1)) / $k / $k;
+    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+	$size / 1024, $time, @mnmx;
     }
 
 ### ############################################################################
