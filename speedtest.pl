@@ -6,7 +6,7 @@
 use 5.12.0;
 use warnings;
 
-my $VERSION = "0.04";
+my $VERSION = "0.05";
 
 sub usage
 {
@@ -24,6 +24,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --upload       test upload   speed (default true)
     -q --quick[=20]   do a quick test (only the fastest 20 tests)
     -Q --realquick    do a real quick test (only the fastest 10 tests)
+    -T --try[=5]      try all tests on th n fastest servers
 
     -v --verbose[=1]  set verbosity
     -V --version      show version and exit
@@ -47,6 +48,7 @@ my $opt_d = 1;
 my $opt_u = 1;
 my $opt_g = 1;
 my $opt_q = 0;
+my $opt_T = 1;
 GetOptions (
     "help|h|?"		=> sub { usage (0); },
     "V|version!"	=> sub { say $VERSION; exit 0; },
@@ -58,6 +60,7 @@ GetOptions (
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
 
+    "T|try:5"		=>    \$opt_T,
     "s|server=i"	=> \my $server,
     "d|download!"	=>    \$opt_d,
     "u|upload!"		=>    \$opt_u,
@@ -133,77 +136,83 @@ if ($ping) {
     }
 
 # default action is to run on fastest server
-my $host = (servers_by_ping ())[0];
-$opt_v and printf STDERR "Using %4d: %s\t%5.2f km, %6.3f ms\n",
-    $host->{id}, $host->{sponsor}, $host->{dist}, $host->{ping};
-$opt_v > 3 and DDumper $host;
-(my $base = $host->{url}) =~ s{/[^/]+$}{};
+my @hosts = grep { $_->{ping} < 10 } servers_by_ping ();
+@hosts > $opt_T and splice @hosts, $opt_T;
+foreach my $host (@hosts) {
+    $host->{sponsor} =~ s/\s+$//;
+    $opt_v and printf STDERR "Using %4d: %6.2f km %6.3f ms %s\n",
+	$host->{id}, $host->{dist}, $host->{ping}, $host->{sponsor};
+    $opt_v > 3 and DDumper $host;
+    (my $base = $host->{url}) =~ s{/[^/]+$}{};
 
-if ($opt_d) {
-    $opt_v and print STDERR "Test download ";
-    # http://ookla.extraip.net/speedtest/random350x350.jpg
-    my @url = map { ("$base/random${_}x${_}.jpg") x 4 }
-	350, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000;
-    my @mnmx = (999999999.999, 0.000);
-    my $size = 0;
-    my $time = 0;
-    $opt_q and splice @url, $opt_q;
-    foreach my $url (@url) {
-	my $req = HTTP::Request->new (GET => $url);
-	my $t0 = [ gettimeofday ];
-	my $rsp = $ua->request ($req);
-	my $elapsed = tv_interval ($t0);
-	unless ($rsp->is_success) {
-	    warn "$url: ", $rsp->status_line, "\n";
-	    next;
+    if ($opt_d) {
+	$opt_v and print STDERR "Test download ";
+	# http://ookla.extraip.net/speedtest/random350x350.jpg
+	my @url = map { ("$base/random${_}x${_}.jpg") x 4 }
+	    350, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000;
+	my @mnmx = (999999999.999, 0.000);
+	my $size = 0;
+	my $time = 0;
+	$opt_q and splice @url, $opt_q;
+	foreach my $url (@url) {
+	    my $req = HTTP::Request->new (GET => $url);
+	    my $t0 = [ gettimeofday ];
+	    my $rsp = $ua->request ($req);
+	    my $elapsed = tv_interval ($t0);
+	    unless ($rsp->is_success) {
+		warn "$url: ", $rsp->status_line, "\n";
+		next;
+		}
+	    my $sz = length $rsp->content;
+	    $size += $sz;
+	    $time += $elapsed;
+	    my $speed = 8 * $sz / $elapsed / $k / $k;
+	    $speed < $mnmx[0] and $mnmx[0] = $speed;
+	    $speed > $mnmx[1] and $mnmx[1] = $speed;
+	    $opt_v     and print  STDERR ".";
+	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
-	my $sz = length $rsp->content;
-	$size += $sz;
-	$time += $elapsed;
-	my $speed = 8 * $sz / $elapsed / $k / $k;
-	$speed < $mnmx[0] and $mnmx[0] = $speed;
-	$speed > $mnmx[1] and $mnmx[1] = $speed;
-	$opt_v     and print  STDERR ".";
-	$opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
+	$opt_q and print " " x (40 - $opt_q);
+	printf "Download: %8.3f Mbit/s\n", 8 * ($size / $time) / $k / $k;
+	$opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+	    $size / 1024, $time, @mnmx;
 	}
-    printf "Download: %8.3f Mbit/s\n", 8 * ($size / $time) / $k / $k;
-    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-	$size / 1024, $time, @mnmx;
-    }
 
-if ($opt_u) {
-    $opt_v and print STDERR "Test upload   ";
-    my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
-    my $data = join "" => map { $data[int rand $#data] } 0 .. 4192;
-    $data = "content1=".($data x 1024); # Total length just over 4 Mb
-    my @mnmx = (999999999.999, 0.000);
-    my $size = 0;
-    my $time = 0;
-    my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
-    # see $upld->{mintestsize} and $upld->{maxchunksize} ?
-    my @size = ((250_000) x 10, (500_000) x 10, (1_000_000) x 10, (4_000_000) x 10);
-    $opt_q and splice @size, $opt_q;
-    foreach my $sz (@size) {
-	my $req = HTTP::Request->new (POST => $url);
-	$req->content (substr $data, 0, $sz);
-	my $t0 = [ gettimeofday ];
-	my $rsp = $ua->request ($req);
-	my $elapsed = tv_interval ($t0);
-	unless ($rsp->is_success) {
-	    warn "$url: ", $rsp->status_line, "\n";
-	    next;
+    if ($opt_u) {
+	$opt_v and print STDERR "Test upload   ";
+	my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
+	my $data = join "" => map { $data[int rand $#data] } 0 .. 4192;
+	$data = "content1=".($data x 1024); # Total length just over 4 Mb
+	my @mnmx = (999999999.999, 0.000);
+	my $size = 0;
+	my $time = 0;
+	my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
+	# see $upld->{mintestsize} and $upld->{maxchunksize} ?
+	my @size = ((250_000) x 10, (500_000) x 10, (1_000_000) x 10, (4_000_000) x 10);
+	$opt_q and splice @size, $opt_q;
+	foreach my $sz (@size) {
+	    my $req = HTTP::Request->new (POST => $url);
+	    $req->content (substr $data, 0, $sz);
+	    my $t0 = [ gettimeofday ];
+	    my $rsp = $ua->request ($req);
+	    my $elapsed = tv_interval ($t0);
+	    unless ($rsp->is_success) {
+		warn "$url: ", $rsp->status_line, "\n";
+		next;
+		}
+	    $size += $sz;
+	    $time += $elapsed;
+	    my $speed = 8 * $sz / $elapsed / $k / $k;
+	    $speed < $mnmx[0] and $mnmx[0] = $speed;
+	    $speed > $mnmx[1] and $mnmx[1] = $speed;
+	    $opt_v     and print  STDERR ".";
+	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
-	$size += $sz;
-	$time += $elapsed;
-	my $speed = 8 * $sz / $elapsed / $k / $k;
-	$speed < $mnmx[0] and $mnmx[0] = $speed;
-	$speed > $mnmx[1] and $mnmx[1] = $speed;
-	$opt_v     and print  STDERR ".";
-	$opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
+	$opt_q and print " " x (40 - $opt_q);
+	printf "Upload:   %8.3f Mbit/s\n", 8 * ($size / ($time || 1)) / $k / $k;
+	$opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+	    $size / 1024, $time, @mnmx;
 	}
-    printf "Upload:   %8.3f Mbit/s\n", 8 * ($size / ($time || 1)) / $k / $k;
-    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-	$size / 1024, $time, @mnmx;
     }
 
 ### ############################################################################
