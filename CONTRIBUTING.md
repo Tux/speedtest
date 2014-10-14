@@ -1,6 +1,7 @@
 # General
 
-I am always open to improvements and suggestions. Use issues or mail me
+I am always open to improvements and suggestions. Use issues at
+https://github.com/Tux/speedtest/issues
 
 # Style
 
