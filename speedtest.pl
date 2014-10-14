@@ -3,7 +3,7 @@
 # speedtest.pl - test network speed using speedtest.net
 # (m)'14 [2014-10-10] Copyright H.M.Brand 2014-2014
 
-use 5.12.0;
+use 5.10.0;
 use warnings;
 
 my $VERSION = "0.05";
