@@ -14,6 +14,7 @@ sub usage
     print <<"EOH";
 usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --geo          use Geo location (default true) for closest testserver
+       --all          include *all* servers
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
 
@@ -58,6 +59,7 @@ GetOptions (
     "V|version!"	=> sub { say $VERSION; exit 0; },
     "v|verbose:2"	=>    \$opt_v,
 
+      "all!"		=> \my $opt_a,
     "g|geo!"		=>    \$opt_g,
     "c|cc|country=s"	=>    \$opt_c,
     "1|one-line!"	=> \my $opt_1,
@@ -90,6 +92,8 @@ my $ua = LWP::UserAgent->new (
     parse_head   => 0,
     cookie_jar   => {},
     );
+
+binmode STDOUT, ":encoding(utf-8)";
 
 # Speedtest.net defines Mbit/s and kbit/s using 1000 as multiplier,
 # https://support.speedtest.net/entries/21057567-What-do-mbps-and-kbps-mean-
@@ -324,7 +328,7 @@ sub servers
 	$opt_v > 3 and warn "Removing servers $iid from server list\n";
 	delete @list{split m/\s*,\s*/ => $iid};
 	}
-    delete @list{grep { $list{$_}{cc} ne $opt_c } keys %list};
+    $opt_a or delete @list{grep { $list{$_}{cc} ne $opt_c } keys %list};
     %list or die "No servers in $opt_c found\n";
     for (values %list) {
 	$_->{dist} = distance ($client->{lat}, $client->{lon},
