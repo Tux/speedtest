@@ -19,8 +19,10 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
 
     -l --list         list test servers in chosen country
     -p --ping         list test servers in chosen country with latency
+       --url          show server url in list
 
     -s --server=nnn   use testserver with id nnn
+       --url=sss      use specific server url (do not scan)
        --download     test download speed (default true)
        --upload       test upload   speed (default true)
     -q --quick[=20]   do a quick test (only the fastest 20 tests)
@@ -35,6 +37,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
   $0 --ping --country=BE
   $0
   $0 -s 4358
+  $0 --url=http://speedtest.solcon.net/speedtest/upload.php
   $0 -q --no-download
   $0 -Q --no-upload
   
@@ -61,6 +64,7 @@ GetOptions (
 
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
+      "url:s"		=> \my $url,
 
     "T|try:5"		=>    \$opt_T,
     "s|server=i"	=> \my $server,
@@ -103,6 +107,11 @@ $opt_v > 3 and DDumper {
     up     => $upld,
     };
 
+if ($url) {
+    $opt_g = 0;
+    $url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
+    }
+
 if ($opt_g && !$opt_c) {	# Try GeoIP
     $opt_v > 5 and say STDERR "Testing Geo location";
     my $url = "http://www.geoiptool.com";
@@ -121,24 +130,48 @@ if ($opt_g && !$opt_c) {	# Try GeoIP
     }
 $opt_c ||= "IS";	# Iceland seems like a nice default :P
 
-$opt_v     and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
+$opt_v and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
 
 if ($list) {
     my %list = servers ();
-    printf "%5d: %-30.30s %-15.15s %7.2f km\n",
-	@{$list{$_}}{qw( id sponsor name dist )} for
-	    sort { $list{$a}{dist} <=> $list{$b}{dist} } keys %list;
+    my @fld = qw( id sponsor name dist );
+    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km\n";
+    if (defined $url) {
+	push @fld, "url0";
+	$fmt .= "       %s\n";
+	}
+    printf $fmt, @{$list{$_}}{@fld}
+	for sort { $list{$a}{dist} <=> $list{$b}{dist} } keys %list;
     exit 0;
     }
 
 if ($ping) {
-    printf "%5d: %-30.30s %-15.15s %7.2f km %9.3f ms\n",
-	@{$_}{qw( id sponsor name dist ping )} for servers_by_ping ();
+    my @fld = qw( id sponsor name dist ping );
+    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km %9.3f ms\n";
+    if (defined $url) {
+	push @fld, "url0";
+	$fmt .= "       %s\n";
+	}
+    printf $fmt, @{$_}{@fld} for servers_by_ping ();
     exit 0;
     }
 
 # default action is to run on fastest server
-my @hosts = grep { $_->{ping} < 10 } servers_by_ping ();
+my @srvrs = $url ? ({
+    cc      => "",
+    country => "",
+    dist    => "0.0",
+    host    => "",
+    id      => 0,
+    lat     => "0.0000",
+    lon     => "0.0000",
+    name    => "Local",
+    ping    => 5,
+    sponsor => "Unknown",
+    url     => $url,
+    url2    => $url,
+    }) : servers_by_ping ();
+my @hosts = grep { $_->{ping} < 10 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
 foreach my $host (@hosts) {
     $host->{sponsor} =~ s/\s+$//;
@@ -296,6 +329,7 @@ sub servers
     for (values %list) {
 	$_->{dist} = distance ($client->{lat}, $client->{lon},
 	    $_->{lat}, $_->{lon});
+	($_->{url0} = $_->{url}) =~ s{/speedtest/upload.*}{};
 	}
     return %list;
     } # servers
