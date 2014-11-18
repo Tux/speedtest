@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # speedtest.pl - test network speed using speedtest.net
-# (m)'14 [2014-10-10] Copyright H.M.Brand 2014-2014
+# (m)'14 [2014-11-18] Copyright H.M.Brand 2014-2014
 
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.05";
+my $VERSION = "0.06";
 
 sub usage
 {
@@ -15,6 +15,7 @@ sub usage
 usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --geo          use Geo location (default true) for closest testserver
     -c --country=IS   use ISO country code for closest test server
+    -1 --one-line     show summary in one line
 
     -l --list         list test servers in chosen country
     -p --ping         list test servers in chosen country with latency
@@ -56,6 +57,7 @@ GetOptions (
 
     "g|geo!"		=>    \$opt_g,
     "c|cc|country=s"	=>    \$opt_c,
+    "1|one-line!"	=> \my $opt_1,
 
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
@@ -145,6 +147,7 @@ foreach my $host (@hosts) {
     $opt_v > 3 and DDumper $host;
     (my $base = $host->{url}) =~ s{/[^/]+$}{};
 
+    my $dl = "-";
     if ($opt_d) {
 	$opt_v and print STDERR "Test download ";
 	# http://ookla.extraip.net/speedtest/random350x350.jpg
@@ -172,12 +175,14 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
+	$dl = sprintf "%8.3f Mbit/s", 8 * ($size / $time) / $k / $k;
 	$opt_q and print " " x (40 - $opt_q);
-	printf "Download: %8.3f Mbit/s\n", 8 * ($size / $time) / $k / $k;
+	$opt_v || !$opt_1 and print "Download: $dl\n";
 	$opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 	    $size / 1024, $time, @mnmx;
 	}
 
+    my $ul = "-";
     if ($opt_u) {
 	$opt_v and print STDERR "Test upload   ";
 	my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
@@ -188,7 +193,8 @@ foreach my $host (@hosts) {
 	my $time = 0;
 	my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
 	# see $upld->{mintestsize} and $upld->{maxchunksize} ?
-	my @size = ((250_000) x 10, (500_000) x 10, (1_000_000) x 10, (4_000_000) x 10);
+	my @size = map { $_ * 1000 }
+	    ((256) x 10, (512) x 10, (1024) x 10, (4192) x 10);
 	$opt_q and splice @size, $opt_q;
 	foreach my $sz (@size) {
 	    my $req = HTTP::Request->new (POST => $url);
@@ -208,11 +214,13 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
+	$ul = sprintf "%8.3f Mbit/s", 8 * ($size / ($time || 1)) / $k / $k;
 	$opt_q and print " " x (40 - $opt_q);
-	printf "Upload:   %8.3f Mbit/s\n", 8 * ($size / ($time || 1)) / $k / $k;
+	$opt_v || !$opt_1 and print "Upload:   $ul\n";
 	$opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 	    $size / 1024, $time, @mnmx;
 	}
+    $opt_1 and print "DL: $dl, UL: $ul\n";
     }
 
 ### ############################################################################
