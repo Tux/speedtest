@@ -116,7 +116,7 @@ if ($url) {
     $url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
     }
 
-if ($opt_s) {
+if ($server) {
     $opt_c = "";
     }
 else {
