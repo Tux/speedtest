@@ -116,26 +116,31 @@ if ($url) {
     $url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
     }
 
-if ($opt_g && !$opt_c) {	# Try GeoIP
-    $opt_v > 5 and say STDERR "Testing Geo location";
-    my $url = "http://www.geoiptool.com";
-    my $rsp = $ua->request (HTTP::Request->new (GET => $url));
-    if ($rsp->is_success) {
-	my $tree = HTML::TreeBuilder->new ();
-	if ($tree->parse_content ($rsp->content)) {
-	    foreach my $e ($tree->look_down (_tag => "div", class => "data-item")) {
-		$opt_v > 2 and say STDERR $e->as_text;
-		$e->as_text =~ m{Country code(?:\s*:)?\s*([A-Za-z]+)}i or next;
-		$opt_c = uc $1;
-		last;
+if ($opt_s) {
+    $opt_c = "";
+    }
+else {
+    if ($opt_c) {
+	$opt_c = uc $opt_c;
+	}
+    elsif ($opt_g) {	# Try GeoIP
+	$opt_v > 5 and say STDERR "Testing Geo location";
+	my $url = "http://www.geoiptool.com";
+	my $rsp = $ua->request (HTTP::Request->new (GET => $url));
+	if ($rsp->is_success) {
+	    my $tree = HTML::TreeBuilder->new ();
+	    if ($tree->parse_content ($rsp->content)) {
+		foreach my $e ($tree->look_down (_tag => "div", class => "data-item")) {
+		    $opt_v > 2 and say STDERR $e->as_text;
+		    $e->as_text =~ m{Country code(?:\s*:)?\s*([A-Za-z]+)}i or next;
+		    $opt_c = uc $1;
+		    last;
+		    }
 		}
 	    }
 	}
+    $opt_c ||= "IS";	# Iceland seems like a nice default :P
     }
-else {
-    $opt_c = uc $opt_c;
-    }
-$opt_c ||= "IS";	# Iceland seems like a nice default :P
 
 $opt_v and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
 
