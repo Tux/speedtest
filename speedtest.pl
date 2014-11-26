@@ -118,6 +118,7 @@ if ($url) {
 
 if ($server) {
     $opt_c = "";
+    $opt_a = 1;
     }
 else {
     if ($opt_c) {
