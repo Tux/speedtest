@@ -6,7 +6,7 @@
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.06";
+my $VERSION = "0.07";
 
 sub usage
 {
@@ -38,7 +38,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
   $0 --ping --country=BE
   $0
   $0 -s 4358
-  $0 --url=http://speedtest.solcon.net/speedtest/upload.php
+  $0 --url=http://ookla.extraip.net
   $0 -q --no-download
   $0 -Q --no-upload
   
@@ -131,6 +131,9 @@ if ($opt_g && !$opt_c) {	# Try GeoIP
 		}
 	    }
 	}
+    }
+else {
+    $opt_c = uc $opt_c;
     }
 $opt_c ||= "IS";	# Iceland seems like a nice default :P
 
