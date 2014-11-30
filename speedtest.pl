@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # speedtest.pl - test network speed using speedtest.net
-# (m)'14 [2014-11-18] Copyright H.M.Brand 2014-2014
+# (m)'14 [2014-11-30] Copyright H.M.Brand 2014-2014
 
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.07";
+my $VERSION = "0.08";
 
 sub usage
 {
@@ -160,7 +160,7 @@ if ($list) {
 
 if ($ping) {
     my @fld = qw( id sponsor name dist ping );
-    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km %9.3f ms\n";
+    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km %7.0f ms\n";
     if (defined $url) {
 	push @fld, "url0";
 	$fmt .= "       %s\n";
@@ -184,11 +184,11 @@ my @srvrs = $url ? ({
     url     => $url,
     url2    => $url,
     }) : servers_by_ping ();
-my @hosts = grep { $_->{ping} < 10 } @srvrs;
+my @hosts = grep { $_->{ping} < 1000 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
 foreach my $host (@hosts) {
     $host->{sponsor} =~ s/\s+$//;
-    $opt_v and printf STDERR "Using %4d: %6.2f km %6.3f ms %s\n",
+    $opt_v and printf STDERR "Using %4d: %6.2f km %7.0f ms %s\n",
 	$host->{id}, $host->{dist}, $host->{ping}, $host->{sponsor};
     $opt_v > 3 and DDumper $host;
     (my $base = $host->{url}) =~ s{/[^/]+$}{};
@@ -350,21 +350,35 @@ sub servers
 sub servers_by_ping
 {
     my %list = servers;
-    $opt_v > 1 and say STDERR "Finding fastest host ...";
+    $opt_v > 1 and say STDERR "Finding fastest host out of @{[scalar keys %list]} hosts for $opt_c ...";
+    my $pa = LWP::UserAgent->new (
+	max_redirect => 2,
+	agent        => "Opera/25.00 opera 25",
+	parse_head   => 0,
+	cookie_jar   => {},
+	timeout      => 15,
+	);
     foreach my $h (values %list) {
 	my $t = 0;
 	if ($server and $h->{id} != $server) {
-	    $h->{ping} = 4000;
+	    $h->{ping} = 40000;
 	    next;
 	    }
+	$opt_v > 5 and printf STDERR "? %4d %-20.20s %s\n",
+	    $h->{id}, $h->{sponsor}, $h->{url};
 	my $req = HTTP::Request->new (GET => "$h->{url}/latency.txt");
 	for (0 .. 3) {
 	    my $t0 = [ gettimeofday ];
-	    my $rsp = $ua->request ($req);
+	    my $rsp = $pa->request ($req);
 	    my $elapsed = tv_interval ($t0);
+	    $opt_v > 8 and printf STDERR "%4d %9.2f\n", $_, $elapsed;
+	    if ($elapsed >= 15) {
+		$t = 40;
+		last;
+		}
 	    $t += ($rsp->is_success ? $elapsed : 1000);
 	    }
-	$h->{ping} = $t;
+	$h->{ping} = $t * 1000; # report in ms
 	}
     return sort { $a->{ping} <=> $b->{ping}
 	       || $a->{dist} <=> $b->{dist} } values %list;
