@@ -14,12 +14,12 @@ sub usage
     print <<"EOH";
 usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --geo          use Geo location (default true) for closest testserver
-       --all          include *all* servers
+       --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
 
-    -l --list         list test servers in chosen country
-    -p --ping         list test servers in chosen country with latency
+    -l --list         list test servers in chosen country sorted by distance
+    -p --ping         list test servers in chosen country sorted by latency
        --url          show server url in list
 
     -s --server=nnn   use testserver with id nnn
@@ -31,6 +31,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -T --try[=5]      try all tests on th n fastest servers
 
     -v --verbose[=1]  set verbosity
+       --simple       alias for -v0
     -V --version      show version and exit
     -? --help         show this help
 
@@ -58,6 +59,7 @@ GetOptions (
     "help|h|?"		=> sub { usage (0); },
     "V|version!"	=> sub { say $VERSION; exit 0; },
     "v|verbose:2"	=>    \$opt_v,
+      "simple!"		=> sub { $opt_v = 0; },
 
       "all!"		=> \my $opt_a,
     "g|geo!"		=>    \$opt_g,
@@ -222,7 +224,7 @@ foreach my $host (@hosts) {
 	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
 	$dl = sprintf "%8.3f Mbit/s", 8 * ($size / $time) / $k / $k;
-	$opt_q and print " " x (40 - $opt_q);
+	$opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	$opt_v || !$opt_1 and print "Download: $dl\n";
 	$opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 	    $size / 1024, $time, @mnmx;
@@ -261,7 +263,7 @@ foreach my $host (@hosts) {
 	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
 	$ul = sprintf "%8.3f Mbit/s", 8 * ($size / ($time || 1)) / $k / $k;
-	$opt_q and print " " x (40 - $opt_q);
+	$opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	$opt_v || !$opt_1 and print "Upload:   $ul\n";
 	$opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 	    $size / 1024, $time, @mnmx;
