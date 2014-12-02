@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest.pl - test network speed using speedtest.net
-# (m)'14 [2014-11-30] Copyright H.M.Brand 2014-2014
+# (m)'14 [2014-12-02] Copyright H.M.Brand 2014-2014
 
 use 5.10.0;
 use warnings;
@@ -118,10 +118,13 @@ if ($url || $mini) {
     $opt_g   = 0;
     $opt_c   = "";
     $server  = "";
+    my $ping    = 0.05;
     my $name    = "";
     my $sponsor = "CLI";
     if ($mini) {
+	my $t0  = [ gettimeofday ];
 	my $rsp = $ua->request (HTTP::Request->new (GET => $mini));
+	$ping   = tv_interval ($t0);
 	$rsp->is_success or die $rsp->status_line . "\n";
 	my $tree = HTML::TreeBuilder->new ();
 	$tree->parse_content ($rsp->content) or die "Cannot parse\n";
@@ -143,6 +146,10 @@ if ($url || $mini) {
     else {
 	$name = "Local";
 	$url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
+	my $t0  = [ gettimeofday ];
+	my $rsp = $ua->request (HTTP::Request->new (GET => $url));
+	$ping   = tv_interval ($t0);
+	$rsp->is_success or die $rsp->status_line . "\n";
 	}
     (my $host = $url) =~ s{^\w+://([^/]+)(?:/.*)?}{$1};
     $url = {
@@ -154,7 +161,7 @@ if ($url || $mini) {
 	lat     => "0.0000",
 	lon     => "0.0000",
 	name    => $name,
-	ping    => 5,
+	ping    => $ping * 1000,
 	sponsor => $sponsor,
 	url     => $url,
 	url2    => $url,
