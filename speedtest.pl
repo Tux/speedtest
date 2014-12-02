@@ -23,7 +23,8 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --url          show server url in list
 
     -s --server=nnn   use testserver with id nnn
-       --url=sss      use specific server url (do not scan)
+       --url=sss      use specific server url (do not scan) ext php
+       --mini=sss     use specific server url (do not scan) ext from sss
        --download     test download speed (default true)
        --upload       test upload   speed (default true)
     -q --quick[=20]   do a quick test (only the fastest 20 tests)
@@ -113,9 +114,51 @@ $opt_v > 3 and DDumper {
     up     => $upld,
     };
 
-if ($url) {
-    $opt_g = 0;
-    $url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
+if ($url || $mini) {
+    $opt_g   = 0;
+    $opt_c   = "";
+    $server  = "";
+    my $name    = "";
+    my $sponsor = "CLI";
+    if ($mini) {
+	my $rsp = $ua->request (HTTP::Request->new (GET => $mini));
+	$rsp->is_success or die $rsp->status_line . "\n";
+	my $tree = HTML::TreeBuilder->new ();
+	$tree->parse_content ($rsp->content) or die "Cannot parse\n";
+	my $ext = "";
+	for ($tree->look_down (_tag => "script")) {
+	    my $c = ($_->content)[0] or next;
+	    ref $c eq "ARRAY" && $c->[0] &&
+		$c->[0] =~ m/\b (?: upload_? | config ) Extension
+			     \s*: \s* "? ([^"\s]+) /xi or next;
+	    $ext = $1;
+	    last;
+	    }
+	$ext or die "No ext found\n";
+	($url = $mini) =~ s{/*$}{/speedtest/upload.$ext};
+	$sponsor = $_->as_text for $tree->look_down (_tag => "title");
+	$name  ||= $_->as_text for $tree->look_down (_tag => "h1");
+	$name  ||= "Speedtest mini";
+	}
+    else {
+	$name = "Local";
+	$url =~ m{/\w+\.\w+$} or $url =~ s{/?$}{/speedtest/upload.php};
+	}
+    (my $host = $url) =~ s{^\w+://([^/]+)(?:/.*)?}{$1};
+    $url = {
+	cc      => "",
+	country => "",
+	dist    => "0.0",
+	host    => $host,
+	id      => 0,
+	lat     => "0.0000",
+	lon     => "0.0000",
+	name    => $name,
+	ping    => 5,
+	sponsor => $sponsor,
+	url     => $url,
+	url2    => $url,
+	};
     }
 
 if ($server) {
@@ -172,20 +215,7 @@ if ($ping) {
     }
 
 # default action is to run on fastest server
-my @srvrs = $url ? ({
-    cc      => "",
-    country => "",
-    dist    => "0.0",
-    host    => "",
-    id      => 0,
-    lat     => "0.0000",
-    lon     => "0.0000",
-    name    => "Local",
-    ping    => 5,
-    sponsor => "Unknown",
-    url     => $url,
-    url2    => $url,
-    }) : servers_by_ping ();
+my @srvrs = $url ? ($url) : servers_by_ping ();
 my @hosts = grep { $_->{ping} < 1000 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
 foreach my $host (@hosts) {
@@ -345,6 +375,7 @@ sub servers
 	$_->{dist} = distance ($client->{lat}, $client->{lon},
 	    $_->{lat}, $_->{lon});
 	($_->{url0} = $_->{url}) =~ s{/speedtest/upload.*}{};
+	$opt_v > 7 and DDumper $_;
 	}
     return %list;
     } # servers
