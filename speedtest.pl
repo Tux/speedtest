@@ -6,7 +6,7 @@
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.08";
+my $VERSION = "0.09";
 
 sub usage
 {
@@ -78,7 +78,7 @@ GetOptions (
     "q|quick|fast:20"	=>    \$opt_q,
     "Q|realquick:10"	=>    \$opt_q,
 
-    "m|mini=s"		=> \my $mini,	# NYI
+    "m|mini=s"		=> \my $mini,
       "source=s"	=> \my $source,	# NYI
     ) or usage (1);
 
