@@ -238,6 +238,7 @@ foreach my $host (@hosts) {
 	    my @ad = gethostbyname ($h);
 	    $s = join " " => "", map { inet_ntoa ($_) } @ad[4 .. $#ad];
 	    }
+	@hosts > 1 and print STDERR "\n";
 	printf STDERR "Using %4d: %6.2f km %7.0f ms%s %s\n",
 	    $host->{id}, $host->{dist}, $host->{ping}, $s, $host->{sponsor};
 	}
