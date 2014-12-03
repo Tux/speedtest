@@ -33,6 +33,7 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
 
     -v --verbose[=1]  set verbosity
        --simple       alias for -v0
+       --ip           show IP for server
     -V --version      show version and exit
     -? --help         show this help
 
@@ -70,6 +71,7 @@ GetOptions (
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
       "url:s"		=> \my $url,
+      "ip!"		=> \my $ip,
 
     "T|try:5"		=>    \$opt_T,
     "s|server=i"	=> \my $server,
@@ -88,6 +90,7 @@ use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
 use Math::Trig;
 use Data::Peek;
+use Socket qw( inet_ntoa );
 
 my $ua = LWP::UserAgent->new (
     max_redirect => 2,
@@ -227,8 +230,16 @@ my @hosts = grep { $_->{ping} < 1000 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
 foreach my $host (@hosts) {
     $host->{sponsor} =~ s/\s+$//;
-    $opt_v and printf STDERR "Using %4d: %6.2f km %7.0f ms %s\n",
-	$host->{id}, $host->{dist}, $host->{ping}, $host->{sponsor};
+    if ($opt_v) {
+	my $s = "";
+	if ($ip) {
+	    (my $h =  $host->{url}) =~ s{^\w+://([^/]+)(?:/.*)?$}{$1};
+	    my @ad = gethostbyname ($h);
+	    $s = join " " => "", map { inet_ntoa ($_) } @ad[4 .. $#ad];
+	    }
+	printf STDERR "Using %4d: %6.2f km %7.0f ms%s %s\n",
+	    $host->{id}, $host->{dist}, $host->{ping}, $s, $host->{sponsor};
+	}
     $opt_v > 3 and DDumper $host;
     (my $base = $host->{url}) =~ s{/[^/]+$}{};
 
