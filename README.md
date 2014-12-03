@@ -31,11 +31,7 @@ modules to be available (from CPAN or from CORE):
 - Math::Trig           CORE module since perl-5.004
 - Time::HiRes          CORE module since perl-5.7.3
 - XML::Simple
-
-It will use if installed (for debugging)
-
 - Data::Peek
-
 
 The script runs on every system that runs perl. I tested on Linux,
 HP-UX, AIX and Windows 7.
