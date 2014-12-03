@@ -11,8 +11,9 @@ my $VERSION = "0.09";
 sub usage
 {
     my $err = shift and select STDERR;
+    (my $p = $0) =~ s{.*/}{};
     print <<"EOH";
-usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
+usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --geo          use Geo location (default true) for closest testserver
        --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
@@ -37,13 +38,13 @@ usage: $0 [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -V --version      show version and exit
     -? --help         show this help
 
-  $0 --list
-  $0 --ping --country=BE
-  $0
-  $0 -s 4358
-  $0 --url=http://ookla.extraip.net
-  $0 -q --no-download
-  $0 -Q --no-upload
+  $p --list
+  $p --ping --country=BE
+  $p
+  $p -s 4358
+  $p --url=http://ookla.extraip.net
+  $p -q --no-download
+  $p -Q --no-upload
   
 EOH
     exit $err;
