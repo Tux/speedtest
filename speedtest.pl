@@ -28,9 +28,9 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --mini=sss     use specific server url (do not scan) ext from sss
        --download     test download speed (default true)
        --upload       test upload   speed (default true)
-    -q --quick[=20]   do a quick test (only the fastest 20 tests)
+    -q --quick[=20]   do a      quick test (only the fastest 20 tests)
     -Q --realquick    do a real quick test (only the fastest 10 tests)
-    -T --try[=5]      try all tests on th n fastest servers
+    -T --try[=5]      try all tests on the n fastest servers
 
     -v --verbose[=1]  set verbosity
        --simple       alias for -v0
