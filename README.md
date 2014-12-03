@@ -36,6 +36,10 @@ modules to be available (from CPAN or from CORE):
 The script runs on every system that runs perl. I tested on Linux,
 HP-UX, AIX and Windows 7.
 
+Debian wheezy will run with just two additional packages:
+
+ # apt-get install libxml-simple-perl libdata-peek-perl
+
 ### Disclaimer
 
 Due to language implementation, it may report speeds that are not
