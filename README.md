@@ -40,6 +40,10 @@ Debian wheezy will run with just two additional packages:
 
  # apt-get install libxml-simple-perl libdata-peek-perl
 
+### Contributing
+
+See CONTRIBUTING.md which states where and how you can contribute
+
 ### Disclaimer
 
 Due to language implementation, it may report speeds that are not
