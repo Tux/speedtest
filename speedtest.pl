@@ -6,7 +6,7 @@
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.09";
+my $VERSION = "0.10";
 
 sub usage
 {
@@ -95,7 +95,7 @@ use Socket qw( inet_ntoa );
 
 my $ua = LWP::UserAgent->new (
     max_redirect => 2,
-    agent        => "Opera/25.00 opera 25",
+    agent        => "speedtest/$VERSION",
     parse_head   => 0,
     cookie_jar   => {},
     );
