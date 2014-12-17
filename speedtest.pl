@@ -24,6 +24,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --url          show server url in list
 
     -s --server=nnn   use testserver with id nnn
+    -t --timeout=nnn  set server timeout to nnn seconds
        --url=sss      use specific server url (do not scan) ext php
        --mini=sss     use specific server url (do not scan) ext from sss
        --download     test download speed (default true)
@@ -76,6 +77,7 @@ GetOptions (
 
     "T|try:5"		=>    \$opt_T,
     "s|server=i"	=> \my $server,
+    "t|timeout=i"	=> \my $timeout,
     "d|download!"	=>    \$opt_d,
     "u|upload!"		=>    \$opt_u,
     "q|quick|fast:20"	=>    \$opt_q,
@@ -93,10 +95,12 @@ use Math::Trig;
 use Data::Peek;
 use Socket qw( inet_ntoa );
 
+$timeout ||= 10;
 my $ua = LWP::UserAgent->new (
     max_redirect => 2,
     agent        => "speedtest/$VERSION",
     parse_head   => 0,
+    timeout      => $timeout,
     cookie_jar   => {},
     );
 
@@ -409,7 +413,7 @@ sub servers_by_ping
 	agent        => "Opera/25.00 opera 25",
 	parse_head   => 0,
 	cookie_jar   => {},
-	timeout      => 15,
+	timeout      => $timeout,
 	);
     foreach my $h (values %list) {
 	my $t = 0;
