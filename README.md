@@ -48,7 +48,8 @@ See CONTRIBUTING.md which states where and how you can contribute
 
 Due to language implementation, it may report speeds that are not
 consistent with the speeds reported by the web interface or other
-speed-test tools.
+speed-test tools.  Likewise for reported latencies, which are not
+to be compared to those reported by tools like ping.
 
 Share and enjoy
 
