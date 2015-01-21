@@ -212,6 +212,18 @@ else {
 		    }
 		}
 	    }
+	unless ($opt_c) {	# GEO-Ip failed :/
+	    my $keep_a = $opt_a;
+	    $opt_a = 1;
+	    my %list = servers ();
+	    my $nearest = { dist => 9999999 };
+	    foreach my $id (keys %list) {
+		$list{$id}{dist} < $nearest->{dist} and $nearest = $list{$id};
+		}
+	    $opt_v > 3 and ddumper { nearest => $nearest };
+	    $opt_c = $nearest->{cc};
+	    $opt_a = $keep_a;
+	    }
 	}
     $opt_c ||= "IS";	# Iceland seems like a nice default :P
     }
