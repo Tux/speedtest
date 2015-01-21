@@ -92,8 +92,21 @@ use XML::Simple;
 use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
 use Math::Trig;
-use Data::Peek;
 use Socket qw( inet_ntoa );
+
+# Debugging. Prefer Data::Peek over Data::Dumper if available
+{   use Data::Dumper;
+    my $dp = 0;
+    eval q{
+	use Data::Peek;
+	$dp = 1;
+	};
+    sub ddumper
+    {
+	$dp ? DDumper (@_)
+	    : print STDERR Dumper (@_);
+	} # ddumper
+    }
 
 $timeout ||= 10;
 my $ua = LWP::UserAgent->new (
@@ -115,7 +128,7 @@ my $client = $config->{"client"}   or die "Config saw no client\n";
 my $times  = $config->{"times"}    or die "Config saw no times\n";
 my $downld = $config->{"download"} or die "Config saw no download\n";
 my $upld   = $config->{"upload"}   or die "Config saw no upload\n";
-$opt_v > 3 and DDumper {
+$opt_v > 3 and ddumper {
     client => $client,
     times  => $times,
     down   => $downld,
@@ -246,7 +259,7 @@ foreach my $host (@hosts) {
 	printf STDERR "Using %4d: %6.2f km %7.0f ms%s %s\n",
 	    $host->{id}, $host->{dist}, $host->{ping}, $s, $host->{sponsor};
 	}
-    $opt_v > 3 and DDumper $host;
+    $opt_v > 3 and ddumper $host;
     (my $base = $host->{url}) =~ s{/[^/]+$}{};
 
     my $dl = "-";
@@ -338,7 +351,7 @@ sub get_config
         keyattr         => [ ],
         suppressempty   => "",
         );
-    $opt_v > 5 and DDumper $xml->{settings};
+    $opt_v > 5 and ddumper $xml->{settings};
     return $xml->{settings};
     } # get_config
 
@@ -399,7 +412,7 @@ sub servers
 	$_->{dist} = distance ($client->{lat}, $client->{lon},
 	    $_->{lat}, $_->{lon});
 	($_->{url0} = $_->{url}) =~ s{/speedtest/upload.*}{};
-	$opt_v > 7 and DDumper $_;
+	$opt_v > 7 and ddumper $_;
 	}
     return %list;
     } # servers
