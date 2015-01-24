@@ -11,13 +11,14 @@ without the overhead of flash or java and the need of a browser.
 
 The tool is there to give you a quick indication of the achievable
 throughput of your current network. That can drop dramatically if
-you are behind (several) firewalls or badly configure networks (or
+you are behind (several) firewalls or badly configured networks (or
 network parts like switches, hubs and routers).
 
 It was inspired by the speedtest-cli project written in python, but
-I neither like python, nor did I like the default behjavior of
-that script, nor do I think it made the right decisions in choosing
-the fastest server or the list of servers to start with.
+I neither like python, nor did I like the default behjavior of that
+script. I also think it does not take the right decisions in choosing
+the server based on distance instead of speed. That *does* matter if
+one has fiber lines. I prefer speed over distance.
 
 #### Requirements
 
@@ -31,7 +32,8 @@ modules to be available (from CPAN or from CORE):
 - Math::Trig           CORE module since perl-5.004
 - Time::HiRes          CORE module since perl-5.7.3
 - XML::Simple
-- Data::Peek
+- Data::Peek           optional but recommended. does fallback
+                       to Data::Dumper if not available
 
 The script runs on every system that runs perl. I tested on Linux,
 HP-UX, AIX and Windows 7.
@@ -43,6 +45,12 @@ Debian wheezy will run with just two additional packages:
 ### Contributing
 
 See CONTRIBUTING.md which states where and how you can contribute
+
+### TODO
+
+ - Make an installer
+ - Make a manual
+ - Enable alternative XML parsers
 
 ### Disclaimer
 
