@@ -1,0 +1,8 @@
+ChangeLog
+speedtest
+Makefile.PL
+MANIFEST
+CONTRIBUTING.md
+LICENSE
+README.md
+t/00_pod.t

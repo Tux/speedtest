@@ -1,0 +1,10 @@
+blib
+cover_db
+Makefile
+META.yml
+MYMETA.yml
+MYMETA.json
+pm_to_blib
+*.tar.gz
+*.tgz
+*.old
