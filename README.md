@@ -49,7 +49,6 @@ See CONTRIBUTING.md which states where and how you can contribute
 ### TODO
 
  - Make an installer
- - Make a manual
  - Enable alternative XML parsers
 
 ### Disclaimer
