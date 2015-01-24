@@ -18,7 +18,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
-    -C --csv          output in CSV (stamp,id,ping,tests,direction,speed)
+    -C --csv          output in CSV (stamp,id,ping,tests,direction,speed,min,max)
 
     -l --list         list test servers in chosen country sorted by distance
     -p --ping         list test servers in chosen country sorted by latency
@@ -311,10 +311,10 @@ foreach my $host (@hosts) {
 	if ($opt_C) {
 	    my @d = localtime;
 	    # stamp,id,ping,tests,direction,speed)
-	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,D,%.2f\r\n},
+	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,D,%.2f,%.2f,%.2f\r\n},
 		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
 		$host->{id}, $host->{ping},
-		scalar @url, $dl;
+		scalar @url, $dl, @mnmx;
 	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
@@ -360,10 +360,10 @@ foreach my $host (@hosts) {
 	if ($opt_C) {
 	    my @d = localtime;
 	    # stamp,id,ping,tests,direction,speed)
-	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,U,%.2f\r\n},
+	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,U,%.2f,%.2f,%.2f\r\n},
 		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
 		$host->{id}, $host->{ping},
-		scalar @size, $ul;
+		scalar @size, $ul, @mnmx;
 	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
