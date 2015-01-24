@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # speedtest.pl - test network speed using speedtest.net
-# (m)'14 [2014-12-02] Copyright H.M.Brand 2014-2015
+# (m)'15 [2015-01-21] Copyright H.M.Brand 2014-2015
 
 use 5.10.0;
 use warnings;
 
-my $VERSION = "0.10";
+my $VERSION = "0.12";
 
 sub usage
 {
@@ -18,6 +18,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
+    -C --csv          output in CSV (stamp,id,ping,tests,direction,speed)
 
     -l --list         list test servers in chosen country sorted by distance
     -p --ping         list test servers in chosen country sorted by latency
@@ -51,7 +52,7 @@ EOH
     exit $err;
     } # usage
 
-use Getopt::Long qw(:config bundling);
+use Getopt::Long qw(:config bundling noignorecase);
 my $opt_c = "";
 my $opt_v = 1;
 my $opt_d = 1;
@@ -69,6 +70,7 @@ GetOptions (
     "g|geo!"		=>    \$opt_g,
     "c|cc|country=s"	=>    \$opt_c,
     "1|one-line!"	=> \my $opt_1,
+    "C|csv!"		=> \my $opt_C,
 
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
@@ -86,6 +88,8 @@ GetOptions (
     "m|mini=s"		=> \my $mini,
       "source=s"	=> \my $source,	# NYI
     ) or usage (1);
+
+$opt_C and $opt_v = 0;
 
 use LWP::UserAgent;
 use XML::Simple;
@@ -213,6 +217,7 @@ else {
 		}
 	    }
 	unless ($opt_c) {	# GEO-Ip failed :/
+	    $opt_v and warn "GEO-IP failed. Getting country code based on nearest server\n";
 	    my $keep_a = $opt_a;
 	    $opt_a = 1;
 	    my %list = servers ();
@@ -302,11 +307,21 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
-	$dl = sprintf "%8.3f Mbit/s", 8 * ($size / $time) / $k / $k;
-	$opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	$opt_v || !$opt_1 and print "Download: $dl\n";
-	$opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-	    $size / 1024, $time, @mnmx;
+	$dl = sprintf "%8.3f", 8 * ($size / $time) / $k / $k;
+	if ($opt_C) {
+	    my @d = localtime;
+	    # stamp,id,ping,tests,direction,speed)
+	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,D,%.2f\r\n},
+		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
+		$host->{id}, $host->{ping},
+		scalar @url, $dl;
+	    }
+	else {
+	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
+	    $opt_v || !$opt_1 and print "Download: $dl Mbit/s\n";
+	    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+		$size / 1024, $time, @mnmx;
+	    }
 	}
 
     my $ul = "-";
@@ -341,13 +356,23 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
-	$ul = sprintf "%8.3f Mbit/s", 8 * ($size / ($time || 1)) / $k / $k;
-	$opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	$opt_v || !$opt_1 and print "Upload:   $ul\n";
-	$opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-	    $size / 1024, $time, @mnmx;
+	$ul = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k;
+	if ($opt_C) {
+	    my @d = localtime;
+	    # stamp,id,ping,tests,direction,speed)
+	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,U,%.2f\r\n},
+		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
+		$host->{id}, $host->{ping},
+		scalar @size, $ul;
+	    }
+	else {
+	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
+	    $opt_v || !$opt_1 and print "Upload:   $ul Mbit/s\n";
+	    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
+		$size / 1024, $time, @mnmx;
+	    }
 	}
-    $opt_1 and print "DL: $dl, UL: $ul\n";
+    $opt_1 and print "DL: $dl Mbit/s, UL: $ul Mbit/s\n";
     }
 
 ### ############################################################################
