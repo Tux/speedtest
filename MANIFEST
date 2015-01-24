@@ -5,4 +5,5 @@ MANIFEST
 CONTRIBUTING.md
 LICENSE
 README.md
+lib/App/SpeedTest.pm
 t/00_pod.t

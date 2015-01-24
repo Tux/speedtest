@@ -5,7 +5,7 @@ https://github.com/Tux/speedtest/issues
 
 # Style
 
-I will never accept pull request that do not strickly conform to my
+I will never accept pull request that do not strictly conform to my
 style, however you might hate it. You can read the reasoning behind
 my preferences here: http://tux.nl/style.html
 

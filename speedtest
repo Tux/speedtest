@@ -4,6 +4,7 @@
 # (m)'15 [2015-01-21] Copyright H.M.Brand 2014-2015
 
 use 5.10.0;
+use strict;
 use warnings;
 
 our $VERSION = "0.12";
@@ -501,7 +502,7 @@ __END__
 
 =head1 NAME
 
-App::SpeedTest - Commandline interface to speedtest.nt
+App::SpeedTest - Command-line interface to speedtest.net
 
 =head1 SYNOPSIS
 
@@ -533,11 +534,11 @@ network parts like switches, hubs and routers).
 
 It was inspired by L<speedtest-cli|https://github.com/sivel/speedtest-cli>,
 a project written in python. But I neither like python, nor did I like the
-default behjavior of that script. I also think it does not take the right
+default behavior of that script. I also think it does not take the right
 decisions in choosing the server based on distance instead of speed. That
 B<does> matter if one has fiber lines. I prefer speed over distance.
 
-=head1 Commandline Arguments
+=head1 Command-line Arguments
 
 =over 2
 
@@ -613,7 +614,7 @@ Generate a very short report easy to paste in e.g. IRC channels.
 X<-C>
 X<--csv>
 
-Generate the measurements in CSV format. The format cann be collected in
+Generate the measurements in CSV format. The data can be collected in
 a file (by a cron job) to be able to follow internet speed over time.
 
 The reported fields are
@@ -700,7 +701,7 @@ to do all required tests.
 X<-s>
 X<--server>
 
-Specify the ID of the server to test agains. This ID can be taken from the
+Specify the ID of the server to test against. This ID can be taken from the
 output of L</--list> or L</--ping>. Using this option prevents fetching the
 complete server list and calculation of distances. It also enables you to
 always test against the same server.
@@ -738,7 +739,7 @@ X<--fast>
 Don't run the full test. The default test runs 40 tests, sorting on
 increasing test size (and thus test duration). Long(er) tests may take
 too long on slow connections without adding value. The default value
-for C<-q> is 20 but any value between 1 and 40 is allowd.
+for C<-q> is 20 but any value between 1 and 40 is allowed.
 
 =item -Q[#] | --realquick[=#]
 X<-Q>
@@ -747,7 +748,7 @@ X<--realquick>
 Don't run the full test. The default test runs 40 tests, sorting on
 increasing test size (and thus test duration). Long(er) tests may take
 too long on slow connections without adding value. The default value
-for C<-Q> is 10 but any value between 1 and 40 is allowd.
+for C<-Q> is 10 but any value between 1 and 40 is allowed.
 
 =item -mXX | --mini=XX
 X<-m>
@@ -757,13 +758,13 @@ Run the speedtest on a speedtest mini server.
 
 =item --source=XX
 
-NYI - mentioned for speedtest-cli compatability
+NYI - mentioned for speedtest-cli compatibility
 
 =back
 
 =head1 EXAMPLES
 
-See L</SYNOPSIS> and L</Commandline arguments>
+See L</SYNOPSIS> and L</Command-line arguments>
 
 =head1 DIAGNOSTICS
 
@@ -794,7 +795,7 @@ startup. All other API's are more complex.
 =head1 PORTABILITY
 
 As Perl has been ported to a plethora of operating systems, this CLI
-will work fine on all systems that fullfill the requirement as listed
+will work fine on all systems that fulfill the requirement as listed
 in Makefile.PL (or the various META files).
 
 The script has been tested on Linux, HP-UX, AIX, and Windows 7.
@@ -818,7 +819,7 @@ L<github issues|https://github.com/Tux/speedtest/issues>.
 
 =head2 Style
 
-I will never accept pull request that do not strickly conform to my
+I will never accept pull request that do not strictly conform to my
 style, however you might hate it. You can read the reasoning behind
 my preferences L<here|http://tux.nl/style.html>.
 

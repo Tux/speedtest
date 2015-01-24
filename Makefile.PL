@@ -49,6 +49,7 @@ sub postamble
 	'',
 	'fixmeta:	distmeta',
 	'	perl sandbox/genMETA.pl',
+	'	perl sandbox/make-pm',
 	'',
 	'tgzdist:	checkmeta fixmeta $(DISTVNAME).tar.gz distcheck',
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',

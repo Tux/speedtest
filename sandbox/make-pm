@@ -1,0 +1,35 @@
+#!/pro/bin/perl
+
+use 5.18.2;
+use warnings;
+
+open my $fh, "<", "speedtest" or die;
+my ($v) = grep m/\bVERSION\s*=/ => <$fh>;
+close $fh;
+
+my @pm;
+while (<DATA>) {
+    push @pm, m/^V/ ? $v : $_;
+    }
+
+open    $fh, "<", "speedtest";
+while (<$fh>) {
+    /__END__/ .. -1 and push @pm, $_;
+    }
+close $fh;
+
+open $fh, ">", "lib/App/SpeedTest.pm" or die;
+print $fh @pm;
+close $fh;
+
+__END__
+#!/usr/bin/perl
+
+package App::SpeedTest;
+
+use strict;
+use warnings;
+
+our $VERSION = "0.12";
+
+1;

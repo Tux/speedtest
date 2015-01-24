@@ -5,6 +5,7 @@ META.yml
 MYMETA.yml
 MYMETA.json
 pm_to_blib
+lib/App/SpeedTest.pm
 *.tar.gz
 *.tgz
 *.old
