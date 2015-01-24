@@ -1,0 +1,464 @@
+{   settings         => {
+        client           => {
+            ip               => '80.100.130.165',
+            isp              => 'XS4ALL Internet BV',
+            ispdlavg         => 11440,
+            isprating        => '3.8',
+            ispulavg         => 4627,
+            lat              => '52.0568',
+            loggedin         => 0,
+            lon              => '5.4663',
+            rating           => 0
+            },
+        conditions       => {
+            cond             => [
+                {   download         => '+100000',
+                    name             => 'tcpulthreads',
+                    value            => 8
+                    },
+                {   download         => '+10000',
+                    name             => 'tcpulthreads',
+                    value            => 4
+                    },
+                {   name             => 'tcpulthreads',
+                    value            => 2
+                    }
+                ]
+            },
+        customer         => 'speedtest',
+        download         => {
+            initialtest      => '250K',
+            mintestsize      => '250K',
+            testlength       => 10,
+            threadsperurl    => 4
+            },
+        endtest          => {
+            endtest          => 'standard-wide-new-1button'
+            },
+        interface        => {
+            colortcp         => 0,
+            template         => 'mbps'
+            },
+        latency          => {
+            testlength       => 10,
+            timeout          => 20,
+            waittime         => 50
+            },
+        licensekey       => '9c1687ea58e5e770-1df5b7cd427370f7-4b62a84526ea1f56',
+        odometer         => {
+            rate             => 23,
+            start            => '6495497731'
+            },
+        panels           => {
+            panel0           => 'wave-ad-wide',
+            panel1           => 'share-wide',
+            panel2           => 'link:/results.php?source=compare',
+            panel3           => 'contribute-wide-new:wide'
+            },
+        'server-config'  => {
+            forcepingid      => '',
+            ignoreids        => '660,683,954,963,1023,1084,1161,1254,1389,1390,1403,1404,1405,1406,1407,1411,1412,1413,1435,1436,1525,1597,1670,1719,1758,1762,1800,1815,1816,1834,1838,1839,1840,1847,1850,1852,1854,1859,1860,1861,1871,1872,1873,1874,1875,1877,1880,1913,2052,2108,2148,2257,2317,2341,2373,2560,2631,2849,2871,3043,3280,3383,3448,3695,3696,3697,3698,3699,3725,3726,3727,3728,3729,3730,3731,3732,3733,3788,4021,4533,4787,5023,5024,5025,5026,5027,5028,5029,5030,5031,5032,5033,5085,5086,5107,5108,5109,5111,5112,5113,5114,5115,5116,5117,5118,949,5249',
+            notonmap         => '4179,5237,2690,4810,4781,4231,2801,4689,4558,4984,2322,5040,4381,5201,4472,3682,4835,5077,3868,4046,5045,5147,4219,4716,4268,4521,3326,2806,4493,3923,951,4734,1894,5046,4446,4864,5059,4778,4008,2295,5121,5142,5157,2760,2356,3145,3782,5339,4688,1263,2828,4964,4500,3862,5066,1483,4111,4290,4662,4590,5082,4169,2565,3860,4049,2485,4933,4208,3104,4587,4378,4667,2185,4272,4128,3007,1355,3226,5303,1705,2712,4081,5348,4622,4848,3892,4937,2115,3967,2181,2133,4728,5020,3366,4251,4535,3624,1445,4406,4588,3737,4567,1219,2459,428,4673,4085,4161,4306,480,4487,4403,5304,4235,367,5168,4614,5248,4210,5356,4615,4635,4594,4402,2329,788,3611,5375,4245,5205,2173,4696,4336,4953,4989,4775',
+            preferredserverid => '',
+            threadcount      => 4
+            },
+        'socket-download' => {
+            bufferlength     => 5000,
+            initialthreads   => 4,
+            maxsamplesize    => 5000000,
+            maxthreads       => 32,
+            minsamplesize    => 32000,
+            minthreads       => 4,
+            packetlength     => 1000,
+            readbuffer       => 65536,
+            startbuffersize  => 1,
+            startsamplesize  => 1000000,
+            testlength       => 15,
+            threadratio      => '750K'
+            },
+        'socket-latency' => {
+            testlength       => 10,
+            timeout          => 20,
+            waittime         => 50
+            },
+        'socket-upload'  => {
+            bufferlength     => 1000,
+            disabled         => 'false',
+            initialthreads   => 'dyn:tcpulthreads',
+            maxsamplesize    => 1000000,
+            maxthreads       => 32,
+            minsamplesize    => 32000,
+            minthreads       => 'dyn:tcpulthreads',
+            packetlength     => 1000,
+            startbuffersize  => 2,
+            startsamplesize  => 100000,
+            testlength       => 15,
+            threadratio      => '750K'
+            },
+        survey           => {
+            currency         => {
+                rate_USD         => '1.2559',
+                sign             => "\x{20ac}"
+                },
+            defaults         => {
+                isp_common_name  => 'XS4ALL',
+                isp_name         => 'XS4ALL Internet BV',
+                postal_code      => ''
+                }
+            },
+        times            => {
+            dl1              => 5000000,
+            dl2              => 35000000,
+            dl3              => 800000000,
+            ul1              => 1000000,
+            ul2              => 8000000,
+            ul3              => 35000000
+            },
+        translation      => {
+            lang             => 'xml',
+            text             => [
+                {   content          => 'Rate Your ISP',
+                    id               => 'rateyourisp'
+                    },
+                {   content          => 'COPY IP',
+                    id               => 'copy'
+                    },
+                {   content          => 'kilobits',
+                    id               => 'long-kbps'
+                    },
+                {   content          => 'megabits',
+                    id               => 'long-Mbps'
+                    },
+                {   content          => 'NEW SERVER',
+                    id               => 'newserver'
+                    },
+                {   content          => 'TEST AGAIN',
+                    id               => 'testagain'
+                    },
+                {   content          => 'UPLOAD SPEED',
+                    id               => 'uploadspeed'
+                    },
+                {   content          => 'DOWNLOAD SPEED',
+                    id               => 'downloadspeed'
+                    },
+                {   content          => 'kbps',
+                    id               => 'kbps'
+                    },
+                {   content          => 'Mbps',
+                    id               => 'Mbps'
+                    },
+                {   content          => 'BEGIN TEST',
+                    id               => 'begintest'
+                    },
+                {   content          => 'START TEST TO RECOMMENDED SERVER',
+                    id               => 'startclosest'
+                    },
+                {   content          => 'megabytes',
+                    id               => 'long-MB/s'
+                    },
+                {   content          => 'kilobytes',
+                    id               => 'long-kB/s'
+                    },
+                {   content          => 'kB/s',
+                    id               => 'kB/s'
+                    },
+                {   content          => 'MB/s',
+                    id               => 'MB/s'
+                    },
+                {   content          => 'Mbps',
+                    id               => 'mbps'
+                    },
+                {   content          => 'How happy are you with your current Internet service provider?',
+                    id               => 'ratinghelp'
+                    },
+                {   content          => 'Very unhappy',
+                    id               => 'rating1'
+                    },
+                {   content          => 'Unhappy',
+                    id               => 'rating2'
+                    },
+                {   content          => 'Neutral',
+                    id               => 'rating3'
+                    },
+                {   content          => 'Happy',
+                    id               => 'rating4'
+                    },
+                {   content          => 'Very happy',
+                    id               => 'rating5'
+                    },
+                {   content          => 'YOUR RESULT WILL BECOME PART OF A SPEED WAVE',
+                    id               => 'speedwavebegin'
+                    },
+                {   content          => 'PING',
+                    id               => 'ping'
+                    },
+                {   content          => 'Hosted by',
+                    id               => 'hostedby'
+                    },
+                {   content          => 'TOTAL TESTS
+TO DATE',
+                    id               => 'counterdescription'
+                    },
+                {   content          => 'COPIED',
+                    id               => 'copied'
+                    },
+                {   content          => 'AUTO STARTING SPEED TEST IN',
+                    id               => 'autostartdesc'
+                    },
+                {   content          => 'SECONDS',
+                    id               => 'seconds'
+                    },
+                {   content          => 'SECOND',
+                    id               => 'second'
+                    },
+                {   content          => 'ERROR',
+                    id               => 'error'
+                    },
+                {   content          => 'Try Again',
+                    id               => 'tryagain'
+                    },
+                {   content          => 'START A SPEED WAVE',
+                    id               => 'share-wavetitle'
+                    },
+                {   content          => 'Speed Wave Name',
+                    id               => 'share-namewave'
+                    },
+                {   content          => 'Your result is now part of the Speed Wave!',
+                    id               => 'share-waveresults'
+                    },
+                {   content          => 'Your Result',
+                    id               => 'compare-yourtest'
+                    },
+                {   content          => 'Help Us Understand Broadband Costs',
+                    id               => 'survey-surveytitle'
+                    },
+                {   content          => 'Download Package',
+                    id               => 'survey-downloadpackage'
+                    },
+                {   content          => 'Upload Package',
+                    id               => 'survey-uploadpackage'
+                    },
+                {   content          => 'How much do you pay?',
+                    id               => 'survey-howmuch'
+                    },
+                {   content          => 'Includes:',
+                    id               => 'survey-includes'
+                    },
+                {   content          => 'Is this your postal code?',
+                    id               => 'survey-postalcode'
+                    },
+                {   content          => 'SUBMIT',
+                    id               => 'survey-submit'
+                    },
+                {   content          => 'GET A FREE OOKLA SPEEDTEST ACCOUNT',
+                    id               => 'share-accounttitle'
+                    },
+                {   content          => 'Being logged in would allow you to start a Speed Wave here!
+Registration is free and only requires a valid email address.',
+                    id               => 'share-accountdescription'
+                    },
+                {   content          => 'Your Email Address',
+                    id               => 'share-emailaddress'
+                    },
+                {   content          => 'https://twitter.com/share?text=Check%20out%20my%20%40Ookla%20Speedtest%20result!%20What%27s%20your%20speed%3F&url=http%3A%2F%2Fwww.speedtest.net%2Fmy-result%2F{RESULTID}&related=ookla%3ACreators%20of%20Ookla%20Speedtest&hashtags=speedtest',
+                    id               => 'share-twitterurl'
+                    },
+                {   content          => 'https://www.facebook.com/dialog/feed?app_id=581657151866321&link=http://www.speedtest.net/my-result/{RESULTID}&description=This%20is%20my%20Ookla%20Speedtest%20result.%20Compare%20your%20speed%20to%20mine!&redirect_uri=http://www.speedtest.net&name=Check%20out%20my%20Ookla%20Speedtest%20results.%20What%27s%20your%20speed%3F',
+                    id               => 'share-facebookurl'
+                    },
+                {   content          => 'VIEW SPEED WAVE',
+                    id               => 'share-viewwave'
+                    },
+                {   content          => 'CREATE',
+                    id               => 'share-createwave'
+                    },
+                {   content          => 'Speed',
+                    id               => 'survey-speed'
+                    },
+                {   content          => 'Phone',
+                    id               => 'survey-phone'
+                    },
+                {   content          => 'TV',
+                    id               => 'survey-tv'
+                    },
+                {   content          => 'What speeds do you pay for?',
+                    id               => 'survey-package'
+                    },
+                {   content          => 'Thanks for participating in the survey!',
+                    id               => 'survey-thanks'
+                    },
+                {   content          => 'SELECTING BEST SERVER BASED ON PING',
+                    id               => 'selectingbestserver'
+                    },
+                {   content          => 'MY RESULTS',
+                    id               => 'compare-myresults'
+                    },
+                {   content          => 'CREATE',
+                    id               => 'share-createaccount'
+                    },
+                {   content          => 'YOUR PREFERRED SERVER',
+                    id               => 'begintest-preferred'
+                    },
+                {   content          => 'RECOMMENDED SERVER',
+                    id               => 'begintest-ping'
+                    },
+                {   content          => 'CONNECTING',
+                    id               => 'connecting'
+                    },
+                {   content          => 'COPY',
+                    id               => 'share-copy'
+                    },
+                {   content          => 'SHARE THIS RESULT',
+                    id               => 'endtest-share-button'
+                    },
+                {   content          => 'COMPARE 
+YOUR RESULT',
+                    id               => 'endtest-compare-button'
+                    },
+                {   content          => 'CONTRIBUTE
+TO NET INDEX',
+                    id               => 'endtest-contribute-button'
+                    },
+                {   content          => 'CLOSE',
+                    id               => 'close'
+                    },
+                {   content          => 'RETAKE THE
+SURVEY',
+                    id               => 'survey-retake'
+                    },
+                {   content          => 'IMAGE',
+                    id               => 'share-link'
+                    },
+                {   content          => 'FORUM',
+                    id               => 'share-forum'
+                    },
+                {   content          => 'Use this test result to begin your own Speed Wave!',
+                    id               => 'share-wavedescription'
+                    },
+                {   content          => 'Fastest ISPs',
+                    id               => 'pcmagmessage'
+                    },
+                {   content          => 'wave',
+                    id               => 'panel0'
+                    },
+                {   content          => 'share',
+                    id               => 'panel1'
+                    },
+                {   content          => 'link:{LANG_CODE}/results.php?source=compare',
+                    id               => 'panel2'
+                    },
+                {   content          => 'contribute',
+                    id               => 'panel3'
+                    },
+                {   content          => 'bits per second',
+                    id               => 'bitspersecond'
+                    },
+                {   content          => 'standard',
+                    id               => 'endtest'
+                    },
+                {   content          => 'en',
+                    id               => 'lang'
+                    },
+                {   content          => 'http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.speedtest.net%2F&media=http%3A%2F%2Fspeedtest.net%2Fresult%2F{RESULTID}.png&description=Check%20out%20my%20result%20from%20Ookla%20Speedtest!',
+                    id               => 'share-pinteresturl'
+                    },
+                {   id               => 'panelsuffix'
+                    },
+                {   content          => 'Continue',
+                    id               => 'survey-nextbtn'
+                    },
+                {   content          => 'EDIT',
+                    id               => 'survey-editbtn'
+                    },
+                {   content          => 'Download',
+                    id               => 'survey-download'
+                    },
+                {   content          => 'Download:',
+                    id               => 'survey-download-validate'
+                    },
+                {   content          => 'Upload',
+                    id               => 'survey-upload'
+                    },
+                {   content          => 'Upload:',
+                    id               => 'survey-upload-validate'
+                    },
+                {   content          => 'Connection Type?',
+                    id               => 'survey-connectiontype'
+                    },
+                {   content          => 'Home',
+                    id               => 'survey-q1label1'
+                    },
+                {   content          => 'Business',
+                    id               => 'survey-q1label2'
+                    },
+                {   content          => 'School',
+                    id               => 'survey-q1label3'
+                    },
+                {   content          => 'Public Wi-Fi',
+                    id               => 'survey-q1label4'
+                    },
+                {   content          => 'Other',
+                    id               => 'survey-q1label5'
+                    },
+                {   content          => 'My ISP is:',
+                    id               => 'survey-ispconf'
+                    },
+                {   content          => 'Yes',
+                    id               => 'survey-q2label1'
+                    },
+                {   content          => 'Wrong',
+                    id               => 'survey-q2label2'
+                    },
+                {   content          => 'Yes',
+                    id               => 'survey-q3label1'
+                    },
+                {   content          => 'Wrong',
+                    id               => 'survey-q3label2'
+                    },
+                {   content          => 'Please enter your postal code',
+                    id               => 'survey-postalcode-input'
+                    },
+                {   content          => 'Please enter your ISP name',
+                    id               => 'survey-labelispinput'
+                    },
+                {   content          => 'OK',
+                    id               => 'survey-okbtn'
+                    },
+                {   content          => 'Please check your upload speed.
+    This seems faster than expected.',
+                    id               => 'survey-validationUploadline1'
+                    },
+                {   content          => 'Please check the amount entered.
+        This seems higher than expected.',
+                    id               => 'survey-validationAmountline1'
+                    },
+                {   content          => 'Please check your Download speed.
+    This seems faster than expected.',
+                    id               => 'survey-validationDownloadline1'
+                    },
+                {   content          => 'WEB',
+                    id               => 'share-web'
+                    },
+                {   content          => 'EMBED',
+                    id               => 'share-html'
+                    },
+                {   content          => 'Are you on',
+                    id               => 'endtest-contribute-are-you-on'
+                    },
+                {   content          => 'Take our Broadband Internet Survey!',
+                    id               => 'endtest-contribute-take-survey'
+                    }
+                ]
+            },
+        upload           => {
+            initialtest      => 0,
+            maxchunkcount    => 50,
+            maxchunksize     => '512K',
+            mintestsize      => '32K',
+            ratio            => 5,
+            testlength       => 10,
+            threads          => 2,
+            threadsperurl    => 4
+            }
+        }
+    }
