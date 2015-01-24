@@ -233,8 +233,6 @@ else {
     $opt_c ||= "IS";	# Iceland seems like a nice default :P
     }
 
-$opt_v and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
-
 if ($list) {
     my %list = servers ();
     my @fld = qw( id sponsor name dist );
@@ -258,6 +256,8 @@ if ($ping) {
     printf $fmt, @{$_}{@fld} for servers_by_ping ();
     exit 0;
     }
+
+$opt_v and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
 
 # default action is to run on fastest server
 my @srvrs = $url ? ($url) : servers_by_ping ();
