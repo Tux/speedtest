@@ -36,19 +36,21 @@ sub postamble
 {
     my $min_vsn = ($] >= 5.010 && -d "xt" && -d "tmp" && ($ENV{AUTOMATED_TESTING} || 0) != 1)
 	? join "\n" =>
-	    'test ::',
+	    'test ::	lib/App/SpeedTest.pm',
 	    '	-@env TEST_FILES="xt/*.t" make -e test_dynamic',
 	    ''
 	: "";
     join "\n" =>
-	'spellcheck:',
+	'spellcheck:	lib/App/SpeedTest.pm',
 	'	pod-spell-check --aspell',
 	'',
 	'checkmeta:	spellcheck',
 	'	perl sandbox/genMETA.pl -c',
 	'',
-	'fixmeta:	distmeta',
+	'fixmeta:	lib/App/SpeedTest.pm distmeta',
 	'	perl sandbox/genMETA.pl',
+	'',
+	'lib/App/SpeedTest.pm:	speedtest',
 	'	perl sandbox/make-pm',
 	'',
 	'tgzdist:	checkmeta fixmeta $(DISTVNAME).tar.gz distcheck',
