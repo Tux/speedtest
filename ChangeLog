@@ -1,3 +1,14 @@
+0.16	2015-...
+
+    - 
+
+0.15	2015-01-15
+
+    * Renamed to speedtest
+    * Do not report/show origin on --list & --ping
+    * Documentation/Manual + --man and --info
+    * Put on CPAN
+
 0.12	2015-01-24
 
     * Add --csv
