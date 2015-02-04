@@ -14,8 +14,9 @@ throughput of your current network. That can drop dramatically if
 you are behind (several) firewalls or badly configured networks (or
 network parts like switches, hubs and routers).
 
-It was inspired by the speedtest-cli project written in python, but
-I neither like python, nor did I like the default behjavior of that
+It was inspired by the same project written in python:
+[speedtest-cli](https://github.com/sivel/speedtest-cli), but I
+neither like python, nor did I like the default behjavior of that
 script. I also think it does not take the right decisions in choosing
 the server based on distance instead of speed. That *does* matter if
 one has fiber lines. I prefer speed over distance.
