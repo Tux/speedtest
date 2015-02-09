@@ -462,7 +462,8 @@ sub servers
 sub servers_by_ping
 {
     my %list = servers;
-    $opt_v > 1 and say STDERR "Finding fastest host out of @{[scalar keys %list]} hosts for $opt_c ...";
+    my @list = values %list;
+    $opt_v > 1 and say STDERR "Finding fastest host out of @{[scalar @list]} hosts for $opt_c ...";
     my $pa = LWP::UserAgent->new (
 	max_redirect => 2,
 	agent        => "Opera/25.00 opera 25",
@@ -470,7 +471,11 @@ sub servers_by_ping
 	cookie_jar   => {},
 	timeout      => $timeout,
 	);
-    foreach my $h (values %list) {
+    if (@list > 40) {
+	@list = sort { $a->{dist} <=> $b->{dist} } @list;
+	splice @list, 40;
+	}
+    foreach my $h (@list) {
 	my $t = 0;
 	if ($server and $h->{id} != $server) {
 	    $h->{ping} = 40000;
@@ -493,7 +498,7 @@ sub servers_by_ping
 	$h->{ping} = $t * 1000; # report in ms
 	}
     return sort { $a->{ping} <=> $b->{ping}
-	       || $a->{dist} <=> $b->{dist} } values %list;
+	       || $a->{dist} <=> $b->{dist} } values @list;
     } # servers_by_ping
 
 __END__
