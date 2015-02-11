@@ -11,6 +11,7 @@ use Carp;
 use List::Util qw( first );
 use Encode qw( encode decode );
 use Term::ANSIColor qw(:constants);
+use Date::Calc qw( Delta_Days );
 use Test::CPAN::Meta::YAML::Version;
 use CPAN::Meta::Converter;
 use Test::MinimumVersion;
@@ -253,8 +254,37 @@ sub check_minimum
 	} or warn RED, "\n### Use 'perlver --blame' on the failing file(s)\n\n", RESET;
     } # check_minimum
 
+sub check_changelog
+{
+    # Check if the first date has been updated ...
+    my @td = grep m/^Change(?:s|Log)$/i => glob "[Cc]*";
+    unless (@td) {
+	warn "No ChangeLog to check\n";
+	return;
+	}
+    my %mnt = qw( jan 1 feb 2 mar 3 apr 4 may 5 jun 6 jul 7 aug 8 sep 9 oct 10 nov 11 dec 11 );
+    open my $fh, "<", $td[0] or die "$td[0]: $!\n";
+    while (<$fh>) {
+	s/\b([0-9]{4}) (?:[- ])
+	    ([0-9]{1,2}) (?:[- ])
+	    ([0-9]{1,2})\b/$3-$2-$1/x; # 2015-01-15 => 15-01-2015
+	m/\b([0-9]{1,2}) (?:[- ])
+	    ([0-9]{1,2}|[ADFJMNOSadfjmnos][acekopu][abcgilnprtv]) (?:[- ])
+	    ([0-9]{4})\b/x or next;
+	my ($d, $m, $y) = ($1 + 0, ($mnt{lc $2} || $2) + 0, $3 + 0);
+	printf STDERR "Most recent ChangeLog entry is dated %02d-%02d-%04d\n", $d, $m, $y;
+	my @t = localtime;
+	my $D = Delta_Days ($y, $m , $d, $t[5] + 1900, $t[4] + 1, $t[3]);
+	$D < 0 and die  RED,    "Last entry in $td[0] is in the future!",               RESET, "\n";
+	$D > 2 and die  RED,    "Last entry in $td[0] is not up to date ($D days ago)", RESET, "\n";
+	$D > 0 and warn YELLOW, "Last entry in $td[0] is not today",                    RESET, "\n";
+	last;
+	}
+    } # check_changelog
+
 sub done_testing
 {
+    check_changelog ();
     Test::More::done_testing ();
     } # done_testing
 
