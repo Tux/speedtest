@@ -59,7 +59,6 @@ requires:
     Time::HiRes:         0
     XML::Simple:         0
 recommends:
-    perl:                5.020001
     Data::Peek:          0.42
     Getopt::Long:        2.43
     HTML::TreeBuilder:   5.03

@@ -1,6 +1,7 @@
-0.16	2015-02-09
+0.16	2015-02-11
 
-    - Set a limit of 40 of the number of hosts to ping
+    * Set a limit of 40 of the number of hosts to ping
+    * Remove perl recommendation from META as it breaks cpan clients
 
 0.15	2015-01-15
 
