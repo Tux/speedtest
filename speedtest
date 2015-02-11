@@ -498,7 +498,7 @@ sub servers_by_ping
 	$h->{ping} = $t * 1000; # report in ms
 	}
     return sort { $a->{ping} <=> $b->{ping}
-	       || $a->{dist} <=> $b->{dist} } values @list;
+	       || $a->{dist} <=> $b->{dist} } @list;
     } # servers_by_ping
 
 __END__
