@@ -59,11 +59,11 @@ requires:
     Time::HiRes:         0
     XML::Simple:         0
 recommends:
-    Data::Peek:          0.42
-    Getopt::Long:        2.43
+    Data::Peek:          0.43
+    Getopt::Long:        2.45
     HTML::TreeBuilder:   5.03
-    LWP::UserAgent:      6.06
-    Socket:              2.016
+    LWP::UserAgent:      6.13
+    Socket:              2.018
     Time::HiRes:         1.9726
     XML::Simple:         2.20
 configure_requires:
