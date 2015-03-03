@@ -18,6 +18,8 @@ while (<$fh>) {
     }
 close $fh;
 
+-d "lib"     or mkdir "lib";
+-d "lib/App" or mkdir "lib/App";
 open $fh, ">", "lib/App/SpeedTest.pm" or die;
 print $fh @pm;
 close $fh;
