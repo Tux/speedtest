@@ -1,6 +1,7 @@
-0.17	2015-03-02
+0.17	2015-03-06
 
-    - Add graph example
+    * Add graph example
+    * Update version in .pm
 
 0.16	2015-02-11
 

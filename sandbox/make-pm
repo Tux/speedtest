@@ -32,6 +32,6 @@ package App::SpeedTest;
 use strict;
 use warnings;
 
-our $VERSION = "0.12";
+VERSION = "";
 
 1;
