@@ -1,9 +1,9 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'15 [2015-01-21] Copyright H.M.Brand 2014-2015
+# (m)'15 [2015-03-27] Copyright H.M.Brand 2014-2015
 
-use 5.10.0;
+require 5.010;
 use strict;
 use warnings;
 

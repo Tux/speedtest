@@ -59,7 +59,7 @@ requires:
     Time::HiRes:         0
     XML::Simple:         0
 recommends:
-    Data::Peek:          0.43
+    Data::Peek:          0.44
     Getopt::Long:        2.45
     HTML::TreeBuilder:   5.03
     LWP::UserAgent:      6.13
