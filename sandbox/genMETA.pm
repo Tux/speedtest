@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.04-20130212";
+our $VERSION = "1.05-20150419";
 
 use 5.014;
 use warnings;
@@ -13,6 +13,7 @@ use Encode qw( encode decode );
 use Term::ANSIColor qw(:constants);
 use Date::Calc qw( Delta_Days );
 use Test::CPAN::Meta::YAML::Version;
+use CPAN::Meta::Validator;
 use CPAN::Meta::Converter;
 use Test::More ();
 use Parse::CPAN::Meta;
@@ -354,6 +355,10 @@ sub fix_meta
 
     $jsn = CPAN::Meta::Converter->new ($jsn)->convert (version => "2");
     $jsn->{generated_by} = "Author";
+
+    my $cmv = CPAN::Meta::Validator->new ($jsn);
+    $cmv->is_valid or
+	die join "\n" => RED, "META Validator found fail:\n", $cmv->errors, RESET, "";
 
     my @my = glob <*/META.yml> or croak "No META files";
     my $yf = $my[0];
