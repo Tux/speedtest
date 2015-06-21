@@ -60,10 +60,10 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Peek:          0.44
-    Getopt::Long:        2.45
+    Getopt::Long:        2.47
     HTML::TreeBuilder:   5.03
     LWP::UserAgent:      6.13
-    Socket:              2.018
+    Socket:              2.019
     Time::HiRes:         1.9726
     XML::Simple:         2.20
 configure_requires:
