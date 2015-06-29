@@ -1,13 +1,13 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'15 [2015-03-27] Copyright H.M.Brand 2014-2015
+# (m)'15 [2015-06-29] Copyright H.M.Brand 2014-2015
 
 require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.17";
+our $VERSION = "0.18";
 
 sub usage
 {
@@ -20,6 +20,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
     -C --csv          output in CSV (stamp,id,ping,tests,direction,speed,min,max)
+    -P --prtg         output in XML for PRTG
 
     -l --list         list test servers in chosen country sorted by distance
     -p --ping         list test servers in chosen country sorted by latency
@@ -76,6 +77,7 @@ GetOptions (
     "c|cc|country=s"	=>    \$opt_c,
     "1|one-line!"	=> \my $opt_1,
     "C|csv!"		=> \my $opt_C,
+    "P|prtg!"		=> \my $opt_P,
 
     "l|list!"		=> \my $list,
     "p|ping!"		=> \my $ping,
@@ -94,7 +96,7 @@ GetOptions (
       "source=s"	=> \my $source,	# NYI
     ) or usage (1);
 
-$opt_C and $opt_v = 0;
+$opt_C || $opt_P and $opt_v = 0;
 
 use LWP::UserAgent;
 use XML::Simple;
@@ -263,6 +265,8 @@ if ($ping) {
     }
 
 $opt_v and say STDERR "Testing for $client->{ip} : $client->{isp} ($opt_c)";
+$opt_P and print qq{<?xml version="1.0" encoding="UTF-8" ?>\n<prtg>\n},
+                 qq{  <text>Testing from $client->{isp} ($client->{ip})</text>\n};
 
 # default action is to run on fastest server
 my @srvrs = $url ? ($url) : servers_by_ping ();
@@ -270,7 +274,17 @@ my @hosts = grep { $_->{ping} < 1000 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
 foreach my $host (@hosts) {
     $host->{sponsor} =~ s/\s+$//;
-    if ($opt_v) {
+    if ($opt_P) {
+	printf do { join "\n", map { "  $_" }
+	    "<result>",
+	    "  <channel>Ping</channel>",
+	    "  <customUnit>ms</customUnit>",
+	    "  <float>1</float>",
+	    "  <value>%0.2f</value>",
+	    "  </result>\n",
+	    }, $host->{ping};
+	}
+    elsif ($opt_v) {
 	my $s = "";
 	if ($ip) {
 	    (my $h =  $host->{url}) =~ s{^\w+://([^/]+)(?:/.*)?$}{$1};
@@ -321,6 +335,16 @@ foreach my $host (@hosts) {
 		$host->{id}, $host->{ping},
 		scalar @url, $dl, @mnmx;
 	    }
+	elsif ($opt_P) {
+	    printf do { join "\n", map { "  $_" }
+		"<result>",
+		"  <channel>Download</channel>",
+		"  <customUnit>M%s/s</customUnit>",
+		"  <float>1</float>",
+		"  <value>%0.2f</value>",
+		"  </result>\n",
+		}, "bit", $dl;
+	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	    $opt_v || !$opt_1 and print "Download: $dl Mbit/s\n";
@@ -370,6 +394,16 @@ foreach my $host (@hosts) {
 		$host->{id}, $host->{ping},
 		scalar @size, $ul, @mnmx;
 	    }
+	elsif ($opt_P) {
+	    printf do { join "\n", map { "  $_" }
+		"<result>",
+		"  <channel>Upload</channel>",
+		"  <customUnit>M%s/s</customUnit>",
+		"  <float>1</float>",
+		"  <value>%0.2f</value>",
+		"  </result>\n",
+		}, "bit", $ul;
+	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	    $opt_v || !$opt_1 and print "Upload:   $ul Mbit/s\n";
@@ -379,6 +413,7 @@ foreach my $host (@hosts) {
 	}
     $opt_1 and print "DL: $dl Mbit/s, UL: $ul Mbit/s\n";
     }
+$opt_P and print "  </prtg>\n";
 
 ### ############################################################################
 
@@ -636,6 +671,36 @@ The reported fields are
  $ speedtest -Cs4358
  "2015-01-24 17:15:09",4358,63.97,40,D,93.45,30.39,136.93
  "2015-01-24 17:15:14",4358,63.97,40,U,92.67,31.10,143.06
+
+=item -P | --prtg
+X<-P>
+X<--prtg>
+
+Generate the measurements in XML suited for PRTG
+
+ $ speedtest -P
+ <?xml version="1.0" encoding="UTF-8" ?>
+ <prtg>
+   <text>Testing from My ISP (10.20.30.40)</text>
+   <result>
+     <channel>Ping</channel>
+     <customUnit>ms</customUnit>
+     <float>1</float>
+     <value>56.40</value>
+     </result>
+   <result>
+     <channel>Download</channel>
+     <customUnit>Mbit/s</customUnit>
+     <float>1</float>
+     <value>38.34</value>
+     </result>
+   <result>
+     <channel>Upload</channel>
+     <customUnit>Mbit/s</customUnit>
+     <float>1</float>
+     <value>35.89</value>
+     </result>
+   </prtg>
 
 =item -l | --list
 X<-l>
