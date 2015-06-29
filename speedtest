@@ -64,6 +64,7 @@ my $opt_u = 1;
 my $opt_g = 1;
 my $opt_q = 0;
 my $opt_T = 1;
+my $unit  = [ 1, "bit" ];
 GetOptions (
     "help|h|?"		=> sub { usage (0); },
     "V|version!"	=> sub { say $VERSION; exit 0; },
@@ -83,6 +84,8 @@ GetOptions (
     "p|ping!"		=> \my $ping,
       "url:s"		=> \my $url,
       "ip!"		=> \my $ip,
+
+    "B|bytes"		=> sub { $unit = [ 8, "byte" ] },
 
     "T|try:5"		=>    \$opt_T,
     "s|server=i"	=> \my $server,
@@ -326,7 +329,7 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
-	$dl = sprintf "%8.3f", 8 * ($size / $time) / $k / $k;
+	$dl = sprintf "%8.3f", 8 * ($size / $time) / $k / $k / $unit->[0];
 	if ($opt_C) {
 	    my @d = localtime;
 	    # stamp,id,ping,tests,direction,speed)
@@ -343,11 +346,11 @@ foreach my $host (@hosts) {
 		"  <float>1</float>",
 		"  <value>%0.2f</value>",
 		"  </result>\n",
-		}, "bit", $dl;
+		}, $unit->[1], $dl;
 	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	    $opt_v || !$opt_1 and print "Download: $dl Mbit/s\n";
+	    $opt_v || !$opt_1 and print "Download: $dl M$unit->[1]/s\n";
 	    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 		$size / 1024, $time, @mnmx;
 	    }
@@ -385,7 +388,7 @@ foreach my $host (@hosts) {
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
-	$ul = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k;
+	$ul = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k / $unit->[0];
 	if ($opt_C) {
 	    my @d = localtime;
 	    # stamp,id,ping,tests,direction,speed)
@@ -402,16 +405,16 @@ foreach my $host (@hosts) {
 		"  <float>1</float>",
 		"  <value>%0.2f</value>",
 		"  </result>\n",
-		}, "bit", $ul;
+		}, $unit->[1], $ul;
 	    }
 	else {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	    $opt_v || !$opt_1 and print "Upload:   $ul Mbit/s\n";
+	    $opt_v || !$opt_1 and print "Upload:   $ul M$unit->[1]/s\n";
 	    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
 		$size / 1024, $time, @mnmx;
 	    }
 	}
-    $opt_1 and print "DL: $dl Mbit/s, UL: $ul Mbit/s\n";
+    $opt_1 and print "DL: $dl M$unit->[1]it/s, UL: $ul M$unit->[1]it/s\n";
     }
 $opt_P and print "  </prtg>\n";
 
@@ -649,6 +652,12 @@ Generate a very short report easy to paste in e.g. IRC channels.
 
  $ speedtest -1Qv0
  DL:   40.721 Mbit/s, UL:   30.307 Mbit/s
+
+=item -B | --bytes
+X<-B>
+X<--bytes>
+
+Report throughput in Mbyte/s instead of Mbit/s
 
 =item -C | --csv
 X<-C>
