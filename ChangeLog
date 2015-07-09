@@ -1,7 +1,8 @@
-0.18	2015-06-29
+0.18	2015-07-07
 
     * Add --prtg option
     * Add --bytes option
+    * Cleanup code to calculate average
 
 0.17	2015-03-27
 

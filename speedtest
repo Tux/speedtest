@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'15 [2015-06-29] Copyright H.M.Brand 2014-2015
+# (m)'15 [2015-07-09] Copyright H.M.Brand 2014-2015
 
 require 5.010;
 use strict;
@@ -105,8 +105,9 @@ use LWP::UserAgent;
 use XML::Simple;
 use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
-use Math::Trig;
+use List::Util qw( min max sum );
 use Socket qw( inet_ntoa );
+use Math::Trig;
 
 # Debugging. Prefer Data::Peek over Data::Dumper if available
 {   use Data::Dumper;
@@ -307,9 +308,7 @@ foreach my $host (@hosts) {
 	# http://ookla.extraip.net/speedtest/random350x350.jpg
 	my @url = map { ("$base/random${_}x${_}.jpg") x 4 }
 	    350, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000;
-	my @mnmx = (999999999.999, 0.000);
-	my $size = 0;
-	my $time = 0;
+	my @rslt;
 	$opt_q and splice @url, $opt_q;
 	foreach my $url (@url) {
 	    my $req = HTTP::Request->new (GET => $url);
@@ -321,14 +320,16 @@ foreach my $host (@hosts) {
 		next;
 		}
 	    my $sz = length $rsp->content;
-	    $size += $sz;
-	    $time += $elapsed;
 	    my $speed = 8 * $sz / $elapsed / $k / $k;
-	    $speed < $mnmx[0] and $mnmx[0] = $speed;
-	    $speed > $mnmx[1] and $mnmx[1] = $speed;
+	    push @rslt, [ $sz, $elapsed, $speed ];
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
 	    }
+	my $size = (sum map { $_->[0] } @rslt) //         0;
+	my $time = (sum map { $_->[1] } @rslt) //         0;
+	my $slow = (min map { $_->[2] } @rslt) //         0.000;
+	my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
+
 	$dl = sprintf "%8.3f", 8 * ($size / $time) / $k / $k / $unit->[0];
 	if ($opt_C) {
 	    my @d = localtime;
@@ -336,7 +337,7 @@ foreach my $host (@hosts) {
 	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,D,%.2f,%.2f,%.2f\r\n},
 		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
 		$host->{id}, $host->{ping},
-		scalar @url, $dl, @mnmx;
+		scalar @url, $dl, $slow, $fast;
 	    }
 	elsif ($opt_P) {
 	    printf do { join "\n", map { "  $_" }
@@ -352,7 +353,7 @@ foreach my $host (@hosts) {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	    $opt_v || !$opt_1 and print "Download: $dl M$unit->[1]/s\n";
 	    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-		$size / 1024, $time, @mnmx;
+		$size / 1024, $time, $slow, $fast;
 	    }
 	}
 
@@ -362,9 +363,7 @@ foreach my $host (@hosts) {
 	my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
 	my $data = join "" => map { $data[int rand $#data] } 0 .. 4192;
 	$data = "content1=".($data x 1024); # Total length just over 4 Mb
-	my @mnmx = (999999999.999, 0.000);
-	my $size = 0;
-	my $time = 0;
+	my @rslt;
 	my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
 	# see $upld->{mintestsize} and $upld->{maxchunksize} ?
 	my @size = map { $_ * 1000 }
@@ -380,14 +379,16 @@ foreach my $host (@hosts) {
 		warn "$url: ", $rsp->status_line, "\n";
 		next;
 		}
-	    $size += $sz;
-	    $time += $elapsed;
 	    my $speed = 8 * $sz / $elapsed / $k / $k;
-	    $speed < $mnmx[0] and $mnmx[0] = $speed;
-	    $speed > $mnmx[1] and $mnmx[1] = $speed;
+	    push @rslt, [ $sz, $elapsed, $speed ];
 	    $opt_v     and print  STDERR ".";
 	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
 	    }
+	my $size = (sum map { $_->[0] } @rslt) //         0;
+	my $time = (sum map { $_->[1] } @rslt) //         0;
+	my $slow = (min map { $_->[2] } @rslt) //         0.000;
+	my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
+
 	$ul = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k / $unit->[0];
 	if ($opt_C) {
 	    my @d = localtime;
@@ -395,7 +396,7 @@ foreach my $host (@hosts) {
 	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,U,%.2f,%.2f,%.2f\r\n},
 		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
 		$host->{id}, $host->{ping},
-		scalar @size, $ul, @mnmx;
+		scalar @size, $ul, $slow, $fast;
 	    }
 	elsif ($opt_P) {
 	    printf do { join "\n", map { "  $_" }
@@ -411,7 +412,7 @@ foreach my $host (@hosts) {
 	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
 	    $opt_v || !$opt_1 and print "Upload:   $ul M$unit->[1]/s\n";
 	    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-		$size / 1024, $time, @mnmx;
+		$size / 1024, $time, $slow, $fast;
 	    }
 	}
     $opt_1 and print "DL: $dl M$unit->[1]it/s, UL: $ul M$unit->[1]it/s\n";
