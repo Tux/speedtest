@@ -323,38 +323,9 @@ foreach my $host (@hosts) {
 	    my $speed = 8 * $sz / $elapsed / $k / $k;
 	    push @rslt, [ $sz, $elapsed, $speed ];
 	    $opt_v     and print  STDERR ".";
-	    $opt_v > 2 and printf STDERR "%12.3f %s\n", $speed, $url;
+	    $opt_v > 2 and printf STDERR "\n%12.3f %s (%7d) ", $speed, $url, $sz;
 	    }
-	my $size = (sum map { $_->[0] } @rslt) //         0;
-	my $time = (sum map { $_->[1] } @rslt) //         0;
-	my $slow = (min map { $_->[2] } @rslt) //         0.000;
-	my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
-
-	$dl = sprintf "%8.3f", 8 * ($size / $time) / $k / $k / $unit->[0];
-	if ($opt_C) {
-	    my @d = localtime;
-	    # stamp,id,ping,tests,direction,speed)
-	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,D,%.2f,%.2f,%.2f\r\n},
-		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
-		$host->{id}, $host->{ping},
-		scalar @url, $dl, $slow, $fast;
-	    }
-	elsif ($opt_P) {
-	    printf do { join "\n", map { "  $_" }
-		"<result>",
-		"  <channel>Download</channel>",
-		"  <customUnit>M%s/s</customUnit>",
-		"  <float>1</float>",
-		"  <value>%0.2f</value>",
-		"  </result>\n",
-		}, $unit->[1], $dl;
-	    }
-	else {
-	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	    $opt_v || !$opt_1 and print "Download: $dl M$unit->[1]/s\n";
-	    $opt_v > 1 and printf "  Received %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-		$size / 1024, $time, $slow, $fast;
-	    }
+	$dl = result ("Download", $host, scalar @url, @rslt);
 	}
 
     my $ul = "-";
@@ -382,42 +353,51 @@ foreach my $host (@hosts) {
 	    my $speed = 8 * $sz / $elapsed / $k / $k;
 	    push @rslt, [ $sz, $elapsed, $speed ];
 	    $opt_v     and print  STDERR ".";
-	    $opt_v > 2 and printf STDERR "%12.3f %s (%7d)\n", $speed, $url, $sz;
+	    $opt_v > 2 and printf STDERR "\n%12.3f %s (%7d) ", $speed, $url, $sz;
 	    }
-	my $size = (sum map { $_->[0] } @rslt) //         0;
-	my $time = (sum map { $_->[1] } @rslt) //         0;
-	my $slow = (min map { $_->[2] } @rslt) //         0.000;
-	my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
 
-	$ul = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k / $unit->[0];
-	if ($opt_C) {
-	    my @d = localtime;
-	    # stamp,id,ping,tests,direction,speed)
-	    printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,U,%.2f,%.2f,%.2f\r\n},
-		$d[5] + 1900, ++$d[4], @d[3,2,1,0],
-		$host->{id}, $host->{ping},
-		scalar @size, $ul, $slow, $fast;
-	    }
-	elsif ($opt_P) {
-	    printf do { join "\n", map { "  $_" }
-		"<result>",
-		"  <channel>Upload</channel>",
-		"  <customUnit>M%s/s</customUnit>",
-		"  <float>1</float>",
-		"  <value>%0.2f</value>",
-		"  </result>\n",
-		}, $unit->[1], $ul;
-	    }
-	else {
-	    $opt_q &&  $opt_v and print " " x (40 - $opt_q);
-	    $opt_v || !$opt_1 and print "Upload:   $ul M$unit->[1]/s\n";
-	    $opt_v > 1 and printf "  Sent     %10.2f kb in %9.3f s. [%8.3f - %8.3f]\n",
-		$size / 1024, $time, $slow, $fast;
-	    }
+	$ul = result ("Upload", $host, scalar @size, @rslt);
 	}
-    $opt_1 and print "DL: $dl M$unit->[1]it/s, UL: $ul M$unit->[1]it/s\n";
+    $opt_1 and print "DL: $dl M$unit->[1]/s, UL: $ul M$unit->[1]/s\n";
     }
 $opt_P and print "  </prtg>\n";
+
+sub result
+{
+    my ($dir, $host, $n, @rslt) = @_;
+
+    my $size = (sum map { $_->[0] } @rslt) //         0;
+    my $time = (sum map { $_->[1] } @rslt) //         0;
+    my $slow = (min map { $_->[2] } @rslt) //         0.000;
+    my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
+
+    my $sp = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k / $unit->[0];
+    if ($opt_C) {
+	my @d = localtime;
+	# stamp,id,ping,tests,direction,speed)
+	printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,%.1s,%.2f,%.2f,%.2f\r\n},
+	    $d[5] + 1900, ++$d[4], @d[3,2,1,0],
+	    $host->{id}, $host->{ping},
+	    $n, $dir, $sp, $slow, $fast;
+	}
+    elsif ($opt_P) {
+	printf do { join "\n", map { "  $_" }
+	    "<result>",
+	    "  <channel>%s</channel>",
+	    "  <customUnit>M%s/s</customUnit>",
+	    "  <float>1</float>",
+	    "  <value>%0.2f</value>",
+	    "  </result>\n",
+	    }, $dir, $unit->[1], $sp;
+	}
+    else {
+	$opt_q &&  $opt_v and print $opt_v > 2 ? "\n " : " " x (40 - $opt_q);
+	$opt_v || !$opt_1 and printf "%-10s %8s M%s/s\n", $dir, $sp, $unit->[1];
+	$opt_v > 1        and printf " Transfer %10.3f kb in %9.3f s. [%8.3f - %8.3f]\n",
+	    $size / 1024, $time, $slow, $fast;
+	}
+    return $sp;
+    } # result
 
 ### ############################################################################
 
