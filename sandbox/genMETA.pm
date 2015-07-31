@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.05-20150419";
+our $VERSION = "1.06-20150430";
 
 use 5.014;
 use warnings;
@@ -247,12 +247,9 @@ sub check_minimum
     my $paths = (join ", " => @{($locs // {})->{paths} // []}) || "default paths";
 
     $reqv or croak "No minimal required version for perl";
-    if ($reqv > 5.006) {
-	eval "use Test::MinimumVersion::Fast;";
-	}
-    else {
-	eval "use Test::MinimumVersion;";
-	}
+    my $tmv = 0;
+    $reqv > 5.006 and eval "use Test::MinimumVersion::Fast; \$tmv = 1";
+    $tmv          or  eval "use Test::MinimumVersion;";
     print "Checking if $reqv is still OK as minimal version for $paths\n";
     # All other minimum version checks done in xt
     Test::More::subtest "Minimum perl version $reqv" => sub {
