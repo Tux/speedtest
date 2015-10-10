@@ -9,7 +9,7 @@ I will never accept pull request that do not strictly conform to my
 style, however you might hate it. You can read the reasoning behind
 my preferences here: http://tux.nl/style.html
 
-I really don't care about mixed spaces and tabs in (leading) whitespace
+I really don not care about mixed spaces and tabs in (leading) whitespace
 
 # Requirements
 
