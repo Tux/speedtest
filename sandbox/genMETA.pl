@@ -63,7 +63,7 @@ recommends:
     Getopt::Long:        2.48
     HTML::TreeBuilder:   5.03
     LWP::UserAgent:      6.13
-    Socket:              2.020
+    Socket:              2.021
     Time::HiRes:         1.9728
     XML::Simple:         2.20
 configure_requires:
