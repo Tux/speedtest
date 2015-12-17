@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'15 [2015-07-09] Copyright H.M.Brand 2014-2015
+# (m)'15 [2015-12-17] Copyright H.M.Brand 2014-2015
 
 require 5.010;
 use strict;
@@ -105,7 +105,7 @@ use LWP::UserAgent;
 use XML::Simple;
 use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
-use List::Util qw( min max sum );
+use List::Util qw( min max sum first );
 use Socket qw( inet_ntoa );
 use Math::Trig;
 
@@ -418,11 +418,19 @@ sub get_config
 
 sub get_servers
 {
-#   my $url = "http://www.speedtest.net/speedtest-servers.php";
-    my $url = "http://www.speedtest.net/speedtest-servers-static.php";
-    my $rsp = $ua->request (HTTP::Request->new (GET => $url));
-    $rsp->is_success or die "Cannot get config: ", $rsp->status_line, "\n";
-    my $xml = XMLin ( $rsp->content,
+    my $servlist;
+    foreach my $url (qw(
+	      http://www.speedtest.net/speedtest-servers-static.php
+	      http://www.speedtest.net/speedtest-servers.php
+	      http://c.speedtest.net/speedtest-servers.php
+	      )) {
+	$opt_v > 2 and warn "Fetching $url\n";
+	my $rsp = $ua->request (HTTP::Request->new (GET => $url));
+	$opt_v > 2 and warn $rsp->status_line, "\n";
+	$rsp->is_success and $servlist = $rsp->content and last;
+	}
+    $servlist or die "Cannot get any config\n";
+    my $xml = XMLin ($servlist,
         keeproot        => 1,
         noattr          => 0,
         keyattr         => [ ],
