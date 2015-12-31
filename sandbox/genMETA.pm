@@ -265,7 +265,7 @@ sub check_changelog
 	warn "No ChangeLog to check\n";
 	return;
 	}
-    my %mnt = qw( jan 1 feb 2 mar 3 apr 4 may 5 jun 6 jul 7 aug 8 sep 9 oct 10 nov 11 dec 11 );
+    my %mnt = qw( jan 1 feb 2 mar 3 apr 4 may 5 jun 6 jul 7 aug 8 sep 9 oct 10 nov 11 dec 12 );
     open my $fh, "<", $td[0] or die "$td[0]: $!\n";
     while (<$fh>) {
 	s/\b([0-9]{4}) (?:[- ])
