@@ -59,13 +59,13 @@ requires:
     Time::HiRes:         0
     XML::Simple:         0
 recommends:
-    Data::Peek:          0.44
+    Data::Peek:          0.45
     Getopt::Long:        2.48
     HTML::TreeBuilder:   5.03
-    LWP::UserAgent:      6.13
+    LWP::UserAgent:      6.15
     Socket:              2.021
     Time::HiRes:         1.9728
-    XML::Simple:         2.20
+    XML::Simple:         2.22
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
