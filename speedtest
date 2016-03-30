@@ -7,10 +7,9 @@ require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.19";
+our $VERSION = "0.20";
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     (my $p = $0) =~ s{.*/}{};
     print <<"EOH";
@@ -116,8 +115,7 @@ use Math::Trig;
 	use Data::Peek;
 	$dp = 1;
 	};
-    sub ddumper
-    {
+    sub ddumper {
 	$dp ? DDumper (@_)
 	    : print STDERR Dumper (@_);
 	} # ddumper
@@ -362,8 +360,7 @@ foreach my $host (@hosts) {
     }
 $opt_P and print "  </prtg>\n";
 
-sub result
-{
+sub result {
     my ($dir, $host, $n, @rslt) = @_;
 
     my $size = (sum map { $_->[0] } @rslt) //         0;
@@ -401,8 +398,7 @@ sub result
 
 ### ############################################################################
 
-sub get_config
-{
+sub get_config {
     my $url = "http://www.speedtest.net/speedtest-config.php";
     my $rsp = $ua->request (HTTP::Request->new (GET => $url));
     $rsp->is_success or die "Cannot get config: ", $rsp->status_line, "\n";
@@ -416,8 +412,7 @@ sub get_config
     return $xml->{settings};
     } # get_config
 
-sub get_servers
-{
+sub get_servers {
     my $servlist;
     foreach my $url (qw(
 	      http://www.speedtest.net/speedtest-servers-static.php
@@ -452,8 +447,7 @@ sub get_servers
     return map { $_->{id} => $_ } @{$xml->{settings}{servers}{server}};
     } # get_servers
 
-sub distance
-{
+sub distance {
     my ($lat_c, $lon_c, $lat_s, $lon_s) = @_;
     my $rad = 6371; # km
 
@@ -468,8 +462,7 @@ sub distance
     return 6371 * 2 * atan2 (sqrt ($x), sqrt (1 - $x)); # km
     } # distance
 
-sub servers
-{
+sub servers {
     my %list = get_servers ();
     if (my $iid = $config->{"server-config"}{ignoreids}) {
 	$opt_v > 3 and warn "Removing servers $iid from server list\n";
@@ -486,8 +479,7 @@ sub servers
     return %list;
     } # servers
 
-sub servers_by_ping
-{
+sub servers_by_ping {
     my %list = servers;
     my @list = values %list;
     $opt_v > 1 and say STDERR "Finding fastest host out of @{[scalar @list]} hosts for $opt_c ...";

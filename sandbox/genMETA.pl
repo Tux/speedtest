@@ -64,7 +64,7 @@ recommends:
     HTML::TreeBuilder:   5.03
     LWP::UserAgent:      6.15
     Socket:              2.021
-    Time::HiRes:         1.9728
+    Time::HiRes:         1.9732
     XML::Simple:         2.22
 configure_requires:
     ExtUtils::MakeMaker: 0
