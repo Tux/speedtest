@@ -4,7 +4,7 @@ package genMETA;
 
 our $VERSION = "1.06-20150430";
 
-use 5.014;
+use 5.14.1;
 use warnings;
 use Carp;
 
@@ -272,7 +272,7 @@ sub check_changelog
 	    ([0-9]{1,2}) (?:[- ])
 	    ([0-9]{1,2})\b/$3-$2-$1/x; # 2015-01-15 => 15-01-2015
 	m/\b([0-9]{1,2}) (?:[- ])
-	    ([0-9]{1,2}|[ADFJMNOSadfjmnos][acekopu][abcgilnprtv]) (?:[- ])
+	    ([0-9]{1,2}|[ADFJMNOSadfjmnos][acekopu][abcgilnprtvy]) (?:[- ])
 	    ([0-9]{4})\b/x or next;
 	my ($d, $m, $y) = ($1 + 0, ($mnt{lc $2} || $2) + 0, $3 + 0);
 	printf STDERR "Most recent ChangeLog entry is dated %02d-%02d-%04d\n", $d, $m, $y;
