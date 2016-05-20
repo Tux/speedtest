@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.06-20150430";
+our $VERSION = "1.08-20160520";
 
 use 5.14.1;
 use warnings;
@@ -23,14 +23,20 @@ use Data::Peek;
 use Text::Diff;
 use JSON::PP;
 
-sub new
-{
+sub new {
     my $package = shift;
     return bless { @_ }, $package;
     } # new
 
-sub version_from
-{
+sub extract_version {
+    my $fh = shift;
+    while (<$fh>) {
+	m/^(?:our\s+)? \$VERSION \s*=\s* ["']? ([-0-9._]+) ['"]? \s*;\s*$/x or next;
+	return $1;
+	}
+    } # extract_version
+
+sub version_from {
     my ($self, $src) = @_;
 
     $self->{mfpr} = {};
@@ -50,10 +56,10 @@ sub version_from
 	if ($mf =~ m{\b VERSION_FROM \s*=>\s* ["'] (\S+) ['"]}x) {
 	    my $from = $1;
 	    -f $from or
-		die RED, "Makefile wants version from nonexisten $from", RESET, "\n";
+		croak RED, "Makefile wants version from nonexisten $from", RESET, "\n";
 	    $self->{from} //= $from;
 	    $from eq $self->{from} or
-		die RED, "VERSION_FROM mismatch Makefile.PL / YAML", RESET, "\n";
+		croak RED, "VERSION_FROM mismatch Makefile.PL / YAML", RESET, "\n";
 	    }
 
 	if ($mf =~ m[\b PREREQ_PM    \s*=>\s* \{ ( [^}]+ ) \}]x) {
@@ -67,31 +73,24 @@ sub version_from
 
     $src //= $self->{from} or croak "No file to extract version from";
 
-    my $version;
     open my $pm, "<", $src or croak "Cannot read $src";
-    while (<$pm>) {
-	m/^(?:our\s+)? \$VERSION \s*=\s* ["']? ([-0-9._]+) ['"]? \s*;\s*$/x or next;
-	$version = $1;
-	last;
-	}
+    my $version = extract_version ($pm) or croak "Cannot extract VERSION from $src\n";
     close $pm;
-    $version or croak "Cannot extract VERSION from $src\n";
     $self->{version} = $version;
     return $version
     } # version_from
 
-sub from_data
-{
+sub from_data {
     my ($self, @data) = @_;
     $self->{version} or $self->version_from ();
     s/VERSION/$self->{version}/g for @data;
     $self->{yml} = \@data;
     $self->check_yaml ();
+    $self->check_provides ();
     return @data;
     } # from_data
 
-sub check_encoding
-{
+sub check_encoding {
     my $self = shift;
     my @tf   = grep m{^(?: change | readme | .*\.pod )}ix => glob "*";
     (my $tf = join ", " => @tf) =~ s/.*\K, / and /;
@@ -125,8 +124,7 @@ sub check_encoding
 	}
     } # check_encoding
 
-sub check_required
-{
+sub check_required {
     my $self = shift;
     
     my $yml = $self->{h} or croak "No YAML to check";
@@ -148,7 +146,7 @@ sub check_required
     for (sort keys %vsn) {
 	if (my $mfv = delete $self->{mfpr}{$_}) {
 	    $req{$_} eq $mfv or
-		die RED, "PREREQ mismatch for $_ Makefile.PL ($mfv) / YAML ($req{$_})", RESET, "\n";
+		croak RED, "PREREQ mismatch for $_ Makefile.PL ($mfv) / YAML ($req{$_})", RESET, "\n";
 	    }
 	$vsn{$_} eq "0" and next;
 	my $v = V::get_version ($_);
@@ -156,7 +154,7 @@ sub check_required
 	printf STDERR "%s%-35s %-6s => %s%s%s\n", BLUE, $_, $vsn{$_}, GREEN, $v, RESET;
 	}
     if (my @mfpr = sort keys %{$self->{mfpr}}) {
-	die RED, "Makefile.PL requires @mfpr, YAML does not", RESET, "\n";
+	croak RED, "Makefile.PL requires @mfpr, YAML does not", RESET, "\n";
 	}
 
     find (sub {
@@ -172,47 +170,23 @@ sub check_required
 		}
 	    }
 	}, glob "*");
-
-    if (ref $self->{h}{provides}) {
-	print "Check distribution module versions ...\n";
-	foreach my $m (sort keys %{$self->{h}{provides}}) {
-	    $m eq $self->{name} and next;
-	    my $ev = $self->{h}{provides}{$m}{version};
-	    printf "  Expect %5s for %-32s ", $ev, $m;
-	    my $fn = $self->{h}{provides}{$m}{file};
-	    if (open my $fh, "<", $fn) {
-		my $fv;
-		while (<$fh>) {
-		    m/\bVERSION\s*=\s*["']?([-0-9.]+)/ or next;
-		    $fv = $1;
-		    print $fv eq $ev ? "ok\n" : RED." mismatch, module has $1".RESET."\n";
-		    last;
-		    }
-		defined $fv or print " .. no version defined\n";
-		}
-	    else {
-		print " .. cannot open $fn: $!\n";
-		}
-	    }
-	}
     } # check_required
 
-sub check_yaml
-{
+sub check_yaml {
     my $self = shift;
 
     my @yml = @{$self->{yml}} or croak "No YAML to check";
 
-    warn "Checking generated YAML ...\n";
+    warn "Checking generated YAML ...\n" unless $self->{quiet};
     my $h;
     my $yml = join "", @yml;
     eval { $h = Load ($yml) };
     $@ and croak "$@\n";
     $self->{name} //= $h->{name};
     $self->{name} eq  $h->{name} or
-	die RED, "NAME mismatch Makefile.PL / YAML", RESET, "\n";
+	croak RED, "NAME mismatch Makefile.PL / YAML", RESET, "\n";
     $self->{name} =~ s/-/::/g;
-    warn "Checking for $self->{name}-$self->{version}\n";
+    warn "Checking for $self->{name}-$self->{version}\n" unless $self->{quiet};
 
     $self->{verbose} and print Dump $h;
 
@@ -227,8 +201,7 @@ sub check_yaml
     $self->{yaml} = $yml;
     } # check_yaml
 
-sub check_minimum
-{
+sub check_minimum {
     my $self = shift;
     my $reqv = $self->{h}{requires}{perl};
     my $locs;
@@ -257,8 +230,59 @@ sub check_minimum
 	} or warn RED, "\n### Use 'perlver --blame' on the failing file(s)\n\n", RESET;
     } # check_minimum
 
-sub check_changelog
-{
+sub check_provides {
+    my $self = shift;
+    my $prov = $self->{h}{provides};
+
+    print "Check distribution module versions ...\n";
+
+    $prov or croak RED, "META does not contain a provides section", RESET, "\n";
+
+    ref $prov eq "HASH" or
+	croak RED, "The provides section in META is not a HASH", RESET, "\n";
+
+    my $fail = 0;
+    foreach my $m (sort keys %{$prov}) {
+	my ($file, $pvsn) = @{$prov->{$m}}{qw( file version )};
+	unless ($file) {
+	    $fail++;
+	    say RED, "  provided $m does not refer to a file", RESET;
+	    next;
+	    }
+	unless ($pvsn) {
+	    $fail++;
+	    say RED, "  provided $m does not declare a version", RESET;
+	    next;
+	    }
+
+	printf "  Expect %5s for %-32s ", $pvsn, $m;
+	open my $fh, "<", $file;
+	unless ($fh) {
+	    $fail++;
+	    say RED, "$file: $!\n", RESET;
+	    next;
+	    }
+
+	my $version = extract_version ($fh);
+	close $fh;
+	unless ($version) {
+	    $fail++;
+	    say RED, "$file does not contain a VERSION", RESET;
+	    next;
+	    }
+
+	if ($version ne $pvsn) {
+	    $fail++;
+	    say RED, "mismatch: $version", RESET;
+	    next;
+	    }
+	say "ok";
+	}
+
+    $fail and exit 1;
+    } # check_provides
+
+sub check_changelog {
     # Check if the first date has been updated ...
     my @td = grep m/^Change(?:s|Log)$/i => glob "[Cc]*";
     unless (@td) {
@@ -266,7 +290,7 @@ sub check_changelog
 	return;
 	}
     my %mnt = qw( jan 1 feb 2 mar 3 apr 4 may 5 jun 6 jul 7 aug 8 sep 9 oct 10 nov 11 dec 12 );
-    open my $fh, "<", $td[0] or die "$td[0]: $!\n";
+    open my $fh, "<", $td[0] or croak "$td[0]: $!\n";
     while (<$fh>) {
 	s/\b([0-9]{4}) (?:[- ])
 	    ([0-9]{1,2}) (?:[- ])
@@ -279,29 +303,43 @@ sub check_changelog
 	unless ($ENV{SKIP_CHANGELOG_DATE}) {
 	    my @t = localtime;
 	    my $D = Delta_Days ($y, $m , $d, $t[5] + 1900, $t[4] + 1, $t[3]);
-	    $D < 0 and die  RED,    "Last entry in $td[0] is in the future!",               RESET, "\n";
-	    $D > 2 and die  RED,    "Last entry in $td[0] is not up to date ($D days ago)", RESET, "\n";
+	    $D < 0 and croak  RED,    "Last entry in $td[0] is in the future!",               RESET, "\n";
+	    $D > 2 and croak  RED,    "Last entry in $td[0] is not up to date ($D days ago)", RESET, "\n";
 	    $D > 0 and warn YELLOW, "Last entry in $td[0] is not today",                    RESET, "\n";
 	    }
 	last;
 	}
+    close $fh;
     } # check_changelog
 
-sub done_testing
-{
+sub done_testing {
     check_changelog ();
     Test::More::done_testing ();
     } # done_testing
 
-sub print_yaml
-{
+sub quiet {
+    my $self = shift;
+    @_ and $self->{quiet} = defined $_[0];
+    $self->{quiet};
+    } # quiet
+
+sub print_yaml {
     my $self = shift;
     print @{$self->{yml}};
     } # print_yaml
 
-sub fix_meta
-{
-    my $self = shift;
+sub write_yaml {
+    my ($self, $out) = @_;
+    $out ||= "META.yml";
+    $out =~ s/\.jso?n$/.yml/;
+    open my $fh, ">", $out or croak "$out: $!\n";
+    print $fh @{$self->{yml}};
+    close $fh;
+    $self->fix_meta ($out);
+    } # print_yaml
+
+sub fix_meta {
+    my ($self, $yf) = @_;
 
     # Convert to meta-spec version 2
     # licenses are lists now
@@ -355,12 +393,14 @@ sub fix_meta
 
     my $cmv = CPAN::Meta::Validator->new ($jsn);
     $cmv->is_valid or
-	die join "\n" => RED, "META Validator found fail:\n", $cmv->errors, RESET, "";
+	croak join "\n" => RED, "META Validator found fail:\n", $cmv->errors, RESET, "";
 
-    my @my = glob <*/META.yml> or croak "No META files";
-    my $yf = $my[0];
-    (my $jf = $yf) =~ s/yml$/json/;
-    open my $jh, ">", $jf or croak "Cannot update $jf\n";
+    unless ($yf) {
+	my @my = glob "*/META.yml" or croak "No META files";
+	$yf = $my[0];
+	}
+    my $jf = $yf =~ s/yml$/json/r;
+    open my $jh, ">", $jf or croak "Cannot update $jf: $!\n";
     print   $jh JSON::PP->new->utf8 (1)->pretty (1)->encode ($jsn);
     close   $jh;
 
@@ -405,7 +445,7 @@ sub fix_meta
     #DDumper $yml;
     #exit;
 
-    @my == 1 && open my $my, ">", $yf or croak "Cannot update $yf\n";
+    open my $my, ">", $yf or croak "Cannot update $yf: $!\n";
     print $my Dump $yml; # @{$self->{yml}};
     close $my;
 
