@@ -94,7 +94,7 @@ sub check_encoding {
     my $self = shift;
     my @tf   = grep m{^(?: change | readme | .*\.pod )}ix => glob "*";
     (my $tf = join ", " => @tf) =~ s/.*\K, / and /;
-    
+
     print "Check if $tf are still valid UTF8 ...\n";
     foreach my $tf (@tf) {
 	open my $fh, "<", $tf or croak "$tf: $!\n";
@@ -126,7 +126,7 @@ sub check_encoding {
 
 sub check_required {
     my $self = shift;
-    
+
     my $yml = $self->{h} or croak "No YAML to check";
 
     warn "Check required and recommended module versions ...\n";

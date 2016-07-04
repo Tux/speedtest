@@ -60,11 +60,11 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Peek:          0.46
-    Getopt::Long:        2.48
+    Getopt::Long:        2.49
     HTML::TreeBuilder:   5.03
     LWP::UserAgent:      6.15
     Socket:              2.021
-    Time::HiRes:         1.9733
+    Time::HiRes:         1.9739
     XML::Simple:         2.22
 configure_requires:
     ExtUtils::MakeMaker: 0
