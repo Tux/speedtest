@@ -66,10 +66,13 @@ recommends:
     Socket:              2.024
     Time::HiRes:         1.9741
     XML::Simple:         2.22
+    Text::CSV_XS:        1.27
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
     Test::More:          0
+test_recommends:
+    Test::More:          1.302078
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/speedtest
