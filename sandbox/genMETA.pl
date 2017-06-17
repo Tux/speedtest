@@ -60,19 +60,19 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Peek:          0.46
-    Getopt::Long:        2.50
+    Getopt::Long:        2.5
     HTML::TreeBuilder:   5.06
     LWP::UserAgent:      6.26
     Socket:              2.024
     Time::HiRes:         1.9742
     XML::Simple:         2.24
-    Text::CSV_XS:        1.27
+    Text::CSV_XS:        1.31
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302078
+    Test::More:          1.302085
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/speedtest
