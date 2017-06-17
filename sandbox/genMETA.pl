@@ -60,12 +60,12 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Peek:          0.46
-    Getopt::Long:        2.49
-    HTML::TreeBuilder:   5.03
-    LWP::UserAgent:      6.21
+    Getopt::Long:        2.50
+    HTML::TreeBuilder:   5.06
+    LWP::UserAgent:      6.26
     Socket:              2.024
-    Time::HiRes:         1.9741
-    XML::Simple:         2.22
+    Time::HiRes:         1.9742
+    XML::Simple:         2.24
     Text::CSV_XS:        1.27
 configure_requires:
     ExtUtils::MakeMaker: 0
