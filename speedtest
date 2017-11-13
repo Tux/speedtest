@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'16 [2016-01-02] Copyright H.M.Brand 2014-2017
+# (m)'17 [2017-11-13] Copyright H.M.Brand 2014-2017
 
 require 5.010;
 use strict;
@@ -287,6 +287,7 @@ $opt_P and print qq{<?xml version="1.0" encoding="UTF-8" ?>\n<prtg>\n},
 my @srvrs = $url ? ($url) : servers_by_ping ();
 my @hosts = grep { $_->{ping} < 1000 } @srvrs;
 @hosts > $opt_T and splice @hosts, $opt_T;
+my @try;
 foreach my $host (@hosts) {
     $host->{sponsor} =~ s/\s+$//;
     if ($opt_P) {
@@ -307,7 +308,7 @@ foreach my $host (@hosts) {
 	    $s = join " " => "", map { inet_ntoa ($_) } @ad[4 .. $#ad];
 	    }
 	@hosts > 1 and print STDERR "\n";
-	printf STDERR "Using %4d: %6.2f km %7.0f ms%s %s\n",
+	printf STDERR "Using %5d: %6.2f km %7.0f ms%s %s\n",
 	    $host->{id}, $host->{dist}, $host->{ping}, $s, $host->{sponsor};
 	}
     $opt_v > 3 and ddumper $host;
@@ -345,12 +346,13 @@ foreach my $host (@hosts) {
 	$opt_v and print STDERR "Test upload   ";
 	my @data = (0 .. 9, "a" .. "Z", "a" .. "z"); # Random pure ASCII data
 	my $data = join "" => map { $data[int rand $#data] } 0 .. 4192;
-	$data = "content1=".($data x 1024); # Total length just over 4 Mb
+	$data = "content1=".($data x 8192); # Total length just over 4 Mb
 	my @rslt;
 	my $url  = $host->{url}; # .php, .asp, .aspx, .jsp
 	# see $upld->{mintestsize} and $upld->{maxchunksize} ?
 	my @size = map { $_ * 1000 }
-	    ((256) x 10, (512) x 10, (1024) x 10, (4192) x 10);
+	  # ((256) x 10, (512) x 10, (1024) x 10, (4096) x 10);
+	    ((256) x 10, (512) x 10, (1024) x 5, (2048) x 5, (4096) x 5, (8192) x 5);
 	$opt_q and splice @size, $opt_q;
 	foreach my $sz (@size) {
 	    my $req = HTTP::Request->new (POST => $url);
@@ -370,9 +372,20 @@ foreach my $host (@hosts) {
 
 	$ul = result ("Upload", $host, scalar @size, @rslt);
 	}
-    $opt_1 and print "DL: $dl M$unit->[1]/s, UL: $ul M$unit->[1]/s\n";
+    push @try => [ $host, $dl, $ul, $dl + $ul ];
+    $opt_1 and print "DL: $dl M$unit->[1]/s, UL: $ul M$unit->[1]/s, SRV: $host->{id}\n";
     }
 $opt_P and print "  </prtg>\n";
+
+if ($opt_T and @try > 1) {
+    print "\n";
+    my $rank = 1;
+    foreach my $t (sort { $b->[-1] <=> $a->[-1] } @try) {
+	my ($host, $dl, $ul) = @$t;
+	printf "Rank %02d: Server: %6d  %6.2f km %7.0f ms,  DL: %s UL: %s\n",
+	    $rank++, $host->{id}, $host->{dist}, $host->{ping}, $dl, $ul;
+	}
+    }
 
 sub result {
     my ($dir, $host, $n, @rslt) = @_;
@@ -770,6 +783,28 @@ to do all required tests.
  Using 3386:  52.33 km      67 ms NFOrce Entertainment B.V.
  Test download ..                                      Download:   28.022 Mbit/s
  Test upload   ..                                      Upload:     33.221 Mbit/s
+
+ $ speedtest -1v0 -T20
+ DL:  156.770 Mbit/s, UL:  119.062 Mbit/s, SRV: 4045
+ DL:  161.597 Mbit/s, UL:  146.166 Mbit/s, SRV: 11365
+ DL:  126.760 Mbit/s, UL:  158.364 Mbit/s, SRV: 7214
+ DL:  156.002 Mbit/s, UL:  134.162 Mbit/s, SRV: 1747
+ DL:  157.777 Mbit/s, UL:  136.393 Mbit/s, SRV: 8781
+ DL:  157.156 Mbit/s, UL:  148.259 Mbit/s, SRV: 3386
+ DL:  161.146 Mbit/s, UL:  127.229 Mbit/s, SRV: 4601
+ DL:  151.952 Mbit/s, UL:   60.200 Mbit/s, SRV: 8796
+ DL:  161.785 Mbit/s, UL:  147.689 Mbit/s, SRV: 10389
+ DL:  154.803 Mbit/s, UL:  132.616 Mbit/s, SRV: 7095
+ DL:  161.037 Mbit/s, UL:  111.231 Mbit/s, SRV: 9182
+ DL:  162.592 Mbit/s, UL:  117.063 Mbit/s, SRV: 5124
+ DL:   98.290 Mbit/s, UL:  132.075 Mbit/s, SRV: 11611
+ DL:  162.779 Mbit/s, UL:   83.317 Mbit/s, SRV: 6554
+ DL:  161.629 Mbit/s, UL:  136.288 Mbit/s, SRV: 5972
+ DL:  163.780 Mbit/s, UL:  160.336 Mbit/s, SRV: 3587
+ DL:  160.815 Mbit/s, UL:  134.978 Mbit/s, SRV: 5302
+ DL:  160.254 Mbit/s, UL:   85.926 Mbit/s, SRV: 5692
+ DL:  160.328 Mbit/s, UL:   95.659 Mbit/s, SRV: 1208
+ DL:  159.438 Mbit/s, UL:   95.040 Mbit/s, SRV: 1671
 
 =item -s# | --server=# | --server=filename
 X<-s>
