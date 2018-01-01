@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'17 [2017-11-13] Copyright H.M.Brand 2014-2017
+# (m)'17 [2017-11-13] Copyright H.M.Brand 2014-2018
 
 require 5.010;
 use strict;
@@ -974,7 +974,7 @@ personal use, but was asked to make it publicly available as application.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2014-2017 H.Merijn Brand
+Copyright (C) 2014-2018 H.Merijn Brand
 
 =head1 LICENSE
 
