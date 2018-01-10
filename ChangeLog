@@ -1,9 +1,10 @@
-0.20	2018-01-01
+0.20	2018-01-10
 
     * Versions
     * It's 2017
     * Show a ranked summary of the tries with --try
     * It's 2018
+    * Deal with proxy settings in env
 
 0.19	2016-01-02
 

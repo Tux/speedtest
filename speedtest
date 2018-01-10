@@ -130,6 +130,7 @@ my $ua = LWP::UserAgent->new (
     timeout      => $timeout,
     cookie_jar   => {},
     );
+$ua->env_proxy;
 
 binmode STDOUT, ":encoding(utf-8)";
 
