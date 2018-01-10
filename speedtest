@@ -518,6 +518,7 @@ sub servers_by_ping {
 	cookie_jar   => {},
 	timeout      => $timeout,
 	);
+    $pa->env_proxy;
     if (@list > 40) {
 	@list = sort { $a->{dist} <=> $b->{dist} } @list;
 	splice @list, 40;
