@@ -945,7 +945,7 @@ Debian wheezy will run with just two additional packages:
 =head1 SEE ALSO
 
 The L<speedtest-cli|https://github.com/sivel/speedtest-cli> project
-that inspired me to improve a broken CLI written in python into out
+that inspired me to improve a broken CLI written in python into our
 beloved language Perl.
 
 =head1 CONTRIBUTING
