@@ -102,7 +102,7 @@ GetOptions (
 $opt_C || $opt_P and $opt_v = 0;
 
 use LWP::UserAgent;
-use XML::Simple;
+use XML::Simple; # Can safely be replaced with XML::LibXML::Simple
 use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
 use List::Util qw( min max sum first );
