@@ -259,24 +259,26 @@ else {
 if ($list) {
     my %list = servers ();
     my @fld = qw( id sponsor name dist );
-    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km\n";
+    my $fmt = "%3d: %5d - %-30.30s %-15.15s %7.2f km\n";
     if (defined $url) {
 	push @fld, "url0";
 	$fmt .= "       %s\n";
 	}
-    printf $fmt, @{$list{$_}}{@fld}
+    my $idx = 1;
+    printf $fmt, $idx++, @{$list{$_}}{@fld}
 	for sort { $list{$a}{dist} <=> $list{$b}{dist} } keys %list;
     exit 0;
     }
 
 if ($ping) {
     my @fld = qw( id sponsor name dist ping );
-    my $fmt = "%5d: %-30.30s %-15.15s %7.2f km %7.0f ms\n";
+    my $fmt = "%3d: %5d - %-30.30s %-15.15s %7.2f km %7.0f ms\n";
     if (defined $url) {
 	push @fld, "url0";
 	$fmt .= "       %s\n";
 	}
-    printf $fmt, @{$_}{@fld} for servers_by_ping ();
+    my $idx = 1;
+    printf $fmt, $idx++, @{$_}{@fld} for servers_by_ping ();
     exit 0;
     }
 
