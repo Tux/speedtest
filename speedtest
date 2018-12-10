@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'17 [2017-11-13] Copyright H.M.Brand 2014-2018
+# (m)'18 [2018-12-10] Copyright H.M.Brand 2014-2018
 
 require 5.010;
 use strict;
@@ -731,13 +731,16 @@ This option will show all servers in the selection with the distance in
 kilometers to the server.
 
  $ speedtest --list --country=IS
- 4998: GreenQloud                     Hafnarfjordur   2066.12 km
- 4141: Vodafone                       Reykjavík       2068.59 km
- 4820: 365                            Reykjavík       2068.59 km
- 4818: Siminn                         Reykjavik       2068.59 km
- 1092: Hringidan ehf                  Reykjavik       2068.59 km
- 3684: Nova                           Reykjavik       2068.59 km
- 3644: Snerpa                         Isafjordur      2222.57 km
+   1: 10661 - Tengir hf              Akureyri    1980.02 km
+   2: 21605 - Premis ehf             Reykjavík   2039.16 km
+   3:  3684 - Nova                   Reykjavik   2039.16 km
+   4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
+   5: 10650 - Nova VIP               Reykjavik   2039.16 km
+   6: 16148 - Hringidan              Reykjavik   2039.16 km
+   7:  4818 - Siminn                 Reykjavik   2039.16 km
+   8: 17455 - Hringdu                Reykjavík   2039.16 km
+   9:  4141 - Vodafone               Reykjavík   2039.16 km
+  10:  3644 - Snerpa                 Isafjordur  2192.27 km
 
 =item -p | --ping
 X<-p>
@@ -747,16 +750,16 @@ Show a list of servers in the selection with their latency in ms.
 Be very patient if running this with L</--all>.
 
  $ speedtest --ping --cc=BE
- 5151: Combell                        Brussels         148.45 km     120 ms
- 4812: Universite Catholique de Louva Louvain-La-Neuv  159.41 km     122 ms
- 2419: VOO                            Liege            154.15 km     131 ms
- 4904: Verixi SPRL                    Louvain-La-Neuv  159.41 km     137 ms
- 4320: EDPnet                         Sint-Niklaas     128.45 km     258 ms
- 4319: Mobistar NV                    Evere            145.15 km     308 ms
- 3457: iGlobe bvba                    Diegem           141.28 km     340 ms
- 5867: Teleweb                        Lokeren          141.00 km     541 ms
- 2955: Nucleus BVBA                   Antwerp          111.57 km 4000000 ms
- 2848: Cu.be Solutions                Diegem           141.28 km 4000000 ms
+   1: 10986 - Proximus             Schaarbeek         169.72 km      58 ms
+   2:  4812 - Universite Catholiqâ€¦ Louvain-La-Neuve   186.05 km      66 ms
+   3: 12627 - Proximus             Brussels           172.22 km      67 ms
+   4: 12306 - VOO                  Liège              185.52 km      79 ms
+   5: 21086 - ASP                  Brussels           172.22 km      91 ms
+   6:  4319 - Orange Belgium       Brussels           172.22 km     127 ms
+   7:  4320 - EDPnet               Sint-Niklaas       147.26 km     489 ms
+   8:  2955 - Nucleus BVBA         Antwerp            132.91 km 4000000 ms
+   9:  2848 - Cu.be Solutions      Diegem             165.51 km 4000000 ms
+  10:  5151 - Combell              Brussels           172.22 km 4000000 ms
 
 If a server does not respond, a very high latency is used as default.
 
@@ -776,39 +779,34 @@ to do all required tests.
  $ speedtest -T3 -c NL -Q2
  Testing for 80.x.y.z : XS4ALL Internet BV (NL)
 
- Using 4358:  52.33 km      64 ms KPN
- Test download ..                                      Download:   30.497 Mbit/s
- Test upload   ..                                      Upload:     32.366 Mbit/s
+ Using 13218:  26.52 km      25 ms XS4ALL Internet BV
+ Test download ..                                      Download     31.807 Mbit/s
+ Test upload   ..                                      Upload       86.587 Mbit/s
 
- Using 4045:  52.33 km      66 ms SoftLayer Technologies, Inc.
- Test download ..                                      Download:   31.971 Mbit/s
- Test upload   ..                                      Upload:     33.503 Mbit/s
+ Using 15850:  26.09 km      25 ms QTS Data Centers
+ Test download ..                                      Download     80.763 Mbit/s
+ Test upload   ..                                      Upload       77.122 Mbit/s
 
- Using 3386:  52.33 km      67 ms NFOrce Entertainment B.V.
- Test download ..                                      Download:   28.022 Mbit/s
- Test upload   ..                                      Upload:     33.221 Mbit/s
+ Using 11365:  26.09 km      27 ms Vancis
+ Test download ..                                      Download    106.022 Mbit/s
+ Test upload   ..                                      Upload       82.891 Mbit/s
 
- $ speedtest -1v0 -T20
- DL:  156.770 Mbit/s, UL:  119.062 Mbit/s, SRV: 4045
- DL:  161.597 Mbit/s, UL:  146.166 Mbit/s, SRV: 11365
- DL:  126.760 Mbit/s, UL:  158.364 Mbit/s, SRV: 7214
- DL:  156.002 Mbit/s, UL:  134.162 Mbit/s, SRV: 1747
- DL:  157.777 Mbit/s, UL:  136.393 Mbit/s, SRV: 8781
- DL:  157.156 Mbit/s, UL:  148.259 Mbit/s, SRV: 3386
- DL:  161.146 Mbit/s, UL:  127.229 Mbit/s, SRV: 4601
- DL:  151.952 Mbit/s, UL:   60.200 Mbit/s, SRV: 8796
- DL:  161.785 Mbit/s, UL:  147.689 Mbit/s, SRV: 10389
- DL:  154.803 Mbit/s, UL:  132.616 Mbit/s, SRV: 7095
- DL:  161.037 Mbit/s, UL:  111.231 Mbit/s, SRV: 9182
- DL:  162.592 Mbit/s, UL:  117.063 Mbit/s, SRV: 5124
- DL:   98.290 Mbit/s, UL:  132.075 Mbit/s, SRV: 11611
- DL:  162.779 Mbit/s, UL:   83.317 Mbit/s, SRV: 6554
- DL:  161.629 Mbit/s, UL:  136.288 Mbit/s, SRV: 5972
- DL:  163.780 Mbit/s, UL:  160.336 Mbit/s, SRV: 3587
- DL:  160.815 Mbit/s, UL:  134.978 Mbit/s, SRV: 5302
- DL:  160.254 Mbit/s, UL:   85.926 Mbit/s, SRV: 5692
- DL:  160.328 Mbit/s, UL:   95.659 Mbit/s, SRV: 1208
- DL:  159.438 Mbit/s, UL:   95.040 Mbit/s, SRV: 1671
+ Rank 01: Server:  11365   26.09 km      27 ms,  DL:  106.022 UL:   82.891
+ Rank 02: Server:  15850   26.09 km      25 ms,  DL:   80.763 UL:   77.122
+ Rank 03: Server:  13218   26.52 km      25 ms,  DL:   31.807 UL:   86.587
+
+ $ speedtest -1v0 -T5
+ DL:  200.014 Mbit/s, UL:  159.347 Mbit/s, SRV: 13218
+ DL:  203.599 Mbit/s, UL:  166.247 Mbit/s, SRV: 15850
+ DL:  207.249 Mbit/s, UL:  134.957 Mbit/s, SRV: 11365
+ DL:  195.490 Mbit/s, UL:  172.109 Mbit/s, SRV: 5972
+ DL:  179.413 Mbit/s, UL:  160.309 Mbit/s, SRV: 2042
+
+ Rank 01: Server:  15850   26.09 km      30 ms,  DL:  203.599 UL:  166.247
+ Rank 02: Server:   5972   26.09 km      32 ms,  DL:  195.490 UL:  172.109
+ Rank 03: Server:  13218   26.52 km      23 ms,  DL:  200.014 UL:  159.347
+ Rank 04: Server:  11365   26.09 km      31 ms,  DL:  207.249 UL:  134.957
+ Rank 05: Server:   2042   51.41 km      33 ms,  DL:  179.413 UL:  160.309
 
 =item -s# | --server=# | --server=filename
 X<-s>
