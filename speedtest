@@ -1,13 +1,13 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'18 [2018-12-10] Copyright H.M.Brand 2014-2019
+# (m)'19 [2019-01-14] Copyright H.M.Brand 2014-2019
 
 require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.20";
+our $VERSION = "0.21";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -19,6 +19,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -c --country=IS   use ISO country code for closest test server
     -1 --one-line     show summary in one line
     -C --csv          output in CSV (stamp,id,ping,tests,direction,speed,min,max)
+       --csv-eol-unix EOL = NL (default = CR NL) implies -C
     -P --prtg         output in XML for PRTG
 
     -l --list         list test servers in chosen country sorted by distance
@@ -78,6 +79,7 @@ GetOptions (
     "c|cc|country=s"	=>    \$opt_c,
     "1|one-line!"	=> \my $opt_1,
     "C|csv!"		=> \my $opt_C,
+      "csv-eol-unix!"	=> \my $opt_CNL,
     "P|prtg!"		=> \my $opt_P,
 
     "l|list!"		=> \my $list,
@@ -99,6 +101,7 @@ GetOptions (
       "source=s"	=> \my $source,	# NYI
     ) or usage (1);
 
+$opt_CNL and $opt_C++;
 $opt_C || $opt_P and $opt_v = 0;
 
 use LWP::UserAgent;
@@ -402,10 +405,10 @@ sub result {
     if ($opt_C) {
 	my @d = localtime;
 	# stamp,id,ping,tests,direction,speed)
-	printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,%.1s,%.2f,%.2f,%.2f\r\n},
+	printf qq{"%4d-%02d-%02d %02d:%02d:%02d",%d,%.2f,%d,%.1s,%.2f,%.2f,%.2f%s},
 	    $d[5] + 1900, ++$d[4], @d[3,2,1,0],
 	    $host->{id}, $host->{ping},
-	    $n, $dir, $sp, $slow, $fast;
+	    $n, $dir, $sp, $slow, $fast, $opt_CNL ? "\n" : "\r\n";
 	}
     elsif ($opt_P) {
 	printf do { join "\n", map { "  $_" }
