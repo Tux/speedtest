@@ -72,7 +72,7 @@ configure_requires:
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302141
+    Test::More:          1.302156
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/speedtest
