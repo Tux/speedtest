@@ -79,7 +79,8 @@ GetOptions (
     "c|cc|country=s"	=>    \$opt_c,
     "1|one-line!"	=> \my $opt_1,
     "C|csv!"		=> \my $opt_C,
-      "csv-eol-unix!"	=> \my $opt_CNL,
+      "csv-eol-unix|".
+      "csv-eol-nl!"	=> \my $opt_CNL,
     "P|prtg!"		=> \my $opt_P,
 
     "l|list!"		=> \my $list,
