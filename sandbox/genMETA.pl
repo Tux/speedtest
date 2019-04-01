@@ -62,7 +62,7 @@ recommends:
     Data::Peek:          0.48
     Getopt::Long:        2.5
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.37
+    LWP::UserAgent:      6.38
     Socket:              2.029
     Time::HiRes:         1.9760
     XML::Simple:         2.25
