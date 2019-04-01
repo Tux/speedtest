@@ -1,13 +1,13 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'19 [2019-01-14] Copyright H.M.Brand 2014-2019
+# (m)'19 [2019-04-01] Copyright H.M.Brand 2014-2019
 
 require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.21";
+our $VERSION = "0.22";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -17,6 +17,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
        --geo          use Geo location (default true) for closest testserver
        --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
+       --list-cc      list country codes and countries with server count
     -1 --one-line     show summary in one line
     -C --csv          output in CSV (stamp,id,ping,tests,direction,speed,min,max)
        --csv-eol-unix EOL = NL (default = CR NL) implies -C
@@ -77,6 +78,7 @@ GetOptions (
       "all!"		=> \my $opt_a,
     "g|geo!"		=>    \$opt_g,
     "c|cc|country=s"	=>    \$opt_c,
+      "list-cc!"	=> \my $opt_cc,
     "1|one-line!"	=> \my $opt_1,
     "C|csv!"		=> \my $opt_C,
       "csv-eol-unix|".
@@ -258,6 +260,21 @@ else {
 	    }
 	}
     $opt_c ||= "IS";	# Iceland seems like a nice default :P
+    }
+
+if ($opt_cc) {
+    my %sl = get_servers ();
+    my %cc;
+    foreach my $s (values %sl) {
+	my $cc = $s->{cc};
+	$cc{$cc} //= { cc => $cc, country => $s->{country}, count => 0 };
+	$cc = $cc{$cc};
+	$cc->{count}++;
+	}
+    for (sort { $a->{cc} cmp $b->{cc} } values %cc) {
+	printf "%2s %-32s %4d\n", $_->{cc}, $_->{country}, $_->{count};
+	}
+    exit 0;
     }
 
 if ($list) {
@@ -660,6 +677,61 @@ Pass the ISO country code to select the servers
  $ speedtest --cc=B ...
  $ speedtest --country=D ...
 
+=item --list-cc
+X<--list-cc>
+
+Fetch the server list and then show the list of countries the servers are
+located with their country code and server count
+
+ $ speedtest --list-cc
+ AD Andorra                             1
+ AE United Arab Emirates                4
+ :
+ ZW Zimbabwe                            6
+
+You can then use that code to list the servers in the chosen country, as
+described below.
+
+=item -l | --list
+X<-l>
+X<--list>
+
+This option will show all servers in the selection with the distance in
+kilometers to the server.
+
+ $ speedtest --list --country=IS
+   1: 10661 - Tengir hf              Akureyri    1980.02 km
+   2: 21605 - Premis ehf             Reykjavík   2039.16 km
+   3:  3684 - Nova                   Reykjavik   2039.16 km
+   4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
+   5: 10650 - Nova VIP               Reykjavik   2039.16 km
+   6: 16148 - Hringidan              Reykjavik   2039.16 km
+   7:  4818 - Siminn                 Reykjavik   2039.16 km
+   8: 17455 - Hringdu                Reykjavík   2039.16 km
+   9:  4141 - Vodafone               Reykjavík   2039.16 km
+  10:  3644 - Snerpa                 Isafjordur  2192.27 km
+
+=item -p | --ping
+X<-p>
+X<--ping>
+
+Show a list of servers in the selection with their latency in ms.
+Be very patient if running this with L</--all>.
+
+ $ speedtest --ping --cc=BE
+   1: 10986 - Proximus             Schaarbeek         169.72 km      58 ms
+   2:  4812 - Universite Catholiqâ€¦ Louvain-La-Neuve   186.05 km      66 ms
+   3: 12627 - Proximus             Brussels           172.22 km      67 ms
+   4: 12306 - VOO                  Liège              185.52 km      79 ms
+   5: 21086 - ASP                  Brussels           172.22 km      91 ms
+   6:  4319 - Orange Belgium       Brussels           172.22 km     127 ms
+   7:  4320 - EDPnet               Sint-Niklaas       147.26 km     489 ms
+   8:  2955 - Nucleus BVBA         Antwerp            132.91 km 4000000 ms
+   9:  2848 - Cu.be Solutions      Diegem             165.51 km 4000000 ms
+  10:  5151 - Combell              Brussels           172.22 km 4000000 ms
+
+If a server does not respond, a very high latency is used as default.
+
 =item -1 | --one-line
 X<-1>
 X<--ono-line>
@@ -726,46 +798,6 @@ Generate the measurements in XML suited for PRTG
      <value>35.89</value>
      </result>
    </prtg>
-
-=item -l | --list
-X<-l>
-X<--list>
-
-This option will show all servers in the selection with the distance in
-kilometers to the server.
-
- $ speedtest --list --country=IS
-   1: 10661 - Tengir hf              Akureyri    1980.02 km
-   2: 21605 - Premis ehf             Reykjavík   2039.16 km
-   3:  3684 - Nova                   Reykjavik   2039.16 km
-   4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
-   5: 10650 - Nova VIP               Reykjavik   2039.16 km
-   6: 16148 - Hringidan              Reykjavik   2039.16 km
-   7:  4818 - Siminn                 Reykjavik   2039.16 km
-   8: 17455 - Hringdu                Reykjavík   2039.16 km
-   9:  4141 - Vodafone               Reykjavík   2039.16 km
-  10:  3644 - Snerpa                 Isafjordur  2192.27 km
-
-=item -p | --ping
-X<-p>
-X<--ping>
-
-Show a list of servers in the selection with their latency in ms.
-Be very patient if running this with L</--all>.
-
- $ speedtest --ping --cc=BE
-   1: 10986 - Proximus             Schaarbeek         169.72 km      58 ms
-   2:  4812 - Universite Catholiqâ€¦ Louvain-La-Neuve   186.05 km      66 ms
-   3: 12627 - Proximus             Brussels           172.22 km      67 ms
-   4: 12306 - VOO                  Liège              185.52 km      79 ms
-   5: 21086 - ASP                  Brussels           172.22 km      91 ms
-   6:  4319 - Orange Belgium       Brussels           172.22 km     127 ms
-   7:  4320 - EDPnet               Sint-Niklaas       147.26 km     489 ms
-   8:  2955 - Nucleus BVBA         Antwerp            132.91 km 4000000 ms
-   9:  2848 - Cu.be Solutions      Diegem             165.51 km 4000000 ms
-  10:  5151 - Combell              Brussels           172.22 km 4000000 ms
-
-If a server does not respond, a very high latency is used as default.
 
 =item --url=XXX
 X<--url>
