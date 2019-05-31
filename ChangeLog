@@ -1,7 +1,8 @@
-0.21	2019-04-01
+0.21	2019-05-31
 
     * Add --csv-eol-unix
     * Add --list-cc
+    * Add cpanfile
 
 0.20	2019-01-01
 

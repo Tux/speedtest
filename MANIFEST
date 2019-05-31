@@ -5,6 +5,7 @@ MANIFEST
 CONTRIBUTING.md
 LICENSE
 README.md
+cpanfile
 examples/speedtest-graph.pl
 lib/App/SpeedTest.pm
 t/00_pod.t

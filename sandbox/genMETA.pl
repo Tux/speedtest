@@ -19,6 +19,7 @@ my $meta = genMETA->new (
     );
 
 $meta->from_data (<DATA>);
+$meta->gen_cpanfile ();
 
 if ($check) {
     $meta->check_encoding ();

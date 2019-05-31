@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.08-20160520";
+our $VERSION = "1.09-20190531";
 
 use 5.14.1;
 use warnings;
@@ -452,5 +452,60 @@ sub fix_meta {
     chmod 0644, glob "*/META.*";
     unlink glob "MYMETA*";
     } # fix_meta
+
+sub _cpfd {
+    my ($jsn, $sct, $f) = @_;
+
+    open my $sh, ">", \my $b;
+    my $sep = "";
+    for (qw( requires recommends suggests )) {
+	my $s = $jsn->{"$sct$_"} or next;
+	print $sh $sep;
+	foreach my $m (sort keys %$s) {
+	    $m eq "perl" and next;
+	    my $v = $s->{$m};
+	    printf $sh qq{%-10s "%s"}, $_, $m;
+	    my $aw = (24 - length $m); $aw < 0 and $aw = 0;
+	    printf $sh qq{%s => "%s"}, " " x $aw, $v if $v;
+	    say $sh ";";
+	    }
+	$sep = "\n";
+	}
+    close $sh;
+    $sct || $f and $b and $b .= "};";
+    return $b;
+    } # _cpfd
+
+sub gen_cpanfile {
+    my $self = shift;
+
+    open my $fh, ">", "cpanfile";
+
+    my $jsn = $self->{h};
+    foreach my $sct_ ("", "configure_", "build_", "test_", "runtime_") {
+
+	my $sct = $sct_ =~ s/_$//r;
+
+	my $b = _cpfd ($jsn, $sct_, 0) or next;
+
+	if ($sct) {
+	    say $fh qq/\non "$sct" => sub {/;
+	    say $fh $b =~ s/^/    /gmr;
+	    }
+	else {
+	    print $fh $b;
+	    }
+	}
+
+    if (my $of = $jsn->{optional_features}) {
+	foreach my $f (sort keys %$of) {
+	    my $fs = $of->{$f};
+	    say $fh qq/\nfeature "$f", "$fs->{description}" => sub {/;
+	    say $fh _cpfd ($fs, "", 1) =~ s/^/    /gmr;
+	    }
+	}
+
+    close $fh;
+    } # gen_cpanfile
 
 1;
