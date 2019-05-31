@@ -37,6 +37,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -q --quick[=20]   do a      quick test (only the fastest 20 tests)
     -Q --realquick    do a real quick test (only the fastest 10 tests)
     -T --try[=5]      try all tests on the n fastest servers
+    -U --skip-undef   skip results with no actual measurements
 
     -v --verbose[=1]  set verbosity
        --simple       alias for -v0
@@ -99,6 +100,7 @@ GetOptions (
     "u|upload!"		=>    \$opt_u,
     "q|quick|fast:20"	=>    \$opt_q,
     "Q|realquick:10"	=>    \$opt_q,
+    "U|skip-undef!"	=> \my $opt_U,
 
     "m|mini=s"		=> \my $mini,
       "source=s"	=> \my $source,	# NYI
@@ -416,8 +418,12 @@ sub result {
 
     my $size = (sum map { $_->[0] } @rslt) //         0;
     my $time = (sum map { $_->[1] } @rslt) //         0;
-    my $slow = (min map { $_->[2] } @rslt) //         0.000;
-    my $fast = (max map { $_->[2] } @rslt) // 999999999.999;
+
+    my @speed = sort { $a <=> $b } grep { $_ } map { $_->[2] } @rslt;
+    $opt_U && @speed == 0 and return;
+
+    my $slow = $speed[ 0] //         0.000;
+    my $fast = $speed[-1] // 999999999.999;
 
     my $sp = sprintf "%8.3f", 8 * ($size / ($time || 1)) / $k / $k / $unit->[0];
     if ($opt_C) {
@@ -768,6 +774,13 @@ The reported fields are
  $ speedtest -Cs4358
  "2015-01-24 17:15:09",4358,63.97,40,D,93.45,30.39,136.93
  "2015-01-24 17:15:14",4358,63.97,40,U,92.67,31.10,143.06
+
+=item -U | --skip-undef
+X<-U>
+X<--skip-undef>
+
+Skip reporting measurements that have no speed recordings at all.
+The default is to report these as C<0.00> .. C<999999999.999>.
 
 =item -P | --prtg
 X<-P>
