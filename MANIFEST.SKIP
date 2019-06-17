@@ -3,6 +3,7 @@
 \.tgz$
 \.git
 \.releaserc
+\.whitesource
 blib/
 cover_db/
 config.dd
