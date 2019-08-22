@@ -3,11 +3,33 @@
 use 5.14.2;
 use warnings;
 
+our $VERSION = "0.02 - 20190822";
+our $CMD = $0 =~ s{.*/}{}r;
+
+sub usage {
+    my $err = shift and select STDERR;
+    say "usage: $CMD [--graph=speedtest.jpg] [--log=speedtest.csv | speedtest.csv]";
+    say "       -l LOG  --log=LOG    specify CSV logfile to scan (speedtest.csv)";
+    say "       -g JPG  --graph=JPG  specify filename of produced image (speedtest.jpg)";
+    exit $err;
+    } # usage
+
 use Time::Local;
 use Text::CSV_XS "csv";
 use Chart::Strip;
+GetOptions (
+    "help|?"		=> sub { usage (0); },
+    "V|version"		=> sub { say "$CMD [$VERSION]"; exit 0; },
 
-my $log = shift // "speedtest.csv";
+    "l|in|csv|log=s"	=> \(my $log = "speedtest.csv"),
+    "g|out|graph|jpg=s"	=> \ my $graph,
+
+    "v|verbose:1"	=> \(my $opt_v = 0),
+    ) or usage (1);
+
+@ARGV && -f $ARGV[0] and $log = shift;
+
+$graph //= $log =~ s{\.\w+$}{.jpg}ir;
 
 my %color = (
     Umin   => "#e00000",
