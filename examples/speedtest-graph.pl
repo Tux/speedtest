@@ -29,7 +29,7 @@ GetOptions (
 
 @ARGV && -f $ARGV[0] and $log = shift;
 
-$graph //= $log =~ s{\.\w+$}{.jpg}ir;
+$graph //= $log =~ s{\.\w+$}{.jpg}r;
 
 my %color = (
     Umin   => "#e00000",
