@@ -17,6 +17,7 @@ sub usage {
 use Time::Local;
 use Text::CSV_XS "csv";
 use Chart::Strip;
+use Getopt::Long qw(:config bundling);
 GetOptions (
     "help|?"		=> sub { usage (0); },
     "V|version"		=> sub { say "$CMD [$VERSION]"; exit 0; },
