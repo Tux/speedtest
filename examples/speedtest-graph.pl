@@ -24,6 +24,8 @@ GetOptions (
 
     "l|in|csv|log=s"	=> \(my $log = "speedtest.csv"),
     "g|out|graph|jpg=s"	=> \ my $graph,
+    "w|width=i"		=> \ my $gwidth,
+    "h|height=i"	=> \ my $gheight,
 
     "v|verbose:1"	=> \(my $opt_v = 0),
     ) or usage (1);
@@ -59,7 +61,9 @@ foreach my $e (@{csv (in => $log, headers => $headers)}) {
 	} for qw( min speed max );
     }
 
-my $chart = Chart::Strip->new ();
+$gwidth  ||= 640;
+$gheight ||= 192;
+my $chart = Chart::Strip->new ( width => $gwidth, height => $gheight );
 $chart->add_data ($data{$_}, {
     style => "points", color => $color{$_}, label => $_})
 	for qw( Umin Umax Dmin Dmax );
