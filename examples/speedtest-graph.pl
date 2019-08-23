@@ -71,6 +71,6 @@ $chart->add_data ($data{$_}, {
     style => "line",   color => $color{$_}, label => $_})
 	for qw( Uspeed Dspeed );
 
-open  $fh, ">", "speedtest-graph.jpg";
+open  $fh, ">:raw", $graph;
 print $fh $chart->jpeg ();
 close $fh;
