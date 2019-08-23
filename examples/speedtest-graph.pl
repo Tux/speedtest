@@ -63,7 +63,7 @@ foreach my $e (@{csv (in => $log, headers => $headers)}) {
 
 $gwidth  ||= 640;
 $gheight ||= 192;
-my $chart = Chart::Strip->new ( width => $gwidth, height => $gheight );
+my $chart = Chart::Strip->new (width => $gwidth, height => $gheight);
 $chart->add_data ($data{$_}, {
     style => "points", color => $color{$_}, label => $_})
 	for qw( Umin Umax Dmin Dmax );
