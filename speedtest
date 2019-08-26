@@ -398,7 +398,10 @@ foreach my $host (@hosts) {
 
 	$ul = result ("Upload", $host, scalar @size, @rslt);
 	}
-    push @try => [ $host, $dl, $ul, $dl + $ul ];
+    my $sum   = $dl eq "-" ? 0 : $dl;
+       $sum  += $ul eq "-" ? 0 : $ul;
+       $sum ||= "-";
+    push @try => [ $host, $dl, $ul, $sum ];
     $opt_1 and print "DL: $dl M$unit->[1]/s, UL: $ul M$unit->[1]/s, SRV: $host->{id}\n";
     }
 $opt_P and print "  </prtg>\n";
