@@ -3,6 +3,7 @@
 \.tgz$
 \.git
 \.releaserc
+\.travis.yml
 \.whitesource
 blib/
 cover_db/

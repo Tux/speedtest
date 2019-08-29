@@ -11,6 +11,14 @@ my preferences here: http://tux.nl/style.html
 
 I really don not care about mixed spaces and tabs in (leading) whitespace
 
+# Mail
+
+Please, please, please, do *NOT* use HTML mail.
+[Plain text](https://useplaintext.email)
+[without](http://www.goldmark.org/jeff/stupid-disclaimers/)
+[disclaimers](https://www.economist.com/business/2011/04/07/spare-us-the-e-mail-yada-yada)
+will do fine!
+
 # Requirements
 
 Currently, the script is simple enough to require perl-5.10.0. It
