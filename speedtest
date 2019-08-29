@@ -624,6 +624,7 @@ decisions in choosing the server based on distance instead of speed. That
 B<does> matter if one has fiber lines. I prefer speed over distance.
 
 =head1 Command-line Arguments
+X<CLIA>
 
 =over 2
 
@@ -954,7 +955,7 @@ NYI - mentioned for speedtest-cli compatibility
 
 =head1 EXAMPLES
 
-See L</SYNOPSIS> and L</Command-line arguments>
+See L</SYNOPSIS> and L<Command-line arguments|/CLIA>
 
 =head1 DIAGNOSTICS
 

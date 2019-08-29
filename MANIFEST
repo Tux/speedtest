@@ -9,3 +9,5 @@ cpanfile
 examples/speedtest-graph.pl
 lib/App/SpeedTest.pm
 t/00_pod.t
+t/01_pod.t
+t/02_pod.t
