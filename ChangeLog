@@ -1,12 +1,18 @@
-0.21	2019-09-02
+0.23	2019-09-02
+    * 
 
-    * Add --csv-eol-unix
+0.22	2019-09-02
+
     * Add --list-cc
     * Add cpanfile
     * Add -U / --skip-undef
     * Provide cpanfile
     * Add help and options to examples/speedtest-graph.pl
     * Fix warning when using --no-upload or --no-download (issue#13)
+
+0.21	2019-03-21
+
+    * Add --csv-eol-unix
 
 0.20	2019-01-01
 

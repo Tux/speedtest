@@ -24,5 +24,5 @@ on "configure" => sub {
 on "test" => sub {
     requires   "Test::More";
 
-    recommends "Test::More"               => "1.302166";
+    recommends "Test::More"               => "1.302167";
     };
