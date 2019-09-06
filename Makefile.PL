@@ -34,12 +34,12 @@ package MY;
 
 sub postamble
 {
-    my $min_vsn = ($] >= 5.010 && -d "xt" && -d "tmp" && ($ENV{AUTOMATED_TESTING} || 0) != 1)
-	? join "\n" =>
+    my @pc;
+    $] >= 5.010 && -d "xt" && ($ENV{AUTOMATED_TESTING} || 0) != 1 and
+	push @pc,
 	    'test ::	lib/App/SpeedTest.pm',
 	    '	-@env TEST_FILES="xt/*.t" make -e test_dynamic',
-	    ''
-	: "";
+	    '';
     join "\n" =>
 	'spellcheck:	lib/App/SpeedTest.pm',
 	'	pod-spell-check --aspell',
@@ -58,7 +58,7 @@ sub postamble
 	'	-@cpants_lint.pl $(DISTVNAME).tgz',
 	'	-@rm -f Debian_CPANTS.txt',
 	'',
-	$min_vsn;
+	@pc;
     } # postamble
 
 1;
