@@ -8,6 +8,7 @@ use strict;
 use warnings;
 
 our $VERSION = "0.23";
+our $CMD = $0; $CMD =~ s{.*/}{};
 
 sub usage {
     my $err = shift and select STDERR;
@@ -70,7 +71,7 @@ my $opt_T = 1;
 my $unit  = [ 1, "bit" ];
 GetOptions (
     "help|h|?"		=> sub { usage (0); },
-    "V|version!"	=> sub { say $VERSION; exit 0; },
+    "V|version!"	=> sub { print "$CMD [$VERSION]\n"; exit 0; },
     "v|verbose:2"	=>    \$opt_v,
       "simple!"		=> sub { $opt_v = 0; },
       "man"		=> sub { exec "pod2man $0 | nroff -man"; },

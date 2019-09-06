@@ -8,3 +8,4 @@ README.md
 cpanfile
 examples/speedtest-graph.pl
 lib/App/SpeedTest.pm
+t/01-help.t
