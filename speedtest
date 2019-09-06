@@ -114,19 +114,15 @@ use LWP::UserAgent;
 use XML::Simple; # Can safely be replaced with XML::LibXML::Simple
 use HTML::TreeBuilder;
 use Time::HiRes qw( gettimeofday tv_interval );
-use List::Util qw( min max sum first );
+use List::Util qw( sum );
 use Socket qw( inet_ntoa );
 use Math::Trig;
 
 # Debugging. Prefer Data::Peek over Data::Dumper if available
 {   use Data::Dumper;
-    my $dp = 0;
-    eval q{
-	use Data::Peek;
-	$dp = 1;
-	};
+    my $dp = eval { require Data::Peek; 1; };
     sub ddumper {
-	$dp ? DDumper (@_)
+	$dp ? Data::Peek::DDumper (@_)
 	    : print STDERR Dumper (@_);
 	} # ddumper
     }
@@ -177,8 +173,8 @@ if ($url || $mini) {
 	for ($tree->look_down (_tag => "script")) {
 	    my $c = ($_->content)[0] or next;
 	    ref $c eq "ARRAY" && $c->[0] &&
-		$c->[0] =~ m/\b (?: upload_? | config ) Extension
-			     \s*: \s* "? ([^"\s]+) /xi or next;
+		$c->[0] =~ m{\b (?: upload_? | config ) Extension
+			     \s*: \s* "? ([^"\s]+) }xi or next;
 	    $ext = $1;
 	    last;
 	    }
@@ -520,7 +516,7 @@ sub distance {
 	    cos (deg2rad ($lat_c)) * cos (deg2rad ($lat_s)) *
 		sin ($dlon / 2) * sin ($dlon / 2);
 
-    return 6371 * 2 * atan2 (sqrt ($x), sqrt (1 - $x)); # km
+    return $rad * 2 * atan2 (sqrt ($x), sqrt (1 - $x)); # km
     } # distance
 
 sub servers {
@@ -578,8 +574,8 @@ sub servers_by_ping {
 	    }
 	$h->{ping} = $t * 1000; # report in ms
 	}
-    return sort { $a->{ping} <=> $b->{ping}
-	       || $a->{dist} <=> $b->{dist} } @list;
+    sort { $a->{ping} <=> $b->{ping}
+        || $a->{dist} <=> $b->{dist} } @list;
     } # servers_by_ping
 
 __END__
@@ -1031,11 +1027,9 @@ connection. The values shown cannot be used in a legal debate.
 H.Merijn Brand F<E<lt>h.m.brand@xs4all.nlE<gt>> wrote this for his own
 personal use, but was asked to make it publicly available as application.
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
 Copyright (C) 2014-2019 H.Merijn Brand
-
-=head1 LICENSE
 
 This software is free; you can redistribute it and/or modify
 it under the same terms as Perl itself.
