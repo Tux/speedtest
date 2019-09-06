@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'19 [2019-04-01] Copyright H.M.Brand 2014-2019
+# (m)'19 [2019-09-06] Copyright H.M.Brand 2014-2019
 
 require 5.010;
 use strict;
@@ -1015,7 +1015,7 @@ L<github issues|https://github.com/Tux/speedtest/issues>.
 
 I will never accept pull request that do not strictly conform to my
 style, however you might hate it. You can read the reasoning behind
-my preferences L<here|http://tux.nl/style.html>.
+my preferences L<here|https://tux.nl/style.html>.
 
 I really don't care about mixed spaces and tabs in (leading) whitespace
 
