@@ -1,4 +1,4 @@
-0.23	2019-09-06
+0.23	2019-10-31
 
     * Move pod tests to xt
     * Add simple tests for basic CLI

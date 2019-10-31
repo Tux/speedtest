@@ -63,17 +63,17 @@ recommends:
     Data::Peek:          0.48
     Getopt::Long:        2.51
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.39
+    LWP::UserAgent:      6.41
     Socket:              2.029
     Time::HiRes:         1.9760
     XML::Simple:         2.25
-    Text::CSV_XS:        1.39
+    Text::CSV_XS:        1.40
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302167
+    Test::More:          1.302168
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/speedtest
