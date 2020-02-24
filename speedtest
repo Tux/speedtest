@@ -550,6 +550,7 @@ sub servers_by_ping {
     $pa->env_proxy;
     if (@list > 40) {
 	@list = sort { $a->{dist} <=> $b->{dist} } @list;
+	$server or splice @list, $opt_ping;
 	splice @list, 40;
 	}
     foreach my $h (@list) {
