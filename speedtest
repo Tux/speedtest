@@ -14,7 +14,7 @@ sub usage {
     my $err = shift and select STDERR;
     (my $p = $0) =~ s{.*/}{};
     print <<"EOH";
-usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
+usage: $p [ --no-geo | --country=NL ] [ --list | --ping[=n] ] [ options ]
        --geo          use Geo location (default true) for closest testserver
        --all          include *all* servers (default only in own country)
     -c --country=IS   use ISO country code for closest test server
@@ -25,7 +25,7 @@ usage: $p [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
     -P --prtg         output in XML for PRTG
 
     -l --list         list test servers in chosen country sorted by distance
-    -p --ping         list test servers in chosen country sorted by latency
+    -p --ping[=40]    list test servers in chosen country sorted by latency
        --url          show server url in list
 
     -s --server=nnn   use testserver with id nnn
@@ -88,7 +88,7 @@ GetOptions (
     "P|prtg!"		=> \my $opt_P,
 
     "l|list!"		=> \my $list,
-    "p|ping!"		=> \my $ping,
+    "p|ping:40"		=> \my $opt_ping,
       "url:s"		=> \my $url,
       "ip!"		=> \my $ip,
 
@@ -290,7 +290,7 @@ if ($list) {
     exit 0;
     }
 
-if ($ping) {
+if ($opt_ping) {
     my @fld = qw( id sponsor name dist ping );
     my $fmt = "%3d: %5d - %-30.30s %-15.15s %7.2f km %7.0f ms\n";
     if (defined $url) {
@@ -548,15 +548,15 @@ sub servers_by_ping {
 	timeout      => $timeout,
 	);
     $pa->env_proxy;
-    if (@list > 40) {
+    $opt_ping ||= 40;
+    if (@list > $opt_ping) {
 	@list = sort { $a->{dist} <=> $b->{dist} } @list;
 	$server or splice @list, $opt_ping;
-	splice @list, 40;
 	}
     foreach my $h (@list) {
 	my $t = 0;
 	if ($server and $h->{id} != $server) {
-	    $h->{ping} = 40000;
+	    $h->{ping} = 999999;
 	    next;
 	    }
 	$opt_v > 5 and printf STDERR "? %4d %-20.20s %s\n",
@@ -719,7 +719,7 @@ kilometers to the server.
    9:  4141 - Vodafone               Reykjavík   2039.16 km
   10:  3644 - Snerpa                 Isafjordur  2192.27 km
 
-=item -p | --ping
+=item -p | --ping | --ping=40
 X<-p>
 X<--ping>
 
@@ -727,18 +727,29 @@ Show a list of servers in the selection with their latency in ms.
 Be very patient if running this with L</--all>.
 
  $ speedtest --ping --cc=BE
-   1: 10986 - Proximus             Schaarbeek         169.72 km      58 ms
-   2:  4812 - Universite Catholiqâ€¦ Louvain-La-Neuve   186.05 km      66 ms
-   3: 12627 - Proximus             Brussels           172.22 km      67 ms
-   4: 12306 - VOO                  Liège              185.52 km      79 ms
-   5: 21086 - ASP                  Brussels           172.22 km      91 ms
-   6:  4319 - Orange Belgium       Brussels           172.22 km     127 ms
-   7:  4320 - EDPnet               Sint-Niklaas       147.26 km     489 ms
-   8:  2955 - Nucleus BVBA         Antwerp            132.91 km 4000000 ms
-   9:  2848 - Cu.be Solutions      Diegem             165.51 km 4000000 ms
-  10:  5151 - Combell              Brussels           172.22 km 4000000 ms
+   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      52 ms
+   2: 12627 - Proximus             Brussels         173.04 km      55 ms
+   3: 10986 - Proximus             Schaarbeek       170.54 km      55 ms
+   4: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      57 ms
+   5: 29238 - Arcadiz              DIEGEM           166.33 km      58 ms
+   6:  5151 - Combell              Brussels         173.04 km      59 ms
+   7: 26887 - Arxus NV             Brussels         173.04 km      64 ms
+   8:  4812 - Universite Catholiqâ€¦ Louvain-La-Neuv  186.87 km      70 ms
+   9:  2848 - Cu.be Solutions      Diegem           166.33 km      75 ms
+  10: 12306 - VOO                  Liège            186.26 km      80 ms
+  11: 24261 - Une Nouvelle Villeâ€¦  Charleroi        217.48 km     147 ms
+  12: 30594 - Orange Belgium       Evere            169.29 km     150 ms
 
 If a server does not respond, a very high latency is used as default.
+
+This option only shows the 40 nearest servers. The number can be changed
+as optional argument.
+
+ $ speedtest --cc=BE --ping=4
+   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      53 ms
+   2: 29238 - Arcadiz              DIEGEM           166.33 km      57 ms
+   3: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      62 ms
+   4:  2848 - Cu.be Solutions      Diegem           166.33 km      76 ms
 
 =item -1 | --one-line
 X<-1>

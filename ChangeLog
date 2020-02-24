@@ -2,6 +2,7 @@
 
     * Move pod tests to xt
     * Add simple tests for basic CLI
+    * Make ping-list-length settable
     * Do not truncate server list when a specific server is selected
 
 0.22	2019-09-02
