@@ -16,7 +16,7 @@ network parts like switches, hubs and routers).
 
 It was inspired by the same project written in python:
 [speedtest-cli](https://github.com/sivel/speedtest-cli), but I
-neither like python, nor did I like the default behjavior of that
+neither like python, nor did I like the default behavior of that
 script. I also think it does not take the right decisions in choosing
 the server based on distance instead of speed. That *does* matter if
 one has fiber lines. I prefer speed over distance.
@@ -41,7 +41,7 @@ HP-UX, AIX and Windows 7.
 
 Debian wheezy will run with just two additional packages:
 
- # apt-get install libxml-simple-perl libdata-peek-perl
+    # apt-get install libxml-simple-perl libdata-peek-perl
 
 ### Contributing
 
