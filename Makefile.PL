@@ -32,8 +32,7 @@ my $rv = WriteMakefile (%wm);
 
 package MY;
 
-sub postamble
-{
+sub postamble {
     my @pc;
     $] >= 5.010 && -d "xt" && ($ENV{AUTOMATED_TESTING} || 0) != 1 and
 	push @pc,
@@ -41,7 +40,7 @@ sub postamble
 	    '	-@env TEST_FILES="xt/*.t" make -e test_dynamic',
 	    '';
     join "\n" =>
-	'spellcheck:	lib/App/SpeedTest.pm',
+	'spellcheck:	lib/App/SpeedTest.pm doc',
 	'	pod-spell-check --aspell',
 	'',
 	'checkmeta:	spellcheck',
@@ -57,6 +56,17 @@ sub postamble
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'	-@cpants_lint.pl $(DISTVNAME).tgz',
 	'	-@rm -f Debian_CPANTS.txt',
+	'',
+	'doc docs:		doc/speedtest.md doc/speedtest.html doc/speedtest.man',
+	'	-@rm -f pod2html.tmp',
+	'doc/speedtest.md:	speedtest',
+	'	pod2markdown  < $? > $@',
+	'doc/speedtest.html:	speedtest',
+	'	pod2html      < $? 2>&1 | grep -v "^Cannot find" > $@',
+	'doc/speedtest.3:	speedtest',
+	'	pod2man       < $? > $@',
+	'doc/speedtest.man:	doc/speedtest.3',
+	'	nroff -mandoc < $? > $@',
 	'',
 	@pc;
     } # postamble

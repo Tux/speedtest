@@ -1,0 +1,466 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>App::SpeedTest - Command-line interface to speedtest.net</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:hmbrand@cpan.org" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#Raison-dtre">Raison-d&#39;&ecirc;tre</a></li>
+  <li><a href="#Command-line-Arguments">Command-line Arguments </a></li>
+  <li><a href="#EXAMPLES">EXAMPLES</a></li>
+  <li><a href="#DIAGNOSTICS">DIAGNOSTICS</a></li>
+  <li><a href="#BUGS-and-CAVEATS">BUGS and CAVEATS</a></li>
+  <li><a href="#TODO">TODO</a></li>
+  <li><a href="#PORTABILITY">PORTABILITY</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+  <li><a href="#CONTRIBUTING">CONTRIBUTING</a>
+    <ul>
+      <li><a href="#General">General</a></li>
+      <li><a href="#Style">Style</a></li>
+    </ul>
+  </li>
+  <li><a href="#WARRANTY">WARRANTY</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#COPYRIGHT-AND-LICENSE">COPYRIGHT AND LICENSE</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>App::SpeedTest - Command-line interface to speedtest.net</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code> $ speedtest [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
+
+ $ speedtest --list
+ $ speedtest --ping --country=BE
+ $ speedtest
+ $ speedtest -s 4358
+ $ speedtest --url=http://ookla.extraip.net
+ $ speedtest -q --no-download
+ $ speedtest -Q --no-upload</code></pre>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>The provided perl script is a command-line interface to the <a href="http://www.speedtest.net/">speedtest.net</a> infrastructure so that flash is not required</p>
+
+<p>It was written to feature the functionality that speedtest.net offers without the overhead of flash or java and the need of a browser.</p>
+
+<h1 id="Raison-dtre">Raison-d&#39;&ecirc;tre</h1>
+
+<p>The tool is there to give you a quick indication of the achievable throughput of your current network. That can drop dramatically if you are behind (several) firewalls or badly configured networks (or network parts like switches, hubs and routers).</p>
+
+<p>It was inspired by <a href="https://github.com/sivel/speedtest-cli">speedtest-cli</a>, a project written in python. But I neither like python, nor did I like the default behavior of that script. I also think it does not take the right decisions in choosing the server based on distance instead of speed. That <b>does</b> matter if one has fiber lines. I prefer speed over distance.</p>
+
+<h1 id="Command-line-Arguments">Command-line Arguments </h1>
+
+<dl>
+
+<dt id="help">-? | --help  </dt>
+<dd>
+
+<p>Show all available options and then exit.</p>
+
+</dd>
+<dt id="V---version">-V | --version  </dt>
+<dd>
+
+<p>Show program version and exit.</p>
+
+</dd>
+<dt id="man">--man </dt>
+<dd>
+
+<p>Show the builtin manual using <code>pod2man</code> and <code>nroff</code>.</p>
+
+</dd>
+<dt id="info">--info </dt>
+<dd>
+
+<p>Show the builtin manual using <code>pod2text</code>.</p>
+
+</dd>
+<dt id="v---verbose">-v[#] | --verbose[=#]  </dt>
+<dd>
+
+<p>Set verbose level. Default value is 1. A plain -v without value will set the level to 2.</p>
+
+</dd>
+<dt id="simple">--simple </dt>
+<dd>
+
+<p>An alias for <code>-v0</code></p>
+
+</dd>
+<dt id="all">--all </dt>
+<dd>
+
+<p>No (default) filtering on available servers. Useful when finding servers outside of the country of your own location.</p>
+
+</dd>
+<dt id="g---geo">-g | --geo  </dt>
+<dd>
+
+<p>Use GEO-IP service to find the country your ISP is located. The default is true. If disable (<code>--no-geo</code>), the server to use will be based on distance instead of on latency.</p>
+
+</dd>
+<dt id="cXX---cc-XX---country-XX">-cXX | --cc=XX | --country=XX   </dt>
+<dd>
+
+<p>Pass the ISO country code to select the servers</p>
+
+<pre><code> $ speedtest -c NL ...
+ $ speedtest --cc=B ...
+ $ speedtest --country=D ...</code></pre>
+
+</dd>
+<dt id="list-cc">--list-cc </dt>
+<dd>
+
+<p>Fetch the server list and then show the list of countries the servers are located with their country code and server count</p>
+
+<pre><code> $ speedtest --list-cc
+ AD Andorra                             1
+ AE United Arab Emirates                4
+ :
+ ZW Zimbabwe                            6</code></pre>
+
+<p>You can then use that code to list the servers in the chosen country, as described below.</p>
+
+</dd>
+<dt id="l---list">-l | --list  </dt>
+<dd>
+
+<p>This option will show all servers in the selection with the distance in kilometers to the server.</p>
+
+<pre><code> $ speedtest --list --country=IS
+   1: 10661 - Tengir hf              Akureyri    1980.02 km
+   2: 21605 - Premis ehf             Reykjav&#xFFFD;k   2039.16 km
+   3:  3684 - Nova                   Reykjavik   2039.16 km
+   4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
+   5: 10650 - Nova VIP               Reykjavik   2039.16 km
+   6: 16148 - Hringidan              Reykjavik   2039.16 km
+   7:  4818 - Siminn                 Reykjavik   2039.16 km
+   8: 17455 - Hringdu                Reykjav&#xFFFD;k   2039.16 km
+   9:  4141 - Vodafone               Reykjav&#xFFFD;k   2039.16 km
+  10:  3644 - Snerpa                 Isafjordur  2192.27 km</code></pre>
+
+</dd>
+<dt id="p---ping---ping-40">-p | --ping | --ping=40  </dt>
+<dd>
+
+<p>Show a list of servers in the selection with their latency in ms. Be very patient if running this with <a href="#all">&quot;--all&quot;</a>.</p>
+
+<pre><code> $ speedtest --ping --cc=BE
+   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      52 ms
+   2: 12627 - Proximus             Brussels         173.04 km      55 ms
+   3: 10986 - Proximus             Schaarbeek       170.54 km      55 ms
+   4: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      57 ms
+   5: 29238 - Arcadiz              DIEGEM           166.33 km      58 ms
+   6:  5151 - Combell              Brussels         173.04 km      59 ms
+   7: 26887 - Arxus NV             Brussels         173.04 km      64 ms
+   8:  4812 - Universite Catholiq&hellip; Louvain-La-Neuv  186.87 km      70 ms
+   9:  2848 - Cu.be Solutions      Diegem           166.33 km      75 ms
+  10: 12306 - VOO                  Li&#xFFFD;ge            186.26 km      80 ms
+  11: 24261 - Une Nouvelle Ville&hellip;  Charleroi        217.48 km     147 ms
+  12: 30594 - Orange Belgium       Evere            169.29 km     150 ms</code></pre>
+
+<p>If a server does not respond, a very high latency is used as default.</p>
+
+<p>This option only shows the 40 nearest servers. The number can be changed as optional argument.</p>
+
+<pre><code> $ speedtest --cc=BE --ping=4
+   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      53 ms
+   2: 29238 - Arcadiz              DIEGEM           166.33 km      57 ms
+   3: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      62 ms
+   4:  2848 - Cu.be Solutions      Diegem           166.33 km      76 ms</code></pre>
+
+</dd>
+<dt id="one-line">-1 | --one-line  </dt>
+<dd>
+
+<p>Generate a very short report easy to paste in e.g. IRC channels.</p>
+
+<pre><code> $ speedtest -1Qv0
+ DL:   40.721 Mbit/s, UL:   30.307 Mbit/s</code></pre>
+
+</dd>
+<dt id="B---bytes">-B | --bytes  </dt>
+<dd>
+
+<p>Report throughput in Mbyte/s instead of Mbit/s</p>
+
+</dd>
+<dt id="C---csv">-C | --csv  </dt>
+<dd>
+
+<p>Generate the measurements in CSV format. The data can be collected in a file (by a cron job) to be able to follow internet speed over time.</p>
+
+<p>The reported fields are</p>
+
+<pre><code> - A timestam (the time the tests are finished)
+ - The server ID
+ - The latency in ms
+ - The number of tests executed in this measurement
+ - The direction of the test (D = Down, U = Up)
+ - The measure avarage speed in Mbit/s
+ - The minimum speed measured in one of the test in Mbit/s
+ - The maximum speed measured in one of the test in Mbit/s
+
+ $ speedtest -Cs4358
+ &quot;2015-01-24 17:15:09&quot;,4358,63.97,40,D,93.45,30.39,136.93
+ &quot;2015-01-24 17:15:14&quot;,4358,63.97,40,U,92.67,31.10,143.06</code></pre>
+
+</dd>
+<dt id="U---skip-undef">-U | --skip-undef  </dt>
+<dd>
+
+<p>Skip reporting measurements that have no speed recordings at all. The default is to report these as <code>0.00</code> .. <code>999999999.999</code>.</p>
+
+</dd>
+<dt id="P---prtg">-P | --prtg  </dt>
+<dd>
+
+<p>Generate the measurements in XML suited for PRTG</p>
+
+<pre><code> $ speedtest -P
+ &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+ &lt;prtg&gt;
+   &lt;text&gt;Testing from My ISP (10.20.30.40)&lt;/text&gt;
+   &lt;result&gt;
+     &lt;channel&gt;Ping&lt;/channel&gt;
+     &lt;customUnit&gt;ms&lt;/customUnit&gt;
+     &lt;float&gt;1&lt;/float&gt;
+     &lt;value&gt;56.40&lt;/value&gt;
+     &lt;/result&gt;
+   &lt;result&gt;
+     &lt;channel&gt;Download&lt;/channel&gt;
+     &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
+     &lt;float&gt;1&lt;/float&gt;
+     &lt;value&gt;38.34&lt;/value&gt;
+     &lt;/result&gt;
+   &lt;result&gt;
+     &lt;channel&gt;Upload&lt;/channel&gt;
+     &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
+     &lt;float&gt;1&lt;/float&gt;
+     &lt;value&gt;35.89&lt;/value&gt;
+     &lt;/result&gt;
+   &lt;/prtg&gt;</code></pre>
+
+</dd>
+<dt id="url-XXX">--url=XXX </dt>
+<dd>
+
+</dd>
+<dt id="ip">--ip </dt>
+<dd>
+
+</dd>
+<dt id="T---try">-T[#] | --try[=#]  </dt>
+<dd>
+
+<p>Use the top # (based on lowest latency or shortest distance) from the list to do all required tests.</p>
+
+<pre><code> $ speedtest -T3 -c NL -Q2
+ Testing for 80.x.y.z : XS4ALL Internet BV (NL)
+
+ Using 13218:  26.52 km      25 ms XS4ALL Internet BV
+ Test download ..                                      Download     31.807 Mbit/s
+ Test upload   ..                                      Upload       86.587 Mbit/s
+
+ Using 15850:  26.09 km      25 ms QTS Data Centers
+ Test download ..                                      Download     80.763 Mbit/s
+ Test upload   ..                                      Upload       77.122 Mbit/s
+
+ Using 11365:  26.09 km      27 ms Vancis
+ Test download ..                                      Download    106.022 Mbit/s
+ Test upload   ..                                      Upload       82.891 Mbit/s
+
+ Rank 01: Server:  11365   26.09 km      27 ms,  DL:  106.022 UL:   82.891
+ Rank 02: Server:  15850   26.09 km      25 ms,  DL:   80.763 UL:   77.122
+ Rank 03: Server:  13218   26.52 km      25 ms,  DL:   31.807 UL:   86.587
+
+ $ speedtest -1v0 -T5
+ DL:  200.014 Mbit/s, UL:  159.347 Mbit/s, SRV: 13218
+ DL:  203.599 Mbit/s, UL:  166.247 Mbit/s, SRV: 15850
+ DL:  207.249 Mbit/s, UL:  134.957 Mbit/s, SRV: 11365
+ DL:  195.490 Mbit/s, UL:  172.109 Mbit/s, SRV: 5972
+ DL:  179.413 Mbit/s, UL:  160.309 Mbit/s, SRV: 2042
+
+ Rank 01: Server:  15850   26.09 km      30 ms,  DL:  203.599 UL:  166.247
+ Rank 02: Server:   5972   26.09 km      32 ms,  DL:  195.490 UL:  172.109
+ Rank 03: Server:  13218   26.52 km      23 ms,  DL:  200.014 UL:  159.347
+ Rank 04: Server:  11365   26.09 km      31 ms,  DL:  207.249 UL:  134.957
+ Rank 05: Server:   2042   51.41 km      33 ms,  DL:  179.413 UL:  160.309</code></pre>
+
+</dd>
+<dt id="s---server---server-filename">-s# | --server=# | --server=filename  </dt>
+<dd>
+
+<p>Specify the ID of the server to test against. This ID can be taken from the output of <a href="#list">&quot;--list&quot;</a> or <a href="#ping">&quot;--ping&quot;</a>. Using this option prevents fetching the complete server list and calculation of distances. It also enables you to always test against the same server.</p>
+
+<pre><code> $ speedtest -1s4358
+ Testing for 80.x.y.z : XS4ALL Internet BV ()
+ Using 4358:  52.33 km      64 ms KPN
+ Test download ........................................Download:   92.633 Mbit/s
+ Test upload   ........................................Upload:     92.552 Mbit/s
+ DL:   92.633 Mbit/s, UL:   92.552 Mbit/s</code></pre>
+
+<p>If you pass a filename, it is expected to reflect a server-like structure as received from the speedtest server-list, possibly completed with upload- and download URL&#39;s:</p>
+
+<pre><code>  {   cc      =&gt; &quot;NL&quot;,
+      country =&gt; &quot;Netherlands&quot;,
+      host    =&gt; &quot;unlisted.host.amsterdam:8080&quot;,
+      id      =&gt; 9999,
+      lat     =&gt; &quot;52.37316&quot;,
+      lon     =&gt; &quot;4.89122&quot;,
+      name    =&gt; &quot;Amsterdam&quot;,
+      ping    =&gt; 20.0,
+      sponsor =&gt; &quot;Dam tot Damloop&quot;,
+      url     =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
+      url2    =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
+
+      dl_list =&gt; [
+          &quot;http://unlisted.host.amsterdam/files/128.bin&quot;,
+          &quot;http://unlisted.host.amsterdam/files/256.bin&quot;,
+          # 40 URL&#39;s pointing to files in increasing size
+          &quot;http://unlisted.host.amsterdam/files/2G.bin&quot;,
+          ],
+      ul_list =&gt; [
+          # 40 URL&#39;s
+          ],
+      }</code></pre>
+
+</dd>
+<dt id="t---timeout">-t# | --timeout=#  </dt>
+<dd>
+
+<p>Specify the maximum timeout in seconds.</p>
+
+</dd>
+<dt id="d---download">-d | --download  </dt>
+<dd>
+
+<p>Run the download tests. This is default unless <a href="#upload">&quot;--upload&quot;</a> is passed.</p>
+
+</dd>
+<dt id="u---upload">-u | --upload  </dt>
+<dd>
+
+<p>Run the upload tests. This is default unless <a href="#download">&quot;--download&quot;</a> is passed.</p>
+
+</dd>
+<dt id="q---quick---fast">-q[#] | --quick[=#] | --fast[=#]   </dt>
+<dd>
+
+<p>Don&#39;t run the full test. The default test runs 40 tests, sorting on increasing test size (and thus test duration). Long(er) tests may take too long on slow connections without adding value. The default value for <code>-q</code> is 20 but any value between 1 and 40 is allowed.</p>
+
+</dd>
+<dt id="Q---realquick">-Q[#] | --realquick[=#]  </dt>
+<dd>
+
+<p>Don&#39;t run the full test. The default test runs 40 tests, sorting on increasing test size (and thus test duration). Long(er) tests may take too long on slow connections without adding value. The default value for <code>-Q</code> is 10 but any value between 1 and 40 is allowed.</p>
+
+</dd>
+<dt id="mXX---mini-XX">-mXX | --mini=XX  </dt>
+<dd>
+
+<p>Run the speedtest on a speedtest mini server.</p>
+
+</dd>
+<dt id="source-XX">--source=XX</dt>
+<dd>
+
+<p>NYI - mentioned for speedtest-cli compatibility</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<p>See <a href="#SYNOPSIS">&quot;SYNOPSIS&quot;</a> and <a href="#CLIA">Command-line arguments</a></p>
+
+<h1 id="DIAGNOSTICS">DIAGNOSTICS</h1>
+
+<p>...</p>
+
+<h1 id="BUGS-and-CAVEATS">BUGS and CAVEATS</h1>
+
+<p>Due to language implementation, it may report speeds that are not consistent with the speeds reported by the web interface or other speed-test tools. Likewise for reported latencies, which are not to be compared to those reported by tools like ping.</p>
+
+<h1 id="TODO">TODO</h1>
+
+<dl>
+
+<dt id="Improve-documentation">Improve documentation</dt>
+<dd>
+
+<p>What did I miss?</p>
+
+</dd>
+<dt id="Enable-alternative-XML-parsers">Enable alternative XML parsers</dt>
+<dd>
+
+<p>XML::Simple is not the recommended XML parser, but it sufficed on startup. All other API&#39;s are more complex.</p>
+
+</dd>
+</dl>
+
+<h1 id="PORTABILITY">PORTABILITY</h1>
+
+<p>As Perl has been ported to a plethora of operating systems, this CLI will work fine on all systems that fulfill the requirement as listed in Makefile.PL (or the various META files).</p>
+
+<p>The script has been tested on Linux, HP-UX, AIX, and Windows 7.</p>
+
+<p>Debian wheezy will run with just two additional packages:</p>
+
+<pre><code> # apt-get install libxml-simple-perl libdata-peek-perl</code></pre>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>As an alternative to <a href="http://www.speedtest.net/">speedtest.net</a>, you could consider <a href="http://compari.tech/speed">http://compari.tech/speed</a>.</p>
+
+<p>The <a href="https://github.com/sivel/speedtest-cli">speedtest-cli</a> project that inspired me to improve a broken CLI written in python into our beloved language Perl.</p>
+
+<h1 id="CONTRIBUTING">CONTRIBUTING</h1>
+
+<h2 id="General">General</h2>
+
+<p>I am always open to improvements and suggestions. Use issues at <a href="https://github.com/Tux/speedtest/issues">github issues</a>.</p>
+
+<h2 id="Style">Style</h2>
+
+<p>I will never accept pull request that do not strictly conform to my style, however you might hate it. You can read the reasoning behind my preferences <a href="https://tux.nl/style.html">here</a>.</p>
+
+<p>I really don&#39;t care about mixed spaces and tabs in (leading) whitespace</p>
+
+<h1 id="WARRANTY">WARRANTY</h1>
+
+<p>This tool is by no means a guarantee to show the correc6t speeds. It is only to be used as an indication of the throughput of your internet connection. The values shown cannot be used in a legal debate.</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>H.Merijn Brand <i>&lt;h.m.brand@xs4all.nl&gt;</i> wrote this for his own personal use, but was asked to make it publicly available as application.</p>
+
+<h1 id="COPYRIGHT-AND-LICENSE">COPYRIGHT AND LICENSE</h1>
+
+<p>Copyright (C) 2014-2020 H.Merijn Brand</p>
+
+<p>This software is free; you can redistribute it and/or modify it under the same terms as Perl itself.</p>
+
+
+</body>
+
+</html>
+
+

@@ -10,3 +10,4 @@ tmp
 *.tar.gz
 *.tgz
 *.old
+*.tmp

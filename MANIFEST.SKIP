@@ -3,10 +3,12 @@
 \.tgz$
 \.git
 \.releaserc
+\.tmp$
 \.travis.yml
 \.whitesource
 xt/
 blib/
+doc/
 cover_db/
 config.dd
 Makefile
