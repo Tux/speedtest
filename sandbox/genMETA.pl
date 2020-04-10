@@ -55,6 +55,7 @@ requires:
     Getopt::Long:        0
     HTML::TreeBuilder:   0
     LWP::UserAgent:      0
+    List::Util:          0
     Math::Trig:          0
     Socket:              0
     Time::HiRes:         0

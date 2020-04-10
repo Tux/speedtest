@@ -3,6 +3,7 @@ requires   "Data::Peek";
 requires   "Getopt::Long";
 requires   "HTML::TreeBuilder";
 requires   "LWP::UserAgent";
+requires   "List::Util";
 requires   "Math::Trig";
 requires   "Socket";
 requires   "Time::HiRes";
