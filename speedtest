@@ -1,13 +1,13 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'20 [2020-04-09] Copyright H.M.Brand 2014-2020
+# (m)'20 [2020-04-10] Copyright H.M.Brand 2014-2020
 
 require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.23";
+our $VERSION = "0.24";
 our $CMD = $0; $CMD =~ s{.*/}{};
 
 sub usage {
@@ -74,8 +74,8 @@ GetOptions (
     "V|version!"	=> sub { print "$CMD [$VERSION]\n"; exit 0; },
     "v|verbose:2"	=>    \$opt_v,
       "simple!"		=> sub { $opt_v = 0; },
-      "man"		=> sub { exec "pod2man $0 | nroff -man"; },
-      "info"		=> sub { exec "pod2text $0"; },
+      "man"		=> sub { pod_nroff (); },
+      "info"		=> sub { pod_text  (); },
 
       "all!"		=> \my $opt_a,
     "g|geo!"		=>    \$opt_g,
@@ -113,10 +113,33 @@ $opt_C || $opt_P and $opt_v = 0;
 use LWP::UserAgent;
 use XML::Simple; # Can safely be replaced with XML::LibXML::Simple
 use HTML::TreeBuilder;
+use Term::ANSIColor;
 use Time::HiRes qw( gettimeofday tv_interval );
-use List::Util qw( sum );
-use Socket qw( inet_ntoa );
+use List::Util  qw( first sum );
+use Socket      qw( inet_ntoa );
 use Math::Trig;
+
+sub pod_text {
+    require Pod::Text::Color;
+    my $m = $ENV{NO_COLOR} ? "Pod::Text" : "Pod::Text::Color";
+    my $p = $m->new ();
+    open my $fh, ">", \my $out;
+    $p->parse_from_file ($0, $fh);
+    close $fh;
+    print $out;
+    exit 0;
+    } # pod_text
+
+sub pod_nroff {
+    first { -x "$_/nroff" } grep { -d } split m/:+/ => $ENV{PATH} or pod_text ();
+
+    require Pod::Man;
+    my $p = Pod::Man->new ();
+    open my $fh, "|-", "nroff", "-man";
+    $p->parse_from_file ($0, $fh);
+    close $fh;
+    exit 0;
+    } # pod_nroff
 
 # Debugging. Prefer Data::Peek over Data::Dumper if available
 {   use Data::Dumper;

@@ -1,3 +1,6 @@
+0.24	2020-04-10
+    * Switch to Pod::Text when nroff is not available
+
 0.23	2020-04-09
 
     * Move pod tests to xt
