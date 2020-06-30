@@ -1,6 +1,7 @@
-0.25	2020-04-10
+0.25	2020-06-30
     * Require List::Util for consistency
     * Add static docs for github
+    * Allow multiple -s ID
 
 0.24	2020-04-10
     * Switch to Pod::Text when nroff is not available

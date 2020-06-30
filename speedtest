@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'20 [2020-04-10] Copyright H.M.Brand 2014-2020
+# (m)'20 [2020-06-30] Copyright H.M.Brand 2014-2020
 
 require 5.010;
 use strict;
@@ -95,7 +95,7 @@ GetOptions (
     "B|bytes"		=> sub { $unit = [ 8, "byte" ] },
 
     "T|try:5"		=>    \$opt_T,
-    "s|server=s"	=> \my $server,
+    "s|server=s"	=> \my @server,
     "t|timeout=i"	=> \my $timeout,
     "d|download!"	=>    \$opt_d,
     "u|upload!"		=>    \$opt_u,
@@ -181,7 +181,7 @@ $opt_v > 3 and ddumper {
 if ($url || $mini) {
     $opt_g   = 0;
     $opt_c   = "";
-    $server  = "";
+    @server  = ();
     my $ping    = 0.05;
     my $name    = "";
     my $sponsor = "CLI";
@@ -232,11 +232,11 @@ if ($url || $mini) {
 	};
     }
 
-if ($server) {
+if (@server) {
     $opt_c = "";
     $opt_a = 1;
-    unless ($server =~ m{^[0-9]+$}) {
-	open my $fh, "<", $server or die;#usage (1);
+    unless ($server[0] =~ m{^[0-9]+$}) {
+	open my $fh, "<", $server[0] or die;#usage (1);
 	my $data = do { local $/; <$fh>; };
 	print $data;
 	$data =~ m/^\s*\{\s*(['"]?)cc\1\s*=>\s*(["'])[A-Z]{1,3}\2\s*,/ &&
@@ -332,6 +332,7 @@ $opt_P and print qq{<?xml version="1.0" encoding="UTF-8" ?>\n<prtg>\n},
 # default action is to run on fastest server
 my @srvrs = $url ? ($url) : servers_by_ping ();
 my @hosts = grep { $_->{ping} < 1000 } @srvrs;
+@server and $opt_T = @server;
 @hosts > $opt_T and splice @hosts, $opt_T;
 my @try;
 foreach my $host (@hosts) {
@@ -574,11 +575,11 @@ sub servers_by_ping {
     $opt_ping ||= 40;
     if (@list > $opt_ping) {
 	@list = sort { $a->{dist} <=> $b->{dist} } @list;
-	$server or splice @list, $opt_ping;
+	@server or splice @list, $opt_ping;
 	}
     foreach my $h (@list) {
 	my $t = 0;
-	if ($server and $h->{id} != $server) {
+	if (@server and not first { $h->{id} == $_ } @server) {
 	    $h->{ping} = 999999;
 	    next;
 	    }
@@ -899,7 +900,7 @@ X<--server>
 
 Specify the ID of the server to test against. This ID can be taken from the
 output of L</--list> or L</--ping>. Using this option prevents fetching the
-complete server list and calculation of distances. It also enables you to
+complete server list and calculation of distances.  It also enables you to
 always test against the same server.
 
  $ speedtest -1s4358
@@ -909,9 +910,32 @@ always test against the same server.
  Test upload   ........................................Upload:     92.552 Mbit/s
  DL:   92.633 Mbit/s, UL:   92.552 Mbit/s
 
+This argument may be repeated to test against multile servers,  more or less
+like specifying your own top x (as with C<-T>).
+
+ $ speedtest -s 22400 -s 1208 -s 13218
+ Testing for 185.x.y.z : Freedom Internet BV ()
+
+ Using 13218:  80.15 km      32 ms XS4ALL Internet BV
+ Test download ........................................Download    66.833 Mbit/s
+ Test upload   ........................................Upload     173.317 Mbit/s
+
+ Using  1208:  51.19 km      37 ms Qweb | Full-Service Hosting
+ Test download ........................................Download    52.077 Mbit/s
+ Test upload   ........................................Upload     195.833 Mbit/s
+
+ Using 22400:  80.15 km      46 ms Usenet.Farm
+ Test download ........................................Download    96.341 Mbit/s
+ Test upload   ........................................Upload     203.306 Mbit/s
+
+ Rank 01: Server:  22400   80.15 km      46 ms,  DL:   96.341 UL:  203.306
+ Rank 02: Server:   1208   51.19 km      37 ms,  DL:   52.077 UL:  195.833
+ Rank 03: Server:  13218   80.15 km      32 ms,  DL:   66.833 UL:  173.317
+
 If you pass a filename, it is expected to reflect a server-like structure as
 received from the speedtest server-list, possibly completed with upload- and
-download URL's:
+download URL's. You can only pass one filename not consisting of all digits.
+If you do, all remaining C<-s> arguments are ignored.
 
   {   cc      => "NL",
       country => "Netherlands",
