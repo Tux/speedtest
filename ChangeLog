@@ -1,4 +1,7 @@
-0.25	2020-06-30
+0.26	2020-04-14
+    * 
+
+0.25	2020-04-14
     * Require List::Util for consistency
     * Add static docs for github
     * Allow multiple -s ID
