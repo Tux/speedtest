@@ -287,7 +287,7 @@ decisions in choosing the server based on distance instead of speed. That
 
     Specify the ID of the server to test against. This ID can be taken from the
     output of ["--list"](#list) or ["--ping"](#ping). Using this option prevents fetching the
-    complete server list and calculation of distances. It also enables you to
+    complete server list and calculation of distances.  It also enables you to
     always test against the same server.
 
         $ speedtest -1s4358
@@ -297,9 +297,32 @@ decisions in choosing the server based on distance instead of speed. That
         Test upload   ........................................Upload:     92.552 Mbit/s
         DL:   92.633 Mbit/s, UL:   92.552 Mbit/s
 
+    This argument may be repeated to test against multile servers,  more or less
+    like specifying your own top x (as with `-T`).
+
+        $ speedtest -s 22400 -s 1208 -s 13218
+        Testing for 185.x.y.z : Freedom Internet BV ()
+
+        Using 13218:  80.15 km      32 ms XS4ALL Internet BV
+        Test download ........................................Download    66.833 Mbit/s
+        Test upload   ........................................Upload     173.317 Mbit/s
+
+        Using  1208:  51.19 km      37 ms Qweb | Full-Service Hosting
+        Test download ........................................Download    52.077 Mbit/s
+        Test upload   ........................................Upload     195.833 Mbit/s
+
+        Using 22400:  80.15 km      46 ms Usenet.Farm
+        Test download ........................................Download    96.341 Mbit/s
+        Test upload   ........................................Upload     203.306 Mbit/s
+
+        Rank 01: Server:  22400   80.15 km      46 ms,  DL:   96.341 UL:  203.306
+        Rank 02: Server:   1208   51.19 km      37 ms,  DL:   52.077 UL:  195.833
+        Rank 03: Server:  13218   80.15 km      32 ms,  DL:   66.833 UL:  173.317
+
     If you pass a filename, it is expected to reflect a server-like structure as
     received from the speedtest server-list, possibly completed with upload- and
-    download URL's:
+    download URL's. You can only pass one filename not consisting of all digits.
+    If you do, all remaining `-s` arguments are ignored.
 
         {   cc      => "NL",
             country => "Netherlands",
