@@ -68,7 +68,7 @@ recommends:
     Socket:              2.030
     Time::HiRes:         1.9764
     XML::Simple:         2.25
-    Text::CSV_XS:        1.43
+    Text::CSV_XS:        1.44
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
