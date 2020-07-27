@@ -849,11 +849,17 @@ Generate the measurements in XML suited for PRTG
      </result>
    </prtg>
 
-=item --url=XXX
+=item --url[=XXX]
 X<--url>
+
+With no value, show server url in list
+
+With value, use specific server url: do not scan available servers
 
 =item --ip
 X<--ip>
+
+Show IP for server
 
 =item -T[#] | --try[=#]
 X<-T>
@@ -1077,13 +1083,13 @@ I really don't care about mixed spaces and tabs in (leading) whitespace
 
 =head1 WARRANTY
 
-This tool is by no means a guarantee to show the correc6t speeds. It
+This tool is by no means a guarantee to show the correct speeds. It
 is only to be used as an indication of the throughput of your internet
 connection. The values shown cannot be used in a legal debate.
 
 =head1 AUTHOR
 
-H.Merijn Brand F<E<lt>h.m.brand@xs4all.nlE<gt>> wrote this for his own
+H.Merijn Brand F<E<lt>linux@tux.freedom.nlE<gt>> wrote this for his own
 personal use, but was asked to make it publicly available as application.
 
 =head1 COPYRIGHT AND LICENSE
