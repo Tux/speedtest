@@ -238,9 +238,17 @@ decisions in choosing the server based on distance instead of speed. That
             </result>
           </prtg>
 
-- --url=XXX
+- --url\[=XXX\]
+
+
+    With no value, show server url in list
+
+    With value, use specific server url: do not scan available servers
 
 - --ip
+
+
+    Show IP for server
 
 - -T\[#\] | --try\[=#\]
 
@@ -458,13 +466,13 @@ I really don't care about mixed spaces and tabs in (leading) whitespace
 
 # WARRANTY
 
-This tool is by no means a guarantee to show the correc6t speeds. It
+This tool is by no means a guarantee to show the correct speeds. It
 is only to be used as an indication of the throughput of your internet
 connection. The values shown cannot be used in a legal debate.
 
 # AUTHOR
 
-H.Merijn Brand `<h.m.brand@xs4all.nl>` wrote this for his own
+H.Merijn Brand `<linux@tux.freedom.nl>` wrote this for his own
 personal use, but was asked to make it publicly available as application.
 
 # COPYRIGHT AND LICENSE

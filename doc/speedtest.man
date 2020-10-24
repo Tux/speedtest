@@ -190,8 +190,14 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
               </result>
             </prtg>
 
-       --url=XXX
+       --url[=XXX]
+         With no value, show server url in list
+
+         With value, use specific server url: do not scan available servers
+
        --ip
+         Show IP for server
+
        -T[#] | --try[=#]
          Use the top # (based on lowest latency or shortest distance) from the
          list to do all required tests.
@@ -371,12 +377,12 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
        I really don't care about mixed spaces and tabs in (leading) whitespace
 
 [1mWARRANTY[0m
-       This tool is by no means a guarantee to show the correc6t speeds. It is
+       This tool is by no means a guarantee to show the correct speeds. It is
        only to be used as an indication of the throughput of your internet
        connection. The values shown cannot be used in a legal debate.
 
 [1mAUTHOR[0m
-       H.Merijn Brand [4m<h.m.brand@xs4all.nl>[24m wrote this for his own personal
+       H.Merijn Brand [4m<linux@tux.freedom.nl>[24m wrote this for his own personal
        use, but was asked to make it publicly available as application.
 
 [1mCOPYRIGHT AND LICENSE[0m
@@ -387,4 +393,4 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
 
 
-perl v5.32.0                      2020-07-09                          STDIN(1)
+perl v5.32.0                      2020-10-24                          STDIN(1)
