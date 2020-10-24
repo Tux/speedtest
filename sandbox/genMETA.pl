@@ -62,9 +62,9 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Peek:          0.49
-    Getopt::Long:        2.51
+    Getopt::Long:        2.52
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.46
+    LWP::UserAgent:      6.49
     Socket:              2.030
     Time::HiRes:         1.9764
     XML::Simple:         2.25
@@ -74,11 +74,11 @@ configure_requires:
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302175
+    Test::More:          1.302183
 resources:
     license:             http://dev.perl.org/licenses/
-    repository:          https://github.com/Tux/speedtest
     homepage:            https://metacpan.org/pod/App::SpeedTest
+    repository:          https://github.com/Tux/speedtest
     bugtracker:          https://github.com/Tux/speedtest/issues
     IRC:                 irc://irc.perl.org/#csv
 meta-spec:

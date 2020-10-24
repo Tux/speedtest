@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.10-20190617";
+our $VERSION = "1.11-20201024";
 
 use 5.14.1;
 use warnings;
@@ -514,7 +514,7 @@ sub gen_cpanfile {
 	foreach my $f (sort keys %$of) {
 	    my $fs = $of->{$f};
 	    say $fh qq/\nfeature "$f", "$fs->{description}" => sub {/;
-	    say $fh _cpfd ($fs, "", 1) =~ s/^/    /gmr;
+	    say $fh _cpfd ($fs, "", 1) =~ s/^(?=\S)/    /gmr;
 	    }
 	}
 

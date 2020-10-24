@@ -10,12 +10,12 @@ requires   "Time::HiRes";
 requires   "XML::Simple";
 
 recommends "Data::Peek"               => "0.49";
-recommends "Getopt::Long"             => "2.51";
+recommends "Getopt::Long"             => "2.52";
 recommends "HTML::TreeBuilder"        => "5.07";
-recommends "LWP::UserAgent"           => "6.43";
-recommends "Socket"                   => "2.029";
-recommends "Text::CSV_XS"             => "1.41";
-recommends "Time::HiRes"              => "1.9760";
+recommends "LWP::UserAgent"           => "6.49";
+recommends "Socket"                   => "2.030";
+recommends "Text::CSV_XS"             => "1.44";
+recommends "Time::HiRes"              => "1.9764";
 recommends "XML::Simple"              => "2.25";
 
 on "configure" => sub {
@@ -25,5 +25,5 @@ on "configure" => sub {
 on "test" => sub {
     requires   "Test::More";
 
-    recommends "Test::More"               => "1.302175";
+    recommends "Test::More"               => "1.302183";
     };
