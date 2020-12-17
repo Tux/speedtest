@@ -1,5 +1,5 @@
-0.26	2020-10-24
-    * 
+0.26	2020-12-17
+    * Fix META to include bugtracker
 
 0.25	2020-04-14
     * Require List::Util for consistency
@@ -10,7 +10,6 @@
     * Switch to Pod::Text when nroff is not available
 
 0.23	2020-04-09
-
     * Move pod tests to xt
     * Add simple tests for basic CLI
     * Make ping-list-length settable
@@ -18,7 +17,6 @@
     * It's 2020
 
 0.22	2019-09-02
-
     * Add --list-cc
     * Add cpanfile
     * Add -U / --skip-undef
@@ -27,11 +25,9 @@
     * Fix warning when using --no-upload or --no-download (issue#13)
 
 0.21	2019-03-21
-
     * Add --csv-eol-unix
 
 0.20	2019-01-01
-
     * Versions
     * It's 2017
     * Show a ranked summary of the tries with --try
@@ -41,40 +37,33 @@
     * It's 2019
 
 0.19	2016-01-02
-
     * Try multiple addresses for the server list RT#110400
     * It's 2016
 
 0.18	2015-10-10
-
     * Add --prtg option
     * Add --bytes option
     * Cleanup code to calculate average
 
 0.17	2015-03-27
-
     * Add graph example
     * Update version in .pm
 
 0.16	2015-02-11
-
     * Set a limit of 40 of the number of hosts to ping
     * Remove perl recommendation from META as it breaks cpan clients
 
 0.15	2015-01-15
-
     * Renamed to speedtest
     * Do not report/show origin on --list & --ping
     * Documentation/Manual + --man and --info
     * Put on CPAN
 
 0.12	2015-01-24
-
     * Add --csv
     * Update README
 
 0.11	2015-01-21
-
     * Add --timeout
     * Update copyright
     * Warning about speedtest not being ping
@@ -82,7 +71,6 @@
     * Fallback to distance in absence of GEO-IP
 
 0.10	2014-12-17
-
     * Add latency for --mini and --url
     * Optionally show server IP
     * Don't show full path in help
@@ -94,34 +82,28 @@
     * Browser-neutral agent-ident
 
 0.09	2014-12-02
-
     * Improve --help
     * Add --simple (alias for -v0)
     * Implement --mini
 
 0.08	2014-11-30
-
     * Report latency in ms
     * Shorten timeouts on detecting server speeds
 
 0.07	2014-11-26
-
     * Allow fetching list off ALL servers
     * Country codes (upper case)
     * Ignore country-code when it does not apply
 
 0.06	2014-11-18
-
     * Add option --one-line
     * Allow specifying a server-url
 
 0.05	2014-10-14
-
     * Allow test on multiple servers
     * Put on github
 
 0.04	2014-10-10
-
     * Require 5.12.0 instead of 5.16.3
     * Options -q and -Q accept count
     * Verbose levels
@@ -131,5 +113,4 @@
     * Remove ignored servers from list
 
 0.03	2014-10-10
-
     * First checkin to git

@@ -368,6 +368,12 @@ sub fix_meta {
 	    $jsn->{license}    = [ $jsn->{license} ];
 	    }
 	}
+    if (exists $jsn->{resources}{bugtracker}) {
+	my $url = $jsn->{resources}{bugtracker};
+	$jsn->{resources}{bugtracker} = {
+	    web  => $url,
+	    };
+	}
     if (exists $jsn->{resources}{repository}) {
 	my $url = $jsn->{resources}{repository};
 	my $web = $url;
