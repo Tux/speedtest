@@ -20,7 +20,9 @@ if ($txt[0] =~ m/^NAME\b/) { # No nroff available, fallback to Text
     like ($txt[1], qr{^\s+App::SpeedTest\s}i, "Pod was correctly parsed");
     }
 else {
-    like ($txt[0], qr{^SPEEDTEST\s*\(1\)}i, "It starts with a standard manual header");
+    # SPEEDTEST(1)          User Contributed Perl Documentation         SPEEDTEST(1)
+    # User Contributed Perl Documentation                  SPEEDTEST(1)
+    like ($txt[0], qr{\bSPEEDTEST\s*\(1\)}i, "It generated a standard header");
     }
 
 chomp (@txt = grep m/\S/ => qx{$^X ./speedtest --info});
