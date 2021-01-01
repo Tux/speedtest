@@ -61,14 +61,14 @@ requires:
     Time::HiRes:         0
     XML::Simple:         0
 recommends:
-    Data::Peek:          0.49
+    Data::Peek:          0.50
     Getopt::Long:        2.52
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.50
+    LWP::UserAgent:      6.51
     Socket:              2.030
     Time::HiRes:         1.9764
     XML::Simple:         2.25
-    Text::CSV_XS:        1.44
+    Text::CSV_XS:        1.45
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:

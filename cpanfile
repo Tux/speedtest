@@ -9,12 +9,12 @@ requires   "Socket";
 requires   "Time::HiRes";
 requires   "XML::Simple";
 
-recommends "Data::Peek"               => "0.49";
+recommends "Data::Peek"               => "0.50";
 recommends "Getopt::Long"             => "2.52";
 recommends "HTML::TreeBuilder"        => "5.07";
 recommends "LWP::UserAgent"           => "6.50";
 recommends "Socket"                   => "2.030";
-recommends "Text::CSV_XS"             => "1.44";
+recommends "Text::CSV_XS"             => "1.45";
 recommends "Time::HiRes"              => "1.9764";
 recommends "XML::Simple"              => "2.25";
 
