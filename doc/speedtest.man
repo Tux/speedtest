@@ -386,11 +386,11 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
        use, but was asked to make it publicly available as application.
 
 [1mCOPYRIGHT AND LICENSE[0m
-       Copyright (C) 2014-2020 H.Merijn Brand
+       Copyright (C) 2014-2021 H.Merijn Brand
 
        This software is free; you can redistribute it and/or modify it under
        the same terms as Perl itself.
 
 
 
-perl v5.32.0                      2020-10-24                          STDIN(1)
+perl v5.32.0                      2021-01-01                          STDIN(1)
