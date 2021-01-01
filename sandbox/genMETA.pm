@@ -331,6 +331,12 @@ sub quiet {
     $self->{quiet};
     } # quiet
 
+sub print_json {
+    my $self = shift;
+    my $jsn = $self->{jsn} || $self->add_json ();
+    print JSON::PP->new->utf8 (1)->pretty (1)->encode ($jsn);
+    } # print_json
+
 sub print_yaml {
     my $self = shift;
     print @{$self->{yml}};
@@ -346,9 +352,8 @@ sub write_yaml {
     $self->fix_meta ($out);
     } # print_yaml
 
-sub fix_meta {
-    my ($self, $yf) = @_;
-
+sub add_json {
+    my $self = shift;
     # Convert to meta-spec version 2
     # licenses are lists now
     my $jsn = $self->{h};
@@ -409,6 +414,13 @@ sub fix_meta {
 
     $jsn = CPAN::Meta::Converter->new ($jsn)->convert (version => "2");
     $jsn->{generated_by} = "Author";
+    $self->{jsn} = $jsn;
+    } # add_json
+
+sub fix_meta {
+    my ($self, $yf) = @_;
+
+    my $jsn = $self->add_json ();
 
     my $cmv = CPAN::Meta::Validator->new ($jsn);
     $cmv->is_valid or
