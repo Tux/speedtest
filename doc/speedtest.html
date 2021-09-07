@@ -40,15 +40,15 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code> $ speedtest [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
+<pre><code>$ speedtest [ --no-geo | --country=NL ] [ --list | --ping ] [ options ]
 
- $ speedtest --list
- $ speedtest --ping --country=BE
- $ speedtest
- $ speedtest -s 4358
- $ speedtest --url=http://ookla.extraip.net
- $ speedtest -q --no-download
- $ speedtest -Q --no-upload</code></pre>
+$ speedtest --list
+$ speedtest --ping --country=BE
+$ speedtest
+$ speedtest -s 4358
+$ speedtest --url=http://ookla.extraip.net
+$ speedtest -q --no-download
+$ speedtest -Q --no-upload</code></pre>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -119,9 +119,9 @@
 
 <p>Pass the ISO country code to select the servers</p>
 
-<pre><code> $ speedtest -c NL ...
- $ speedtest --cc=B ...
- $ speedtest --country=D ...</code></pre>
+<pre><code>$ speedtest -c NL ...
+$ speedtest --cc=B ...
+$ speedtest --country=D ...</code></pre>
 
 </dd>
 <dt id="list-cc">--list-cc </dt>
@@ -129,11 +129,11 @@
 
 <p>Fetch the server list and then show the list of countries the servers are located with their country code and server count</p>
 
-<pre><code> $ speedtest --list-cc
- AD Andorra                             1
- AE United Arab Emirates                4
- :
- ZW Zimbabwe                            6</code></pre>
+<pre><code>$ speedtest --list-cc
+AD Andorra                             1
+AE United Arab Emirates                4
+:
+ZW Zimbabwe                            6</code></pre>
 
 <p>You can then use that code to list the servers in the chosen country, as described below.</p>
 
@@ -143,17 +143,17 @@
 
 <p>This option will show all servers in the selection with the distance in kilometers to the server.</p>
 
-<pre><code> $ speedtest --list --country=IS
-   1: 10661 - Tengir hf              Akureyri    1980.02 km
-   2: 21605 - Premis ehf             Reykjav&#xFFFD;k   2039.16 km
-   3:  3684 - Nova                   Reykjavik   2039.16 km
-   4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
-   5: 10650 - Nova VIP               Reykjavik   2039.16 km
-   6: 16148 - Hringidan              Reykjavik   2039.16 km
-   7:  4818 - Siminn                 Reykjavik   2039.16 km
-   8: 17455 - Hringdu                Reykjav&#xFFFD;k   2039.16 km
-   9:  4141 - Vodafone               Reykjav&#xFFFD;k   2039.16 km
-  10:  3644 - Snerpa                 Isafjordur  2192.27 km</code></pre>
+<pre><code>$ speedtest --list --country=IS
+  1: 10661 - Tengir hf              Akureyri    1980.02 km
+  2: 21605 - Premis ehf             Reykjav&#xFFFD;k   2039.16 km
+  3:  3684 - Nova                   Reykjavik   2039.16 km
+  4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
+  5: 10650 - Nova VIP               Reykjavik   2039.16 km
+  6: 16148 - Hringidan              Reykjavik   2039.16 km
+  7:  4818 - Siminn                 Reykjavik   2039.16 km
+  8: 17455 - Hringdu                Reykjav&#xFFFD;k   2039.16 km
+  9:  4141 - Vodafone               Reykjav&#xFFFD;k   2039.16 km
+ 10:  3644 - Snerpa                 Isafjordur  2192.27 km</code></pre>
 
 </dd>
 <dt id="p---ping---ping-40">-p | --ping | --ping=40  </dt>
@@ -161,29 +161,29 @@
 
 <p>Show a list of servers in the selection with their latency in ms. Be very patient if running this with <a href="#all">&quot;--all&quot;</a>.</p>
 
-<pre><code> $ speedtest --ping --cc=BE
-   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      52 ms
-   2: 12627 - Proximus             Brussels         173.04 km      55 ms
-   3: 10986 - Proximus             Schaarbeek       170.54 km      55 ms
-   4: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      57 ms
-   5: 29238 - Arcadiz              DIEGEM           166.33 km      58 ms
-   6:  5151 - Combell              Brussels         173.04 km      59 ms
-   7: 26887 - Arxus NV             Brussels         173.04 km      64 ms
-   8:  4812 - Universite Catholiq&hellip; Louvain-La-Neuv  186.87 km      70 ms
-   9:  2848 - Cu.be Solutions      Diegem           166.33 km      75 ms
-  10: 12306 - VOO                  Li&#xFFFD;ge            186.26 km      80 ms
-  11: 24261 - Une Nouvelle Ville&hellip;  Charleroi        217.48 km     147 ms
-  12: 30594 - Orange Belgium       Evere            169.29 km     150 ms</code></pre>
+<pre><code>$ speedtest --ping --cc=BE
+  1:  4320 - EDPnet               Sint-Niklaas     148.06 km      52 ms
+  2: 12627 - Proximus             Brussels         173.04 km      55 ms
+  3: 10986 - Proximus             Schaarbeek       170.54 km      55 ms
+  4: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      57 ms
+  5: 29238 - Arcadiz              DIEGEM           166.33 km      58 ms
+  6:  5151 - Combell              Brussels         173.04 km      59 ms
+  7: 26887 - Arxus NV             Brussels         173.04 km      64 ms
+  8:  4812 - Universite Catholiq&hellip; Louvain-La-Neuv  186.87 km      70 ms
+  9:  2848 - Cu.be Solutions      Diegem           166.33 km      75 ms
+ 10: 12306 - VOO                  Li&#xFFFD;ge            186.26 km      80 ms
+ 11: 24261 - Une Nouvelle Ville&hellip;  Charleroi        217.48 km     147 ms
+ 12: 30594 - Orange Belgium       Evere            169.29 km     150 ms</code></pre>
 
 <p>If a server does not respond, a very high latency is used as default.</p>
 
 <p>This option only shows the 40 nearest servers. The number can be changed as optional argument.</p>
 
-<pre><code> $ speedtest --cc=BE --ping=4
-   1:  4320 - EDPnet               Sint-Niklaas     148.06 km      53 ms
-   2: 29238 - Arcadiz              DIEGEM           166.33 km      57 ms
-   3: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      62 ms
-   4:  2848 - Cu.be Solutions      Diegem           166.33 km      76 ms</code></pre>
+<pre><code>$ speedtest --cc=BE --ping=4
+  1:  4320 - EDPnet               Sint-Niklaas     148.06 km      53 ms
+  2: 29238 - Arcadiz              DIEGEM           166.33 km      57 ms
+  3: 15212 - Telenet BVBA/SPRL    Mechelen         133.89 km      62 ms
+  4:  2848 - Cu.be Solutions      Diegem           166.33 km      76 ms</code></pre>
 
 </dd>
 <dt id="one-line">-1 | --one-line  </dt>
@@ -191,8 +191,8 @@
 
 <p>Generate a very short report easy to paste in e.g. IRC channels.</p>
 
-<pre><code> $ speedtest -1Qv0
- DL:   40.721 Mbit/s, UL:   30.307 Mbit/s</code></pre>
+<pre><code>$ speedtest -1Qv0
+DL:   40.721 Mbit/s, UL:   30.307 Mbit/s</code></pre>
 
 </dd>
 <dt id="B---bytes">-B | --bytes  </dt>
@@ -208,18 +208,18 @@
 
 <p>The reported fields are</p>
 
-<pre><code> - A timestam (the time the tests are finished)
- - The server ID
- - The latency in ms
- - The number of tests executed in this measurement
- - The direction of the test (D = Down, U = Up)
- - The measure avarage speed in Mbit/s
- - The minimum speed measured in one of the test in Mbit/s
- - The maximum speed measured in one of the test in Mbit/s
+<pre><code>- A timestam (the time the tests are finished)
+- The server ID
+- The latency in ms
+- The number of tests executed in this measurement
+- The direction of the test (D = Down, U = Up)
+- The measure avarage speed in Mbit/s
+- The minimum speed measured in one of the test in Mbit/s
+- The maximum speed measured in one of the test in Mbit/s
 
- $ speedtest -Cs4358
- &quot;2015-01-24 17:15:09&quot;,4358,63.97,40,D,93.45,30.39,136.93
- &quot;2015-01-24 17:15:14&quot;,4358,63.97,40,U,92.67,31.10,143.06</code></pre>
+$ speedtest -Cs4358
+&quot;2015-01-24 17:15:09&quot;,4358,63.97,40,D,93.45,30.39,136.93
+&quot;2015-01-24 17:15:14&quot;,4358,63.97,40,U,92.67,31.10,143.06</code></pre>
 
 </dd>
 <dt id="U---skip-undef">-U | --skip-undef  </dt>
@@ -233,29 +233,29 @@
 
 <p>Generate the measurements in XML suited for PRTG</p>
 
-<pre><code> $ speedtest -P
- &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
- &lt;prtg&gt;
-   &lt;text&gt;Testing from My ISP (10.20.30.40)&lt;/text&gt;
-   &lt;result&gt;
-     &lt;channel&gt;Ping&lt;/channel&gt;
-     &lt;customUnit&gt;ms&lt;/customUnit&gt;
-     &lt;float&gt;1&lt;/float&gt;
-     &lt;value&gt;56.40&lt;/value&gt;
-     &lt;/result&gt;
-   &lt;result&gt;
-     &lt;channel&gt;Download&lt;/channel&gt;
-     &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
-     &lt;float&gt;1&lt;/float&gt;
-     &lt;value&gt;38.34&lt;/value&gt;
-     &lt;/result&gt;
-   &lt;result&gt;
-     &lt;channel&gt;Upload&lt;/channel&gt;
-     &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
-     &lt;float&gt;1&lt;/float&gt;
-     &lt;value&gt;35.89&lt;/value&gt;
-     &lt;/result&gt;
-   &lt;/prtg&gt;</code></pre>
+<pre><code>$ speedtest -P
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;prtg&gt;
+  &lt;text&gt;Testing from My ISP (10.20.30.40)&lt;/text&gt;
+  &lt;result&gt;
+    &lt;channel&gt;Ping&lt;/channel&gt;
+    &lt;customUnit&gt;ms&lt;/customUnit&gt;
+    &lt;float&gt;1&lt;/float&gt;
+    &lt;value&gt;56.40&lt;/value&gt;
+    &lt;/result&gt;
+  &lt;result&gt;
+    &lt;channel&gt;Download&lt;/channel&gt;
+    &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
+    &lt;float&gt;1&lt;/float&gt;
+    &lt;value&gt;38.34&lt;/value&gt;
+    &lt;/result&gt;
+  &lt;result&gt;
+    &lt;channel&gt;Upload&lt;/channel&gt;
+    &lt;customUnit&gt;Mbit/s&lt;/customUnit&gt;
+    &lt;float&gt;1&lt;/float&gt;
+    &lt;value&gt;35.89&lt;/value&gt;
+    &lt;/result&gt;
+  &lt;/prtg&gt;</code></pre>
 
 </dd>
 <dt id="url-XXX">--url[=XXX] </dt>
@@ -277,37 +277,37 @@
 
 <p>Use the top # (based on lowest latency or shortest distance) from the list to do all required tests.</p>
 
-<pre><code> $ speedtest -T3 -c NL -Q2
- Testing for 80.x.y.z : XS4ALL Internet BV (NL)
+<pre><code>$ speedtest -T3 -c NL -Q2
+Testing for 80.x.y.z : XS4ALL Internet BV (NL)
 
- Using 13218:  26.52 km      25 ms XS4ALL Internet BV
- Test download ..                                      Download     31.807 Mbit/s
- Test upload   ..                                      Upload       86.587 Mbit/s
+Using 13218:  26.52 km      25 ms XS4ALL Internet BV
+Test download ..                                      Download     31.807 Mbit/s
+Test upload   ..                                      Upload       86.587 Mbit/s
 
- Using 15850:  26.09 km      25 ms QTS Data Centers
- Test download ..                                      Download     80.763 Mbit/s
- Test upload   ..                                      Upload       77.122 Mbit/s
+Using 15850:  26.09 km      25 ms QTS Data Centers
+Test download ..                                      Download     80.763 Mbit/s
+Test upload   ..                                      Upload       77.122 Mbit/s
 
- Using 11365:  26.09 km      27 ms Vancis
- Test download ..                                      Download    106.022 Mbit/s
- Test upload   ..                                      Upload       82.891 Mbit/s
+Using 11365:  26.09 km      27 ms Vancis
+Test download ..                                      Download    106.022 Mbit/s
+Test upload   ..                                      Upload       82.891 Mbit/s
 
- Rank 01: Server:  11365   26.09 km      27 ms,  DL:  106.022 UL:   82.891
- Rank 02: Server:  15850   26.09 km      25 ms,  DL:   80.763 UL:   77.122
- Rank 03: Server:  13218   26.52 km      25 ms,  DL:   31.807 UL:   86.587
+Rank 01: Server:  11365   26.09 km      27 ms,  DL:  106.022 UL:   82.891
+Rank 02: Server:  15850   26.09 km      25 ms,  DL:   80.763 UL:   77.122
+Rank 03: Server:  13218   26.52 km      25 ms,  DL:   31.807 UL:   86.587
 
- $ speedtest -1v0 -T5
- DL:  200.014 Mbit/s, UL:  159.347 Mbit/s, SRV: 13218
- DL:  203.599 Mbit/s, UL:  166.247 Mbit/s, SRV: 15850
- DL:  207.249 Mbit/s, UL:  134.957 Mbit/s, SRV: 11365
- DL:  195.490 Mbit/s, UL:  172.109 Mbit/s, SRV: 5972
- DL:  179.413 Mbit/s, UL:  160.309 Mbit/s, SRV: 2042
+$ speedtest -1v0 -T5
+DL:  200.014 Mbit/s, UL:  159.347 Mbit/s, SRV: 13218
+DL:  203.599 Mbit/s, UL:  166.247 Mbit/s, SRV: 15850
+DL:  207.249 Mbit/s, UL:  134.957 Mbit/s, SRV: 11365
+DL:  195.490 Mbit/s, UL:  172.109 Mbit/s, SRV: 5972
+DL:  179.413 Mbit/s, UL:  160.309 Mbit/s, SRV: 2042
 
- Rank 01: Server:  15850   26.09 km      30 ms,  DL:  203.599 UL:  166.247
- Rank 02: Server:   5972   26.09 km      32 ms,  DL:  195.490 UL:  172.109
- Rank 03: Server:  13218   26.52 km      23 ms,  DL:  200.014 UL:  159.347
- Rank 04: Server:  11365   26.09 km      31 ms,  DL:  207.249 UL:  134.957
- Rank 05: Server:   2042   51.41 km      33 ms,  DL:  179.413 UL:  160.309</code></pre>
+Rank 01: Server:  15850   26.09 km      30 ms,  DL:  203.599 UL:  166.247
+Rank 02: Server:   5972   26.09 km      32 ms,  DL:  195.490 UL:  172.109
+Rank 03: Server:  13218   26.52 km      23 ms,  DL:  200.014 UL:  159.347
+Rank 04: Server:  11365   26.09 km      31 ms,  DL:  207.249 UL:  134.957
+Rank 05: Server:   2042   51.41 km      33 ms,  DL:  179.413 UL:  160.309</code></pre>
 
 </dd>
 <dt id="s---server---server-filename">-s# | --server=# | --server=filename  </dt>
@@ -315,58 +315,58 @@
 
 <p>Specify the ID of the server to test against. This ID can be taken from the output of <a href="#list">&quot;--list&quot;</a> or <a href="#ping">&quot;--ping&quot;</a>. Using this option prevents fetching the complete server list and calculation of distances. It also enables you to always test against the same server.</p>
 
-<pre><code> $ speedtest -1s4358
- Testing for 80.x.y.z : XS4ALL Internet BV ()
- Using 4358:  52.33 km      64 ms KPN
- Test download ........................................Download:   92.633 Mbit/s
- Test upload   ........................................Upload:     92.552 Mbit/s
- DL:   92.633 Mbit/s, UL:   92.552 Mbit/s</code></pre>
+<pre><code>$ speedtest -1s4358
+Testing for 80.x.y.z : XS4ALL Internet BV ()
+Using 4358:  52.33 km      64 ms KPN
+Test download ........................................Download:   92.633 Mbit/s
+Test upload   ........................................Upload:     92.552 Mbit/s
+DL:   92.633 Mbit/s, UL:   92.552 Mbit/s</code></pre>
 
 <p>This argument may be repeated to test against multile servers, more or less like specifying your own top x (as with <code>-T</code>).</p>
 
-<pre><code> $ speedtest -s 22400 -s 1208 -s 13218
- Testing for 185.x.y.z : Freedom Internet BV ()
+<pre><code>$ speedtest -s 22400 -s 1208 -s 13218
+Testing for 185.x.y.z : Freedom Internet BV ()
 
- Using 13218:  80.15 km      32 ms XS4ALL Internet BV
- Test download ........................................Download    66.833 Mbit/s
- Test upload   ........................................Upload     173.317 Mbit/s
+Using 13218:  80.15 km      32 ms XS4ALL Internet BV
+Test download ........................................Download    66.833 Mbit/s
+Test upload   ........................................Upload     173.317 Mbit/s
 
- Using  1208:  51.19 km      37 ms Qweb | Full-Service Hosting
- Test download ........................................Download    52.077 Mbit/s
- Test upload   ........................................Upload     195.833 Mbit/s
+Using  1208:  51.19 km      37 ms Qweb | Full-Service Hosting
+Test download ........................................Download    52.077 Mbit/s
+Test upload   ........................................Upload     195.833 Mbit/s
 
- Using 22400:  80.15 km      46 ms Usenet.Farm
- Test download ........................................Download    96.341 Mbit/s
- Test upload   ........................................Upload     203.306 Mbit/s
+Using 22400:  80.15 km      46 ms Usenet.Farm
+Test download ........................................Download    96.341 Mbit/s
+Test upload   ........................................Upload     203.306 Mbit/s
 
- Rank 01: Server:  22400   80.15 km      46 ms,  DL:   96.341 UL:  203.306
- Rank 02: Server:   1208   51.19 km      37 ms,  DL:   52.077 UL:  195.833
- Rank 03: Server:  13218   80.15 km      32 ms,  DL:   66.833 UL:  173.317</code></pre>
+Rank 01: Server:  22400   80.15 km      46 ms,  DL:   96.341 UL:  203.306
+Rank 02: Server:   1208   51.19 km      37 ms,  DL:   52.077 UL:  195.833
+Rank 03: Server:  13218   80.15 km      32 ms,  DL:   66.833 UL:  173.317</code></pre>
 
 <p>If you pass a filename, it is expected to reflect a server-like structure as received from the speedtest server-list, possibly completed with upload- and download URL&#39;s. You can only pass one filename not consisting of all digits. If you do, all remaining <code>-s</code> arguments are ignored.</p>
 
-<pre><code>  {   cc      =&gt; &quot;NL&quot;,
-      country =&gt; &quot;Netherlands&quot;,
-      host    =&gt; &quot;unlisted.host.amsterdam:8080&quot;,
-      id      =&gt; 9999,
-      lat     =&gt; &quot;52.37316&quot;,
-      lon     =&gt; &quot;4.89122&quot;,
-      name    =&gt; &quot;Amsterdam&quot;,
-      ping    =&gt; 20.0,
-      sponsor =&gt; &quot;Dam tot Damloop&quot;,
-      url     =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
-      url2    =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
+<pre><code>{   cc      =&gt; &quot;NL&quot;,
+    country =&gt; &quot;Netherlands&quot;,
+    host    =&gt; &quot;unlisted.host.amsterdam:8080&quot;,
+    id      =&gt; 9999,
+    lat     =&gt; &quot;52.37316&quot;,
+    lon     =&gt; &quot;4.89122&quot;,
+    name    =&gt; &quot;Amsterdam&quot;,
+    ping    =&gt; 20.0,
+    sponsor =&gt; &quot;Dam tot Damloop&quot;,
+    url     =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
+    url2    =&gt; &quot;http://unlisted.host.amsterdam/speedtest/speedtest/upload.php&quot;,
 
-      dl_list =&gt; [
-          &quot;http://unlisted.host.amsterdam/files/128.bin&quot;,
-          &quot;http://unlisted.host.amsterdam/files/256.bin&quot;,
-          # 40 URL&#39;s pointing to files in increasing size
-          &quot;http://unlisted.host.amsterdam/files/2G.bin&quot;,
-          ],
-      ul_list =&gt; [
-          # 40 URL&#39;s
-          ],
-      }</code></pre>
+    dl_list =&gt; [
+        &quot;http://unlisted.host.amsterdam/files/128.bin&quot;,
+        &quot;http://unlisted.host.amsterdam/files/256.bin&quot;,
+        # 40 URL&#39;s pointing to files in increasing size
+        &quot;http://unlisted.host.amsterdam/files/2G.bin&quot;,
+        ],
+    ul_list =&gt; [
+        # 40 URL&#39;s
+        ],
+    }</code></pre>
 
 </dd>
 <dt id="t---timeout">-t# | --timeout=#  </dt>
@@ -451,7 +451,7 @@
 
 <p>Debian wheezy will run with just two additional packages:</p>
 
-<pre><code> # apt-get install libxml-simple-perl libdata-peek-perl</code></pre>
+<pre><code># apt-get install libxml-simple-perl libdata-peek-perl</code></pre>
 
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
