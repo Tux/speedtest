@@ -64,7 +64,7 @@ recommends:
     Data::Peek:          0.50
     Getopt::Long:        2.52
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.56
+    LWP::UserAgent:      6.57
     Socket:              2.032
     Time::HiRes:         1.9767
     XML::Simple:         2.25
@@ -74,7 +74,7 @@ configure_requires:
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302186
+    Test::More:          1.302188
 resources:
     license:             http://dev.perl.org/licenses/
     homepage:            https://metacpan.org/pod/App::SpeedTest
