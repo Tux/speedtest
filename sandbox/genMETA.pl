@@ -64,11 +64,11 @@ recommends:
     Data::Peek:          0.50
     Getopt::Long:        2.52
     HTML::TreeBuilder:   5.07
-    LWP::UserAgent:      6.57
+    LWP::UserAgent:      6.60
     Socket:              2.032
     Time::HiRes:         1.9767
     XML::Simple:         2.25
-    Text::CSV_XS:        1.46
+    Text::CSV_XS:        1.47
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:

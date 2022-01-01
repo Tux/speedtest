@@ -12,9 +12,9 @@ requires   "XML::Simple";
 recommends "Data::Peek"               => "0.50";
 recommends "Getopt::Long"             => "2.52";
 recommends "HTML::TreeBuilder"        => "5.07";
-recommends "LWP::UserAgent"           => "6.56";
+recommends "LWP::UserAgent"           => "6.60";
 recommends "Socket"                   => "2.032";
-recommends "Text::CSV_XS"             => "1.46";
+recommends "Text::CSV_XS"             => "1.47";
 recommends "Time::HiRes"              => "1.9767";
 recommends "XML::Simple"              => "2.25";
 
