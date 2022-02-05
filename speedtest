@@ -7,7 +7,7 @@ require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.28";
+our $VERSION = "0.29";
 our $CMD = $0; $CMD =~ s{.*/}{};
 
 sub usage {
