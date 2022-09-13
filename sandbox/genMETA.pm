@@ -2,9 +2,9 @@
 
 package genMETA;
 
-our $VERSION = "1.11-20201024";
+our $VERSION = "1.12-20220913";
 
-use 5.14.1;
+use 5.014001;
 use warnings;
 use Carp;
 
@@ -31,7 +31,13 @@ sub new {
 sub extract_version {
     my $fh = shift;
     while (<$fh>) {
-	m/^(?:our\s+)? \$VERSION \s*=\s* ["']? ([-0-9._]+) ['"]? \s*;\s*$/x or next;
+	m{^(?:our\s+)?							# declaration
+	   \$VERSION \s*=\s*						# variable
+	   ["']? ([0-9._]+)						# version
+		 (?:\s* - \s* [0-9]{4}-?[0-9]{2}-?[0-9]{2} \s*)?	# date
+	   ['"]?
+	   \s*;\s*
+	   $}x or next;
 	return $1;
 	}
     } # extract_version
@@ -313,7 +319,7 @@ sub check_changelog {
 	    my $D = Delta_Days ($y, $m , $d, $t[5] + 1900, $t[4] + 1, $t[3]);
 	    $D < 0 and croak  RED,    "Last entry in $td[0] is in the future!",               RESET, "\n";
 	    $D > 2 and croak  RED,    "Last entry in $td[0] is not up to date ($D days ago)", RESET, "\n";
-	    $D > 0 and warn YELLOW, "Last entry in $td[0] is not today",                    RESET, "\n";
+	    $D > 0 and warn   YELLOW, "Last entry in $td[0] is not today",                    RESET, "\n";
 	    }
 	last;
 	}
