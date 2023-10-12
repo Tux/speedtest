@@ -26,6 +26,7 @@ elsif ($^O eq "solaris") {
 else {
     # SPEEDTEST(1)          User Contributed Perl Documentation         SPEEDTEST(1)
     # User Contributed Perl Documentation                  SPEEDTEST(1)
+    $txt[0] =~ s/(?:\e\[|\x9b)[0-9;]*m//g; # groff-1.24 starts colorizing
     like ($txt[0], qr{\bSPEEDTEST\s*\(1\)}i, "It generated a standard header");
     }
 

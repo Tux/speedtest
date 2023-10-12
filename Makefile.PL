@@ -67,7 +67,7 @@ sub postamble {
 	'doc/speedtest.3:	speedtest',
 	'	pod2man       < $? > $@',
 	'doc/speedtest.man:	doc/speedtest.3',
-	'	nroff -mandoc < $? > $@',
+	'	nroff2man     < $? > $@',
 	'',
 	@pc;
     } # postamble
