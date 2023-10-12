@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.12-20220913";
+our $VERSION = "1.14-20230522";
 
 use 5.014001;
 use warnings;
@@ -34,9 +34,10 @@ sub extract_version {
 	m{^(?:our\s+)?							# declaration
 	   \$VERSION \s*=\s*						# variable
 	   ["']? ([0-9._]+)						# version
-		 (?:\s* - \s* [0-9]{4}-?[0-9]{2}-?[0-9]{2} \s*)?	# date
+		 (?:\s* - \s* [0-9]{4}-?[0-9]{2}-?[0-9]{2} \s*)?	# date "0.01 - 20230412"
 	   ['"]?
 	   \s*;\s*
+		 (?:\x23 \s* [0-9]{4}-?[0-9]{2}-?[0-9]{2} \s*)?		# date "0.01"; # 20230502
 	   $}x or next;
 	return $1;
 	}
@@ -90,9 +91,18 @@ sub from_data {
     my ($self, @data) = @_;
     $self->{version} or $self->version_from ();
     s/VERSION/$self->{version}/g for @data;
+    my ($dsct, $dmod);
+    for (@data) {
+	s/[ \t]+$//;
+	m/^\s*(\w+):$/			and $dsct = $1;
+	m/^\s*(\w(?:[\w:]+\w)?):\s+\d/	and $dmod = $1;
+	s/\s+#\s*ignore\b\s*[:=]?\s*(\S+)$//i or next;
+	$self->{cve_ignore}{$dsct}{$dmod} = $1;
+	}
     $self->{yml} = \@data;
     $self->check_yaml ();
     $self->check_provides ();
+    #DDumper $self->{cve_ignore};
     return @data;
     } # from_data
 
@@ -139,23 +149,28 @@ sub check_required {
     BEGIN { $V::NO_EXIT = $V::NO_EXIT = 1 } require V;
     my %req = map { %{$yml->{$_}} } grep m/requires/   => keys %{$yml};
     my %rec = map { %{$yml->{$_}} } grep m/recommends/ => keys %{$yml};
+    my %sug = map { %{$yml->{$_}} } grep m/suggests/   => keys %{$yml};
     if (my $of = $yml->{optional_features}) {
 	foreach my $f (values %{$of}) {
 	    my %q = map { %{$f->{$_}} } grep m/requires/   => keys %{$f};
 	    my %c = map { %{$f->{$_}} } grep m/recommends/ => keys %{$f};
+	    my %s = map { %{$f->{$_}} } grep m/suggests/   => keys %{$f};
 	    @req{keys %q} = values %q;
 	    @rec{keys %c} = values %c;
+	    @sug{keys %s} = values %s;
 	    }
 	}
     if (my $of = $yml->{prereqs}) {
 	foreach my $f (values %{$of}) {
 	    my %q = map { %{$f->{$_}} } grep m/requires/   => keys %{$f};
 	    my %c = map { %{$f->{$_}} } grep m/recommends/ => keys %{$f};
+	    my %s = map { %{$f->{$_}} } grep m/suggests/   => keys %{$f};
 	    @req{keys %q} = values %q;
 	    @rec{keys %c} = values %c;
+	    @sug{keys %s} = values %s;
 	    }
 	}
-    my %vsn = ( %req, %rec );
+    my %vsn = ( %req, %rec, %sug );
     delete @vsn{qw( perl version )};
     for (sort keys %vsn) {
 	if (my $mfv = delete $self->{mfpr}{$_}) {
@@ -415,6 +430,10 @@ sub add_json {
 		#$jsn->{prereqs}{runtime}{recommends}{$_} //= $r->{$_} for keys %$r;
 		$of->{$f}{prereqs}{runtime}{recommends} = $r;
 		}
+	    if (my $r = delete $of->{$f}{suggests}) {
+		#$jsn->{prereqs}{runtime}{suggests}{$_} //= $r->{$_} for keys %$r;
+		$of->{$f}{prereqs}{runtime}{suggests} = $r;
+		}
 	    }
 	}
 
@@ -460,6 +479,9 @@ sub fix_meta {
 	    if (my $r = delete $of->{$f}{prereqs}{runtime}{recommends}) {
 		$of->{$f}{requires} = $r;
 		}
+	    if (my $r = delete $of->{$f}{prereqs}{runtime}{suggests}) {
+		$of->{$f}{suggests} = $r;
+		}
 	    }
 	}
     # runtime and test_requires are unknown as top-level in 1.4
@@ -491,12 +513,13 @@ sub fix_meta {
     } # fix_meta
 
 sub _cpfd {
-    my ($jsn, $sct, $f) = @_;
+    my ($self, $jsn, $sct, $f) = @_;
 
     open my $sh, ">", \my $b;
     my $sep = "";
     for (qw( requires recommends suggests )) {
-	my $s = $jsn->{"$sct$_"} or next;
+	my $x = "$sct$_";
+	my $s = $jsn->{$x} or next;
 	print $sh $sep;
 	foreach my $m (sort keys %$s) {
 	    $m eq "perl" and next;
@@ -504,7 +527,11 @@ sub _cpfd {
 	    printf $sh qq{%-10s "%s"}, $_, $m;
 	    my $aw = (24 - length $m); $aw < 0 and $aw = 0;
 	    printf $sh qq{%s => "%s"}, " " x $aw, $v if $v;
-	    say $sh ";";
+	    print  $sh ";";
+	    if (my $i = $self->{cve_ignore}{$x}{$m}) {
+		print  $sh "  # ignore : $i";
+		}
+	    say $sh "";
 	    }
 	$sep = "\n";
 	}
@@ -523,7 +550,7 @@ sub gen_cpanfile {
 
 	my $sct = $sct_ =~ s/_$//r;
 
-	my $b = _cpfd ($jsn, $sct_, 0) or next;
+	my $b = _cpfd ($self, $jsn, $sct_, 0) or next;
 
 	if ($sct) {
 	    say $fh qq/\non "$sct" => sub {/;
@@ -538,11 +565,20 @@ sub gen_cpanfile {
 	foreach my $f (sort keys %$of) {
 	    my $fs = $of->{$f};
 	    say $fh qq/\nfeature "$f", "$fs->{description}" => sub {/;
-	    say $fh _cpfd ($fs, "", 1) =~ s/^(?=\S)/    /gmr;
+	    say $fh _cpfd ($self, $fs, "", 1) =~ s/^(?=\S)/    /gmr;
 	    }
 	}
 
     close $fh;
+
+    warn "Check CVE's ...\n";
+    if (system "cpan-cve.pl", "-d", ".") {
+	warn "### CVE WARNING\n";
+	warn "#\n";
+	warn "# The current release would have recommended versions\n";
+	warn "# with known CVE's that are not (yet) ignored\n";
+	sleep (5);
+	}
     } # gen_cpanfile
 
 1;

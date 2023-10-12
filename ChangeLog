@@ -1,4 +1,5 @@
 0.29	2023-10-12
+    * Make requirements more specific based on known CVE's
     * Work around groff-1.24
 
 0.28	2022-01-01
