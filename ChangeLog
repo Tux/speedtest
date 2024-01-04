@@ -1,6 +1,7 @@
-0.29	2023-12-20
+0.29	2024-01-04
     * Make requirements more specific based on known CVE's
     * Work around groff-1.24
+    * It is 2024
 
 0.28	2022-01-01
     * It is 2021 - No changes in 2021
