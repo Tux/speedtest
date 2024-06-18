@@ -1,7 +1,8 @@
-0.29	2024-01-04
+0.29	2024-06-18
     * Make requirements more specific based on known CVE's
     * Work around groff-1.24
     * It is 2024
+    * Tested with perl-5.40
 
 0.28	2022-01-01
     * It is 2021 - No changes in 2021

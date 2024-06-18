@@ -13,9 +13,9 @@ recommends "Data::Dumper"             => "2.154";
 recommends "Data::Peek"               => "0.52";
 recommends "Getopt::Long"             => "2.57";
 recommends "HTML::TreeBuilder"        => "5.07";
-recommends "LWP::UserAgent"           => "6.72";
-recommends "Socket"                   => "2.037";
-recommends "Text::CSV_XS"             => "1.53";
+recommends "LWP::UserAgent"           => "6.77";
+recommends "Socket"                   => "2.038";
+recommends "Text::CSV_XS"             => "1.55";
 recommends "Time::HiRes"              => "1.9775";
 recommends "XML::Simple"              => "2.25";
 
@@ -32,5 +32,5 @@ on "configure" => sub {
 on "test" => sub {
     requires   "Test::More";
 
-    recommends "Test::More"               => "1.302198";
+    recommends "Test::More"               => "1.302199";
     };
