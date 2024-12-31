@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.15-20231007";
+our $VERSION = "1.16-20240903";
 
 use 5.014001;
 use warnings;
@@ -30,7 +30,9 @@ sub new {
 
 sub extract_version {
     my $fh = shift;
+    my @vsn;
     while (<$fh>) {
+	m/\$VERSION\b/ and push @vsn => $_;
 	m{^(?:our\s+)?							# declaration
 	   \$VERSION \s*=\s*						# variable
 	   ["']? ([0-9._]+)						# version
@@ -40,6 +42,15 @@ sub extract_version {
 		 (?:\x23 \s* [0-9]{4}-?[0-9]{2}-?[0-9]{2} \s*)?		# date "0.01"; # 20230502
 	   $}x or next;
 	return $1;
+	}
+    # No match on first scan, try without date
+    for (@vsn) {
+	m{^(?:our\s+)?							# declaration
+	   \$VERSION \s*=\s*						# variable
+	   ([""'']) ([0-9._]+) \1					# version
+	   \s*;
+	   }x or next;
+	return $2;
 	}
     } # extract_version
 

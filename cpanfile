@@ -11,15 +11,15 @@ requires   "XML::Simple";
 
 recommends "Data::Dumper"             => "2.154";
 recommends "Data::Peek"               => "0.52";
-recommends "Getopt::Long"             => "2.57";
+recommends "Getopt::Long"             => "2.58";
 recommends "HTML::TreeBuilder"        => "5.07";
 recommends "LWP::UserAgent"           => "6.77";
 recommends "Socket"                   => "2.038";
-recommends "Text::CSV_XS"             => "1.55";
-recommends "Time::HiRes"              => "1.9775";
+recommends "Text::CSV_XS"             => "1.58";
+recommends "Time::HiRes"              => "1.9777";
 recommends "XML::Simple"              => "2.25";
 
-suggests   "Data::Dumper"             => "2.188";
+suggests   "Data::Dumper"             => "2.189";
 
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
@@ -32,5 +32,5 @@ on "configure" => sub {
 on "test" => sub {
     requires   "Test::More";
 
-    recommends "Test::More"               => "1.302199";
+    recommends "Test::More"               => "1.302207";
     };

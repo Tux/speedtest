@@ -69,7 +69,7 @@ recommends:
     Socket:              2.038
     Time::HiRes:         1.9777
     XML::Simple:         2.25
-    Text::CSV_XS:        1.55
+    Text::CSV_XS:        1.58
 suggests:
     Data::Dumper:        2.189
 configure_requires:
@@ -81,7 +81,7 @@ configure_suggests:
 test_requires:
     Test::More:          0
 test_recommends:
-    Test::More:          1.302199
+    Test::More:          1.302207
 resources:
     license:             http://dev.perl.org/licenses/
     homepage:            https://metacpan.org/pod/App::SpeedTest
