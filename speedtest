@@ -1,13 +1,13 @@
 #!/pro/bin/perl
 
 # speedtest - test network speed using speedtest.net
-# (m)'20 [2020-06-30] Copyright H.M.Brand 2014-2024
+# (m)'20 [2020-06-30] Copyright H.M.Brand 2014-2025
 
 require 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.29";
+our $VERSION = "0.30";
 our $CMD = $0; $CMD =~ s{.*/}{};
 
 sub usage {
@@ -1094,7 +1094,7 @@ personal use, but was asked to make it publicly available as application.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2014-2024 H.Merijn Brand
+Copyright (C) 2014-2025 H.Merijn Brand
 
 This software is free; you can redistribute it and/or modify
 it under the same terms as Perl itself.
