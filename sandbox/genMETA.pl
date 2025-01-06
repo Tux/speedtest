@@ -62,14 +62,14 @@ requires:
     XML::Simple:         0
 recommends:
     Data::Dumper:        2.154
-    Data::Peek:          0.52
+    Data::Peek:          0.53
     Getopt::Long:        2.58
     HTML::TreeBuilder:   5.07
     LWP::UserAgent:      6.77
     Socket:              2.038
     Time::HiRes:         1.9777
     XML::Simple:         2.25
-    Text::CSV_XS:        1.58
+    Text::CSV_XS:        1.59
 suggests:
     Data::Dumper:        2.189
 configure_requires:

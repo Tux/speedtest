@@ -10,12 +10,12 @@ requires   "Time::HiRes";
 requires   "XML::Simple";
 
 recommends "Data::Dumper"             => "2.154";
-recommends "Data::Peek"               => "0.52";
+recommends "Data::Peek"               => "0.53";
 recommends "Getopt::Long"             => "2.58";
 recommends "HTML::TreeBuilder"        => "5.07";
 recommends "LWP::UserAgent"           => "6.77";
 recommends "Socket"                   => "2.038";
-recommends "Text::CSV_XS"             => "1.58";
+recommends "Text::CSV_XS"             => "1.59";
 recommends "Time::HiRes"              => "1.9777";
 recommends "XML::Simple"              => "2.25";
 
