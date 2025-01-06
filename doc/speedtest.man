@@ -1,4 +1,4 @@
-STDIN(1)              User Contributed Perl Documentation             STDIN(1)
+App::SpeedTest(3)     User Contributed Perl Documentation    App::SpeedTest(3)
 
 NAME
        App::SpeedTest - Command-line interface to speedtest.net
@@ -22,7 +22,7 @@ DESCRIPTION
        It was written to feature the functionality that speedtest.net offers
        without the overhead of flash or java and the need of a browser.
 
-Raison-d'Ãªtre
+Raison-d'être
        The tool is there to give you a quick indication of the achievable
        throughput of your current network. That can drop dramatically if you
        are behind (several) firewalls or badly configured networks (or network
@@ -49,19 +49,19 @@ Command-line Arguments
          Show the builtin manual using "pod2text".
 
        -v[#] | --verbose[=#]
-         Set  verbose level. Default value is 1. A plain -v without value will
+         Set verbose level. Default value is 1. A plain -v without value will
          set the level to 2.
 
        --simple
          An alias for "-v0"
 
        --all
-         No (default) filtering on  available  servers.  Useful  when  finding
+         No (default) filtering on available servers. Useful when finding
          servers outside of the country of your own location.
 
        -g | --geo
-         Use  GEO-IP  service  to  find  the  country your ISP is located. The
-         default is true. If disable ("--no-geo"), the server to use  will  be
+         Use GEO-IP service to find the country your ISP is located. The
+         default is true. If disable ("--no-geo"), the server to use will be
          based on distance instead of on latency.
 
        -cXX | --cc=XX | --country=XX
@@ -85,19 +85,19 @@ Command-line Arguments
          as described below.
 
        -l | --list
-         This  option will show all servers in the selection with the distance
+         This option will show all servers in the selection with the distance
          in kilometers to the server.
 
           $ speedtest --list --country=IS
             1: 10661 - Tengir hf              Akureyri    1980.02 km
-            2: 21605 - Premis ehf             Reykjavï¿½k   2039.16 km
+            2: 21605 - Premis ehf             Reykjav?k   2039.16 km
             3:  3684 - Nova                   Reykjavik   2039.16 km
             4:  6471 - Gagnaveita Reykjavikur Reykjavik   2039.16 km
             5: 10650 - Nova VIP               Reykjavik   2039.16 km
             6: 16148 - Hringidan              Reykjavik   2039.16 km
             7:  4818 - Siminn                 Reykjavik   2039.16 km
-            8: 17455 - Hringdu                Reykjavï¿½k   2039.16 km
-            9:  4141 - Vodafone               Reykjavï¿½k   2039.16 km
+            8: 17455 - Hringdu                Reykjav?k   2039.16 km
+            9:  4141 - Vodafone               Reykjav?k   2039.16 km
            10:  3644 - Snerpa                 Isafjordur  2192.27 km
 
        -p | --ping | --ping=40
@@ -112,15 +112,15 @@ Command-line Arguments
             5: 29238 - Arcadiz              DIEGEM           166.33 km      58 ms
             6:  5151 - Combell              Brussels         173.04 km      59 ms
             7: 26887 - Arxus NV             Brussels         173.04 km      64 ms
-            8:  4812 - Universite Catholiqâ¦ Louvain-La-Neuv  186.87 km      70 ms
+            8:  4812 - Universite Catholiq? Louvain-La-Neuv  186.87 km      70 ms
             9:  2848 - Cu.be Solutions      Diegem           166.33 km      75 ms
-           10: 12306 - VOO                  Liï¿½ge            186.26 km      80 ms
-           11: 24261 - Une Nouvelle Villeâ¦  Charleroi        217.48 km     147 ms
+           10: 12306 - VOO                  Liège            186.26 km      80 ms
+           11: 24261 - Une Nouvelle Ville?  Charleroi        217.48 km     147 ms
            12: 30594 - Orange Belgium       Evere            169.29 km     150 ms
 
          If a server does not respond, a very high latency is used as default.
 
-         This option only shows the 40 nearest  servers.  The  number  can  be
+         This option only shows the 40 nearest servers. The number can be
          changed as optional argument.
 
           $ speedtest --cc=BE --ping=4
@@ -158,7 +158,7 @@ Command-line Arguments
           "2015-01-24 17:15:14",4358,63.97,40,U,92.67,31.10,143.06
 
        -U | --skip-undef
-         Skip  reporting  measurements  that  have no speed recordings at all.
+         Skip reporting measurements that have no speed recordings at all.
          The default is to report these as 0.00 .. 999999999.999.
 
        -P | --prtg
@@ -233,9 +233,9 @@ Command-line Arguments
           Rank 05: Server:   2042   51.41 km      33 ms,  DL:  179.413 UL:  160.309
 
        -s# | --server=# | --server=filename
-         Specify the ID of the server to test against. This ID  can  be  taken
-         from  the  output of "--list" or "--ping". Using this option prevents
-         fetching the complete server list and calculation of  distances.   It
+         Specify the ID of the server to test against. This ID can be taken
+         from the output of "--list" or "--ping". Using this option prevents
+         fetching the complete server list and calculation of distances.  It
          also enables you to always test against the same server.
 
           $ speedtest -1s4358
@@ -245,7 +245,7 @@ Command-line Arguments
           Test upload   ........................................Upload:     92.552 Mbit/s
           DL:   92.633 Mbit/s, UL:   92.552 Mbit/s
 
-         This  argument may be repeated to test against multile servers,  more
+         This argument may be repeated to test against multile servers,  more
          or less like specifying your own top x (as with "-T").
 
           $ speedtest -s 22400 -s 1208 -s 13218
@@ -267,9 +267,9 @@ Command-line Arguments
           Rank 02: Server:   1208   51.19 km      37 ms,  DL:   52.077 UL:  195.833
           Rank 03: Server:  13218   80.15 km      32 ms,  DL:   66.833 UL:  173.317
 
-         If you pass a filename, it  is  expected  to  reflect  a  server-like
-         structure  as  received  from  the  speedtest  server-list,  possibly
-         completed with upload- and download URL's.  You  can  only  pass  one
+         If you pass a filename, it is expected to reflect a server-like
+         structure as received from the speedtest server-list, possibly
+         completed with upload- and download URL's. You can only pass one
          filename not consisting of all digits.  If you do, all remaining "-s"
          arguments are ignored.
 
@@ -306,15 +306,15 @@ Command-line Arguments
          Run the upload tests. This is default unless "--download" is passed.
 
        -q[#] | --quick[=#] | --fast[=#]
-         Don't  run  the full test. The default test runs 40 tests, sorting on
-         increasing test size (and thus test  duration).  Long(er)  tests  may
-         take  too  long on slow connections without adding value. The default
+         Don't run the full test. The default test runs 40 tests, sorting on
+         increasing test size (and thus test duration). Long(er) tests may
+         take too long on slow connections without adding value. The default
          value for "-q" is 20 but any value between 1 and 40 is allowed.
 
        -Q[#] | --realquick[=#]
-         Don't run the full test. The default test runs 40 tests,  sorting  on
-         increasing  test  size  (and  thus test duration). Long(er) tests may
-         take too long on slow connections without adding value.  The  default
+         Don't run the full test. The default test runs 40 tests, sorting on
+         increasing test size (and thus test duration). Long(er) tests may
+         take too long on slow connections without adding value. The default
          value for "-Q" is 10 but any value between 1 and 40 is allowed.
 
        -mXX | --mini=XX
@@ -330,8 +330,8 @@ DIAGNOSTICS
        ...
 
 BUGS and CAVEATS
-       Due  to  language  implementation,  it  may  report speeds that are not
-       consistent with the speeds reported  by  the  web  interface  or  other
+       Due to language implementation, it may report speeds that are not
+       consistent with the speeds reported by the web interface or other
        speed-test tools.  Likewise for reported latencies, which are not to be
        compared to those reported by tools like ping.
 
@@ -340,11 +340,11 @@ TODO
          What did I miss?
 
        Enable alternative XML parsers
-         XML::Simple  is  not  the  recommended XML parser, but it sufficed on
+         XML::Simple is not the recommended XML parser, but it sufficed on
          startup. All other API's are more complex.
 
 PORTABILITY
-       As Perl has been ported to a plethora of operating  systems,  this  CLI
+       As Perl has been ported to a plethora of operating systems, this CLI
        will work fine on all systems that fulfill the requirement as listed in
        Makefile.PL (or the various META files).
 
@@ -355,38 +355,38 @@ PORTABILITY
         # apt-get install libxml-simple-perl libdata-peek-perl
 
 SEE ALSO
-       As  an  alternative  to  speedtest.net <http://www.speedtest.net/>, you
+       As an alternative to speedtest.net <http://www.speedtest.net/>, you
        could consider <http://compari.tech/speed>.
 
        The speedtest-cli <https://github.com/sivel/speedtest-cli> project that
-       inspired me to improve a broken CLI written in python into our  beloved
+       inspired me to improve a broken CLI written in python into our beloved
        language Perl.
 
 CONTRIBUTING
    General
-       I  am always open to improvements and suggestions. Use issues at github
+       I am always open to improvements and suggestions. Use issues at github
        issues <https://github.com/Tux/speedtest/issues>.
 
    Style
-       I will never accept pull request that do not  strictly  conform  to  my
-       style,  however you might hate it. You can read the reasoning behind my
+       I will never accept pull request that do not strictly conform to my
+       style, however you might hate it. You can read the reasoning behind my
        preferences here <https://tux.nl/style.html>.
 
        I really don't care about mixed spaces and tabs in (leading) whitespace
 
 WARRANTY
-       This tool is by no means a guarantee to show the correct speeds. It  is
-       only  to  be  used  as an indication of the throughput of your internet
+       This tool is by no means a guarantee to show the correct speeds. It is
+       only to be used as an indication of the throughput of your internet
        connection. The values shown cannot be used in a legal debate.
 
 AUTHOR
-       H.Merijn Brand <linux@tux.freedom.nl> wrote this for his  own  personal
+       H.Merijn Brand <linux@tux.freedom.nl> wrote this for his own personal
        use, but was asked to make it publicly available as application.
 
 COPYRIGHT AND LICENSE
        Copyright (C) 2014-2024 H.Merijn Brand
 
-       This  software  is free; you can redistribute it and/or modify it under
+       This software is free; you can redistribute it and/or modify it under
        the same terms as Perl itself.
 
-perl v5.38.2                      2024-01-04                          STDIN(1)
+perl v5.40.0                      2025-01-06                 App::SpeedTest(3)

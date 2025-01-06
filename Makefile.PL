@@ -39,6 +39,7 @@ sub postamble {
 	push @pc,
 	    'test ::	lib/App/SpeedTest.pm',
 	    '	-@env TEST_FILES="xt/*.t" make -e test_dynamic',
+	    '	perl doc/make-doc.pl',
 	    '';
     join "\n" =>
 	'spellcheck:	lib/App/SpeedTest.pm doc',
@@ -61,13 +62,7 @@ sub postamble {
 	'doc docs:		doc/speedtest.md doc/speedtest.html doc/speedtest.man',
 	'	-@rm -f pod2html.tmp',
 	'doc/speedtest.md:	speedtest',
-	'	pod2markdown  < $? > $@',
-	'doc/speedtest.html:	speedtest',
-	'	pod2html      < $? 2>&1 | grep -v "^Cannot find" > $@',
-	'doc/speedtest.3:	speedtest',
-	'	pod2man       < $? > $@',
-	'doc/speedtest.man:	doc/speedtest.3',
-	'	nroff2man     < $? > $@',
+	'	perl doc/make-doc.pl',
 	'',
 	@pc;
     } # postamble
