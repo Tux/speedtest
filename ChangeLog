@@ -1,3 +1,6 @@
+0.30	2025-01-06
+    * Add SECURITY.md
+
 0.29	2024-06-18
     * Make requirements more specific based on known CVE's
     * Work around groff-1.24

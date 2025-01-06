@@ -2,26 +2,27 @@
 
 package genMETA;
 
-our $VERSION = "1.16-20240903";
+our $VERSION = "1.17-20250106";
 
 use 5.014001;
 use warnings;
 use Carp;
 
-use List::Util qw( first );
-use Encode qw( encode decode );
-use Term::ANSIColor qw(:constants);
-use Date::Calc qw( Delta_Days );
-use Test::CPAN::Meta::YAML::Version;
-use CPAN::Meta::Validator;
 use CPAN::Meta::Converter;
-use Test::More ();
-use Parse::CPAN::Meta;
-use File::Find;
-use YAML::Syck;
+use CPAN::Meta::Validator;
 use Data::Peek;
-use Text::Diff;
+use Date::Calc qw( Delta_Days );
+use Encode qw( encode decode );
+use File::Find;
 use JSON::PP;
+use List::Util qw( first );
+use Parse::CPAN::Meta;
+use Software::Security::Policy::Individual;
+use Term::ANSIColor qw(:constants);
+use Test::CPAN::Meta::YAML::Version;
+use Test::More ();
+use Text::Diff;
+use YAML::Syck;
 
 sub new {
     my $package = shift;
@@ -576,7 +577,7 @@ sub gen_cpanfile {
     if (my $of = $jsn->{optional_features}) {
 	foreach my $f (sort keys %$of) {
 	    my $fs = $of->{$f};
-	    say $fh qq/\nfeature "$f", "$fs->{description}" => sub {/;
+	    say $fh qq/\nfeature "$f", "$fs->{description}" => sub {/;#}
 	    say $fh _cpfd ($self, $fs, "", 1) =~ s/^(?=\S)/    /gmr;
 	    }
 	}
@@ -592,5 +593,55 @@ sub gen_cpanfile {
 	sleep (5);
 	}
     } # gen_cpanfile
+
+sub security_md {
+    my ($self, $update) = @_;
+
+    my $sfn = "SECURITY.md";
+    my $policy = Software::Security::Policy::Individual->new ({
+        maintainer    => $self->{h}{author}[0],
+        program       => $self->{name},
+        timeframe     => "10 days",
+        url           => $self->{h}{resources}{repository},
+        support_years => 5,
+        });
+
+    my $smd = $policy->fulltext;
+
+    unless (-s $sfn) {
+	open my $fh, ">:encoding(utf-8)", $sfn or die "$sfn: $! \n";
+	print   $fh $smd;
+	close   $fh;
+
+	if (open $fh, "<", "MANIFEST") {
+	    my @m = <$fh>;
+	    close $fh;
+	    unless (grep m/^$sfn(?:\s|$)/ => @m) {
+		open  $fh, ">>", "MANIFEST" or die "MANIFEST: $!\n";
+		say   $fh "$sfn\t\tGuide for reporting security issues";
+		close $fh;
+		}
+	    }
+	say "$sfn added";
+	}
+
+    open my $fh, "<:encoding(utf-8)", $sfn or die "$sfn: $!\n";
+    my $old = do { local $/; <$fh> };
+    close $fh;
+
+    $old eq $smd and return;
+
+    if ($update) {
+	open my $fh, ">:encoding(utf-8)", $sfn or die "$sfn: $!\n";
+	print   $fh $smd;
+	close   $fh;
+	say "$sfn updated";
+	}
+    else {
+	say "$sfn required updates:";
+	say diff \$old, \$smd;
+	say "to apply, use $0 --check --update";
+	}
+    } # gen_security
 
 1;

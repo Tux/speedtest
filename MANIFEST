@@ -3,6 +3,7 @@ speedtest
 Makefile.PL
 MANIFEST
 CONTRIBUTING.md
+SECURITY.md
 LICENSE
 README.md
 cpanfile
