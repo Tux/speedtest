@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.17-20250106";
+our $VERSION = "1.18-20250113";
 
 use 5.014001;
 use warnings;
@@ -599,11 +599,11 @@ sub security_md {
 
     my $sfn = "SECURITY.md";
     my $policy = Software::Security::Policy::Individual->new ({
-        maintainer    => $self->{h}{author}[0],
-        program       => $self->{name},
-        timeframe     => "10 days",
-        url           => $self->{h}{resources}{repository},
-        support_years => 5,
+        maintainer         => $self->{h}{author}[0],
+        program            => $self->{name},
+        timeframe          => "10 days",
+        url                => $self->{h}{resources}{repository},
+        perl_support_years => 5,
         });
 
     my $smd = $policy->fulltext;

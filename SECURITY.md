@@ -3,7 +3,7 @@
 Report issues via email at: H.Merijn Brand <hmbrand@cpan.org>.
 
 
-This is the Security Policy for the Perl App::SpeedTest distribution.
+This is the Security Policy for App::SpeedTest.
 
 The latest version of the Security Policy can be found in the
 [git repository for App::SpeedTest](https://github.com/Tux/speedtest).
